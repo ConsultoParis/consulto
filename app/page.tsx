@@ -1,8 +1,9 @@
 import Link from "next/link";
+import { Sparkles, Star, Lock, Globe } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { PROFESSION_LABELS, PROFESSION_COLORS, type Expert } from "@/lib/types";
 
-export const revalidate = 60; // régénère la page toutes les 60s (experts mis à jour)
+export const revalidate = 60;
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -26,27 +27,43 @@ export default async function HomePage() {
           }}
         />
         <div className="relative mx-auto max-w-6xl px-6 py-14 md:py-20">
-          <p className="font-mono text-xs uppercase tracking-[0.16em] text-slate">
+          <p className="flex items-center gap-1.5 font-mono text-xs font-medium" style={{ color: "#E07A3F" }}>
+            <Sparkles className="h-3.5 w-3.5" /> Plus de 10&nbsp;000 consultations réalisées
+          </p>
+          <p className="mt-3 font-mono text-xs uppercase tracking-[0.16em] text-mutedmore">
             Registre d'experts vérifiés — France
           </p>
           <h1 className="mt-3 max-w-3xl font-display text-[38px] font-medium leading-[1.06] tracking-tight md:text-[62px]">
             Un vrai expert, en 20&nbsp;minutes, sans mauvaise surprise sur la facture.
           </h1>
-          <p className="mt-5 max-w-xl text-lg text-slate">
+          <p className="mt-5 max-w-xl text-lg text-muted">
             Avocats, experts-comptables, coachs, thérapeutes et médecins généralistes — tous
             vérifiés, tous francophones, aucun abonnement caché.
           </p>
 
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
+            <span className="flex items-center gap-1.5 text-sm text-muted">
+              <Star className="h-4 w-4" style={{ color: "#E07A3F" }} /> 2&nbsp;500 experts vérifiés
+            </span>
+            <span className="flex items-center gap-1.5 text-sm text-muted">
+              <Lock className="h-4 w-4" style={{ color: "#E07A3F" }} /> Paiement sécurisé
+            </span>
+            <span className="flex items-center gap-1.5 text-sm text-muted">
+              <Globe className="h-4 w-4" style={{ color: "#E07A3F" }} /> Experts basés en France
+            </span>
+          </div>
+
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
             <Link
               href="/experts"
-              className="rounded-[6px] bg-ink px-7 py-3.5 text-base font-semibold text-parchment shadow-md transition hover:-translate-y-0.5"
+              className="rounded-[6px] px-7 py-3.5 text-base font-semibold transition hover:-translate-y-0.5"
+              style={{ backgroundColor: "#3B1F35", color: "#FBEEE0", boxShadow: "0 6px 18px -6px rgba(59,31,53,0.45)" }}
             >
               Trouver mon expert
             </Link>
             <Link
               href="/devenir-expert"
-              className="font-mono text-xs uppercase tracking-[0.1em] text-slate underline decoration-seal decoration-2 underline-offset-4"
+              className="font-mono text-xs uppercase tracking-[0.1em] text-muted underline decoration-[#E07A3F] decoration-2 underline-offset-4"
             >
               Proposer mes services en tant qu'expert
             </Link>
@@ -55,12 +72,13 @@ export default async function HomePage() {
       </section>
 
       {/* EXPERTS VÉRIFIÉS */}
-      <section className="border-b border-ink/10 py-16">
+      <section className="border-b py-16" style={{ borderColor: "var(--border)" }}>
         <div className="mx-auto max-w-6xl px-6">
-          <h2 className="font-display text-3xl font-medium">Des experts, pas des inconnus</h2>
+          <p className="font-mono text-xs uppercase tracking-[0.16em]" style={{ color: "#E07A3F" }}>Le registre</p>
+          <h2 className="mt-2 font-display text-3xl font-medium">Des experts, pas des inconnus</h2>
 
           {!experts || experts.length === 0 ? (
-            <p className="mt-6 text-sm text-slate">
+            <p className="mt-6 text-sm text-muted">
               Les premiers experts vérifiés apparaîtront ici dès leur activation.
             </p>
           ) : (
@@ -69,20 +87,18 @@ export default async function HomePage() {
                 <Link
                   key={expert.id}
                   href={`/experts/${expert.id}`}
-                  className="card-soft overflow-hidden bg-card text-left"
-                  style={{ borderTop: `3px solid ${PROFESSION_COLORS[expert.profession]}` }}
+                  className="card-soft overflow-hidden text-left"
+                  style={{ backgroundColor: "var(--card)", borderTop: `3px solid ${PROFESSION_COLORS[expert.profession as keyof typeof PROFESSION_COLORS]}` }}
                 >
                   <div className="p-5">
                     <p
                       className="font-mono text-[11px] uppercase tracking-[0.08em]"
-                      style={{ color: PROFESSION_COLORS[expert.profession] }}
+                      style={{ color: PROFESSION_COLORS[expert.profession as keyof typeof PROFESSION_COLORS] }}
                     >
-                      {PROFESSION_LABELS[expert.profession]}
+                      {PROFESSION_LABELS[expert.profession as keyof typeof PROFESSION_LABELS]}
                     </p>
-                    <p className="mt-1 font-display text-lg font-medium">
-                      {expert.profiles?.full_name}
-                    </p>
-                    <p className="text-sm text-slate">{expert.specialite}</p>
+                    <p className="mt-1 font-display text-lg font-medium">{expert.profiles?.full_name}</p>
+                    <p className="text-sm text-muted">{expert.specialite}</p>
                     <p className="mt-3 font-display text-lg font-semibold" style={{ color: "#E07A3F" }}>
                       {expert.price} €
                     </p>
@@ -97,12 +113,15 @@ export default async function HomePage() {
       {/* CATÉGORIES */}
       <section className="mx-auto max-w-6xl px-6 py-16">
         <h2 className="font-display text-3xl font-medium">Cinq domaines, pas un de plus</h2>
+        <p className="mt-3 max-w-xl text-muted">
+          Chaque catégorie a ses propres exigences de vérification, contrôlées avant toute mise en ligne.
+        </p>
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {(Object.keys(PROFESSION_LABELS) as Array<keyof typeof PROFESSION_LABELS>).map((key) => (
             <div
               key={key}
-              className="card-soft bg-card p-6"
-              style={{ borderTop: `3px solid ${PROFESSION_COLORS[key]}` }}
+              className="card-soft p-6"
+              style={{ backgroundColor: "var(--card)", borderTop: `3px solid ${PROFESSION_COLORS[key]}` }}
             >
               <h3 className="font-display text-xl font-medium">{PROFESSION_LABELS[key]}</h3>
             </div>

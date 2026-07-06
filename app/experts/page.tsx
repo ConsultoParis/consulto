@@ -33,7 +33,7 @@ export default async function ExpertsPage({
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-16">
-      <p className="font-mono text-xs uppercase tracking-[0.16em] text-seal">Le registre</p>
+      <p className="font-mono text-xs uppercase tracking-[0.16em]" style={{ color: "#E07A3F" }}>Le registre</p>
       <h1 className="mt-3 font-display text-3xl font-medium">Trouver un expert</h1>
 
       <form className="mt-8 flex flex-col gap-4 sm:flex-row" method="get">
@@ -42,12 +42,14 @@ export default async function ExpertsPage({
           name="q"
           defaultValue={params.q}
           placeholder="Nom, spécialité..."
-          className="flex-1 rounded-[3px] border border-ink/15 px-4 py-2.5 text-[15px] outline-none focus:border-ink"
+          className="flex-1 rounded-[3px] border px-4 py-2.5 text-[15px] outline-none"
+          style={{ borderColor: "var(--border)", backgroundColor: "var(--input-bg)", color: "var(--text)" }}
         />
         <select
           name="profession"
           defaultValue={params.profession || ""}
-          className="rounded-[3px] border border-ink/15 px-4 py-2.5 text-[15px] outline-none focus:border-ink sm:w-64"
+          className="rounded-[3px] border px-4 py-2.5 text-[15px] outline-none sm:w-64"
+          style={{ borderColor: "var(--border)", backgroundColor: "var(--input-bg)", color: "var(--text)" }}
         >
           <option value="">Toutes les professions</option>
           {(Object.keys(PROFESSION_LABELS) as Profession[]).map((p) => (
@@ -61,7 +63,7 @@ export default async function ExpertsPage({
         </button>
       </form>
 
-      <p className="mt-6 font-mono text-xs text-slate">
+      <p className="mt-6 font-mono text-xs text-mutedmore">
         {filtered?.length || 0} expert{(filtered?.length || 0) !== 1 ? "s" : ""} trouvé
         {(filtered?.length || 0) !== 1 ? "s" : ""}
       </p>
@@ -71,18 +73,18 @@ export default async function ExpertsPage({
           <Link
             key={expert.id}
             href={`/experts/${expert.id}`}
-            className="card-soft overflow-hidden bg-card text-left"
-            style={{ borderTop: `3px solid ${PROFESSION_COLORS[expert.profession]}` }}
+            className="card-soft overflow-hidden text-left"
+            style={{ backgroundColor: "var(--card)", borderTop: `3px solid ${PROFESSION_COLORS[expert.profession as keyof typeof PROFESSION_COLORS]}` }}
           >
             <div className="p-5">
               <p
                 className="font-mono text-[11px] uppercase tracking-[0.08em]"
-                style={{ color: PROFESSION_COLORS[expert.profession] }}
+                style={{ color: PROFESSION_COLORS[expert.profession as keyof typeof PROFESSION_COLORS] }}
               >
-                {PROFESSION_LABELS[expert.profession]}
+                {PROFESSION_LABELS[expert.profession as keyof typeof PROFESSION_LABELS]}
               </p>
               <p className="mt-1 font-display text-lg font-medium">{expert.profiles?.full_name}</p>
-              <p className="text-sm text-slate">
+              <p className="text-sm text-muted">
                 {expert.specialite} · {expert.experience_years} ans
               </p>
               <p className="mt-3 font-display text-lg font-semibold" style={{ color: "#E07A3F" }}>
@@ -92,7 +94,7 @@ export default async function ExpertsPage({
           </Link>
         ))}
         {filtered?.length === 0 && (
-          <p className="col-span-full text-sm text-slate">Aucun expert ne correspond à cette recherche.</p>
+          <p className="col-span-full text-sm text-muted">Aucun expert ne correspond à cette recherche.</p>
         )}
       </div>
     </main>
