@@ -26,8 +26,8 @@ export default async function BlogPage() {
             <Link
               key={post.id}
               href={`/blog/${post.slug}`}
-              className="card-soft overflow-hidden p-6 text-left" style={{ backgroundColor: "var(--card)" }}
-              style={{ borderTop: `3px solid ${color}` }}
+              className="card-soft overflow-hidden p-6 text-left"
+              style={{ backgroundColor: "var(--card)", borderTop: `3px solid ${color}` }}
             >
               <p className="font-mono text-[11px] uppercase tracking-[0.08em]" style={{ color }}>
                 {profession ? PROFESSION_LABELS[profession as keyof typeof PROFESSION_LABELS] : ""} · {post.read_minutes} min
