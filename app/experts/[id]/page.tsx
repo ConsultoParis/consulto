@@ -48,18 +48,18 @@ export default async function ExpertDetailPage({
             {PROFESSION_LABELS[expert.profession as keyof typeof PROFESSION_LABELS]}
           </p>
           <h1 className="mt-1 font-display text-3xl font-medium">{expert.profiles?.full_name}</h1>
-          <p className="mt-1 text-slate">
+          <p className="mt-1 text-muted">
             {expert.specialite} · {expert.experience_years} ans d'expérience
           </p>
           {avgRating && (
-            <p className="mt-2 font-mono text-sm text-slate">
+            <p className="mt-2 font-mono text-sm text-muted">
               ★ {avgRating.toFixed(1)} · {reviews!.length} avis
             </p>
           )}
         </div>
-        <div className="card-soft bg-card p-5 text-center">
+        <div className="card-soft p-5 text-center" style={{ backgroundColor: "var(--card)" }}>
           <p className="font-display text-2xl font-medium">{expert.price} €</p>
-          <p className="font-mono text-[11px] text-slate">par session</p>
+          <p className="font-mono text-[11px] text-mutedmore">par session</p>
           <Link
             href={`/booking/${expert.id}`}
             className="mt-3 block rounded-[3px] bg-ink px-5 py-2.5 text-sm font-medium text-parchment"
@@ -69,49 +69,50 @@ export default async function ExpertDetailPage({
         </div>
       </div>
 
-      {expert.bio && <p className="mt-8 leading-relaxed text-slate">{expert.bio}</p>}
+      {expert.bio && <p className="mt-8 leading-relaxed text-muted">{expert.bio}</p>}
 
-      <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-slate">
+      <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-mutedmore">
         Créneaux disponibles ({slots?.length || 0})
       </h2>
       {!slots || slots.length === 0 ? (
-        <p className="mt-4 text-sm text-slate">Aucun créneau disponible actuellement.</p>
+        <p className="mt-4 text-sm text-muted">Aucun créneau disponible actuellement.</p>
       ) : (
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {slots.map((slot) => (
             <Link
               key={slot.id}
               href={`/booking/${expert.id}?slot=${slot.id}`}
-              className="flex items-center justify-between rounded-[3px] border border-ink/15 bg-white px-4 py-3 transition hover:border-ink"
+              className="flex items-center justify-between rounded-[3px] border px-4 py-3 transition"
+              style={{ borderColor: "var(--border)", backgroundColor: "var(--input-bg)" }}
             >
               <span>
                 <span className="block text-sm capitalize">
                   {new Date(slot.date).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })}
                 </span>
-                <span className="font-mono text-xs text-slate">
+                <span className="font-mono text-xs text-muted">
                   {slot.start_time} · {slot.duration_min} min
                 </span>
               </span>
-              <span className="font-mono text-xs text-seal">Choisir →</span>
+              <span className="font-mono text-xs" style={{ color: "#E07A3F" }}>Choisir →</span>
             </Link>
           ))}
         </div>
       )}
 
-      <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-slate">
+      <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-mutedmore">
         Avis certifiés ({reviews?.length || 0})
       </h2>
       {!reviews || reviews.length === 0 ? (
-        <p className="mt-4 text-sm text-slate">Aucun avis pour le moment.</p>
+        <p className="mt-4 text-sm text-muted">Aucun avis pour le moment.</p>
       ) : (
         <div className="mt-4 space-y-4">
           {reviews.map((r) => (
-            <div key={r.id} className="rounded-[6px] border border-ink/10 bg-white p-4">
+            <div key={r.id} className="card-soft p-4" style={{ backgroundColor: "var(--card)" }}>
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">{r.profiles?.full_name}</span>
-                <span className="font-mono text-xs text-seal">★ {r.rating}</span>
+                <span className="font-mono text-xs" style={{ color: "#E07A3F" }}>★ {r.rating}</span>
               </div>
-              <p className="mt-2 text-sm text-slate">{r.comment}</p>
+              <p className="mt-2 text-sm text-muted">{r.comment}</p>
             </div>
           ))}
         </div>

@@ -26,20 +26,20 @@ export default async function BlogPage() {
             <Link
               key={post.id}
               href={`/blog/${post.slug}`}
-              className="card-soft overflow-hidden bg-card p-6 text-left"
+              className="card-soft overflow-hidden p-6 text-left" style={{ backgroundColor: "var(--card)" }}
               style={{ borderTop: `3px solid ${color}` }}
             >
               <p className="font-mono text-[11px] uppercase tracking-[0.08em]" style={{ color }}>
                 {profession ? PROFESSION_LABELS[profession as keyof typeof PROFESSION_LABELS] : ""} · {post.read_minutes} min
               </p>
               <h3 className="mt-2 font-display text-lg font-medium leading-snug">{post.title}</h3>
-              <p className="mt-2 text-sm text-slate">{post.excerpt}</p>
-              <p className="mt-4 font-mono text-[11px] text-slate">{post.experts?.profiles?.full_name}</p>
+              <p className="mt-2 text-sm text-muted">{post.excerpt}</p>
+              <p className="mt-4 font-mono text-[11px] text-muted">{post.experts?.profiles?.full_name}</p>
             </Link>
           );
         })}
         {(!posts || posts.length === 0) && (
-          <p className="col-span-full text-sm text-slate">Aucun article publié pour le moment.</p>
+          <p className="col-span-full text-sm text-muted">Aucun article publié pour le moment.</p>
         )}
       </div>
     </main>

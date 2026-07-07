@@ -37,7 +37,7 @@ export default function ConfiancePage() {
 
       <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
         {SECTIONS.map((s, i) => (
-          <div key={i} id={s.title.includes("remboursement") ? "remboursement" : undefined} className="card-soft bg-card p-6">
+          <div key={i} id={s.title.includes("remboursement") ? "remboursement" : undefined} className="card-soft p-6" style={{ backgroundColor: "var(--card)" }}>
             <div
               className="flex h-11 w-11 items-center justify-center rounded-full font-display text-sm font-semibold"
               style={{ backgroundColor: `${s.color}15`, color: s.color }}
@@ -45,7 +45,7 @@ export default function ConfiancePage() {
               {i + 1}
             </div>
             <h3 className="mt-3 font-display text-lg font-medium">{s.title}</h3>
-            <p className="mt-1.5 text-sm leading-relaxed text-slate">{s.text}</p>
+            <p className="mt-1.5 text-sm leading-relaxed text-muted">{s.text}</p>
           </div>
         ))}
       </div>
@@ -56,9 +56,9 @@ export default function ConfiancePage() {
           <details key={i} className="group py-5">
             <summary className="flex cursor-pointer list-none items-center justify-between font-display text-lg font-medium">
               {item.q}
-              <span className="font-mono text-sm text-slate group-open:rotate-180">▾</span>
+              <span className="font-mono text-sm text-muted group-open:rotate-180">▾</span>
             </summary>
-            <p className="mt-3 pr-8 text-sm leading-relaxed text-slate">{item.a}</p>
+            <p className="mt-3 pr-8 text-sm leading-relaxed text-muted">{item.a}</p>
           </details>
         ))}
       </div>

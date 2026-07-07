@@ -23,9 +23,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         {profession ? PROFESSION_LABELS[profession as keyof typeof PROFESSION_LABELS] : ""} · {post.read_minutes} min de lecture
       </p>
       <h1 className="mt-2 font-display text-3xl font-medium leading-tight">{post.title}</h1>
-      <p className="mt-4 text-sm text-slate">Par {post.experts?.profiles?.full_name}</p>
+      <p className="mt-4 text-sm text-muted">Par {post.experts?.profiles?.full_name}</p>
 
-      <div className="mt-8 space-y-4 leading-relaxed text-slate whitespace-pre-line">{post.content}</div>
+      <div className="mt-8 space-y-4 leading-relaxed text-muted whitespace-pre-line">{post.content}</div>
     </main>
   );
 }

@@ -14,7 +14,7 @@ export default function MentionsLegalesPage() {
         <section>
           <h2 className="font-display text-lg font-medium text-ink">Éditeur du site</h2>
           <p className="mt-2">
-            Consulto — [Forme juridique à préciser]
+            1Expert — [Forme juridique à préciser]
             <br />
             Siège social : [Adresse à compléter]
             <br />
@@ -44,7 +44,7 @@ export default function MentionsLegalesPage() {
           <h2 className="font-display text-lg font-medium text-ink">Propriété intellectuelle</h2>
           <p className="mt-2">
             L'ensemble du contenu de ce site (textes, logo, mise en page) est la propriété de
-            Consulto, sauf mention contraire.
+            1Expert, sauf mention contraire.
           </p>
         </section>
       </div>

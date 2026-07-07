@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Consulto — L'expertise à portée de tous",
+  title: "1Expert — L'expertise à portée de tous",
   description:
     "Avocats, experts-comptables, coachs, thérapeutes et médecins généralistes vérifiés. Consultation en 20-30 minutes, paiement sécurisé en séquestre.",
 };
@@ -12,6 +12,18 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                var t = localStorage.getItem('1expert-theme');
+                if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+              } catch (e) {}
+            `,
+          }}
+        />
+      </head>
       <body>
         <Header />
         {children}

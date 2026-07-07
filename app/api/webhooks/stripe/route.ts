@@ -5,7 +5,7 @@ import { sendReceiptEmail } from "@/lib/email";
 
 // POST /api/webhooks/stripe — appelé automatiquement par Stripe.
 // À configurer dans le Dashboard Stripe > Developers > Webhooks
-// URL : https://consulto.fr/api/webhooks/stripe
+// URL : https://1expert.fr/api/webhooks/stripe
 // Événements à écouter : payment_intent.amount_capturable_updated, payment_intent.canceled
 export async function POST(req: NextRequest) {
   const body = await req.text();

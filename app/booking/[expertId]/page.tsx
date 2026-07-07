@@ -106,7 +106,7 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
 
       {step === "creneaux" && (
         <div className="mt-8">
-          <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate">Mode de consultation</h2>
+          <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Mode de consultation</h2>
           <div className="mt-3 flex gap-2">
             {(["video", "chat", "physique"] as ConsultationMode[]).map((m) => (
               <button
@@ -121,7 +121,7 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
             ))}
           </div>
 
-          <h2 className="mt-8 font-mono text-[11px] uppercase tracking-[0.12em] text-slate">Créneau</h2>
+          <h2 className="mt-8 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Créneau</h2>
           <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
             {slots.map((slot) => (
               <button
@@ -134,12 +134,12 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
                 <span className="block text-sm capitalize">
                   {new Date(slot.date).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })}
                 </span>
-                <span className="font-mono text-xs text-slate">{slot.start_time} · {slot.duration_min} min</span>
+                <span className="font-mono text-xs text-muted">{slot.start_time} · {slot.duration_min} min</span>
               </button>
             ))}
           </div>
 
-          <h2 className="mt-8 font-mono text-[11px] uppercase tracking-[0.12em] text-slate">
+          <h2 className="mt-8 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
             Pièces justificatives (optionnel)
           </h2>
           <div className="mt-3 flex flex-wrap gap-2">
@@ -164,14 +164,14 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
             </label>
           </div>
           {docs.length > 0 && (
-            <ul className="mt-3 space-y-1 text-sm text-slate">
+            <ul className="mt-3 space-y-1 text-sm text-muted">
               {docs.map((f, i) => (
                 <li key={i}>{f.name}</li>
               ))}
             </ul>
           )}
 
-          <h2 className="mt-8 font-mono text-[11px] uppercase tracking-[0.12em] text-slate">Email</h2>
+          <h2 className="mt-8 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Email</h2>
           <input
             type="email"
             className="mt-2 w-full rounded-[3px] border border-ink/15 px-3.5 py-2.5 text-[15px] outline-none focus:border-ink"
@@ -202,7 +202,7 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
       {step === "confirmation" && (
         <div className="mt-8 rounded-[6px] border border-verified/30 bg-verified/5 p-8 text-center">
           <h2 className="font-display text-xl font-medium">Rendez-vous confirmé</h2>
-          <p className="mt-2 text-slate">
+          <p className="mt-2 text-muted">
             Un email de confirmation vous a été envoyé à {email}. Retrouvez votre réservation dans
             votre espace client.
           </p>

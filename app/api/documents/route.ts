@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
   }
 
   // 4. Si c'est l'expert qui envoie un document après la consultation,
-  //    on notifie le client par email en plus de son espace Consulto.
+  //    on notifie le client par email en plus de son espace 1Expert.
   if (uploadedBy === "expert" && booking.status === "completed") {
     const { data: signedUrl } = await supabase.storage
       .from("documents")

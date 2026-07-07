@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM = process.env.RESEND_FROM_EMAIL || "contact@consulto.fr";
+const FROM = process.env.RESEND_FROM_EMAIL || "contact@1expert.fr";
 
 /** Envoie le justificatif d'achat après un paiement confirmé. */
 export async function sendReceiptEmail({
@@ -20,7 +20,7 @@ export async function sendReceiptEmail({
   return resend.emails.send({
     from: FROM,
     to,
-    subject: "Votre réservation Consulto est confirmée",
+    subject: "Votre réservation 1Expert est confirmée",
     html: `
       <h2>Réservation confirmée</h2>
       <p>Votre session avec <strong>${expertName}</strong> est réservée pour le ${date} à ${time}.</p>
@@ -48,7 +48,7 @@ export async function sendDocumentsEmail({
       <h2>Nouveaux documents disponibles</h2>
       <p>${expertName} vous a transmis les documents suivants suite à votre consultation :</p>
       <ul>${list}</ul>
-      <p>Vous pouvez aussi les retrouver dans votre espace client sur Consulto.</p>
+      <p>Vous pouvez aussi les retrouver dans votre espace client sur 1Expert.</p>
     `,
   });
 }

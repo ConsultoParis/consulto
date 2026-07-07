@@ -70,7 +70,7 @@ export default function InscriptionPage() {
   return (
     <main className="mx-auto max-w-md px-6 py-16">
       <p className="font-mono text-xs uppercase tracking-[0.16em] text-seal">Créer un compte</p>
-      <h1 className="mt-3 font-display text-3xl font-medium">Rejoindre Consulto</h1>
+      <h1 className="mt-3 font-display text-3xl font-medium">Rejoindre 1Expert</h1>
 
       {!role ? (
         <div className="mt-8 space-y-3">
