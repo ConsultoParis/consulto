@@ -25,12 +25,18 @@ export default function InscriptionPage() {
 
     setLoading(true);
 
-    // 1. Crée le compte d'authentification Supabase
+    // Crée le compte d'authentification Supabase. Le rôle et le nom sont
+    // transmis en métadonnées : c'est le trigger SQL (0002_auto_profile_trigger.sql)
+    // qui crée automatiquement la fiche "profiles" correspondante, côté serveur.
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/auth/callback`,
+        data: {
+          role,
+          full_name: fullName,
+        },
       },
     });
 
@@ -42,20 +48,6 @@ export default function InscriptionPage() {
     if (!authData.user) {
       setLoading(false);
       return setError("Une erreur est survenue, réessayez.");
-    }
-
-    // 2. Crée le profil associé (déclenché ici plutôt que par trigger SQL,
-    //    pour rester simple à ce stade du projet)
-    const { error: profileError } = await supabase.from("profiles").insert({
-      id: authData.user.id,
-      role,
-      full_name: fullName,
-      email,
-    });
-
-    if (profileError) {
-      setLoading(false);
-      return setError(profileError.message);
     }
 
     setLoading(false);
