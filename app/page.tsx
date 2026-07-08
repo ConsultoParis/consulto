@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Avatar from "@/components/Avatar";
 import { Sparkles, Star, Lock, Globe } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { PROFESSION_LABELS, PROFESSION_COLORS, type Expert } from "@/lib/types";
@@ -91,14 +92,19 @@ export default async function HomePage() {
                   style={{ backgroundColor: "var(--card)", borderTop: `3px solid ${PROFESSION_COLORS[expert.profession as keyof typeof PROFESSION_COLORS]}` }}
                 >
                   <div className="p-5">
-                    <p
-                      className="font-mono text-[11px] uppercase tracking-[0.08em]"
-                      style={{ color: PROFESSION_COLORS[expert.profession as keyof typeof PROFESSION_COLORS] }}
-                    >
-                      {PROFESSION_LABELS[expert.profession as keyof typeof PROFESSION_LABELS]}
-                    </p>
-                    <p className="mt-1 font-display text-lg font-medium">{expert.profiles?.full_name}</p>
-                    <p className="text-sm text-muted">{expert.specialite}</p>
+                    <div className="flex items-center gap-3">
+                      <Avatar name={expert.profiles?.full_name} profession={expert.profession} size={40} />
+                      <div>
+                        <p
+                          className="font-mono text-[11px] uppercase tracking-[0.08em]"
+                          style={{ color: PROFESSION_COLORS[expert.profession as keyof typeof PROFESSION_COLORS] }}
+                        >
+                          {PROFESSION_LABELS[expert.profession as keyof typeof PROFESSION_LABELS]}
+                        </p>
+                        <p className="font-display text-lg font-medium">{expert.profiles?.full_name}</p>
+                      </div>
+                    </div>
+                    <p className="mt-3 text-sm text-muted">{expert.specialite}</p>
                     <p className="mt-3 font-display text-lg font-semibold" style={{ color: "#E07A3F" }}>
                       {expert.price} €
                     </p>
