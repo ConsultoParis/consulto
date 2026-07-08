@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Avatar from "@/components/Avatar";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { PROFESSION_LABELS, PROFESSION_COLORS } from "@/lib/types";
@@ -43,6 +44,7 @@ export default async function ExpertDetailPage({
   return (
     <main className="mx-auto max-w-3xl px-6 py-16">
       <div className="flex flex-wrap items-start gap-5">
+        <Avatar name={expert.profiles?.full_name} profession={expert.profession} size={72} />
         <div className="min-w-0 flex-1">
           <p className="font-mono text-[11px] uppercase tracking-[0.12em]" style={{ color }}>
             {PROFESSION_LABELS[expert.profession as keyof typeof PROFESSION_LABELS]}
