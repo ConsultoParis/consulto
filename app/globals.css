@@ -56,3 +56,34 @@ body {
     0 2px 4px rgba(59, 31, 53, 0.06),
     0 14px 30px -10px rgba(59, 31, 53, 0.2);
 }
+
+/* Tous les champs de formulaire du site s'adaptent au thème clair/sombre,
+   au lieu de garder le fond blanc par défaut du navigateur. */
+input,
+textarea,
+select {
+  background-color: var(--input-bg);
+  color: var(--text);
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-quaternary);
+}
+
+/* Bouton d'action principal, cohérent sur tout le site : ombre et léger
+   soulèvement au survol, pour un rendu plus premium. */
+.btn-primary {
+  background-color: #3b1f35;
+  color: #fbeee0;
+  box-shadow: 0 6px 18px -6px rgba(59, 31, 53, 0.45);
+  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -6px rgba(59, 31, 53, 0.5);
+  opacity: 0.95;
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  transform: none;
+}
