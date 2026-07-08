@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Avatar from "@/components/Avatar";
+import ImageCarousel from "@/components/ImageCarousel";
 import { Sparkles, Star, Lock, Globe } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { PROFESSION_LABELS, PROFESSION_COLORS, type Expert } from "@/lib/types";
@@ -116,23 +117,17 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* CATÉGORIES */}
+      {/* CARROUSEL */}
       <section className="mx-auto max-w-6xl px-6 py-16">
-        <h2 className="font-display text-3xl font-medium">Cinq domaines, pas un de plus</h2>
-        <p className="mt-3 max-w-xl text-muted">
-          Chaque catégorie a ses propres exigences de vérification, contrôlées avant toute mise en ligne.
-        </p>
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {(Object.keys(PROFESSION_LABELS) as Array<keyof typeof PROFESSION_LABELS>).map((key) => (
-            <div
-              key={key}
-              className="card-soft p-6"
-              style={{ backgroundColor: "var(--card)", borderTop: `3px solid ${PROFESSION_COLORS[key]}` }}
-            >
-              <h3 className="font-display text-xl font-medium">{PROFESSION_LABELS[key]}</h3>
-            </div>
-          ))}
-        </div>
+        <ImageCarousel
+          images={[
+            { src: "/carousel-1.jpg", alt: "1Expert" },
+            { src: "/carousel-2.jpg", alt: "1Expert" },
+            { src: "/carousel-3.jpg", alt: "1Expert" },
+            { src: "/carousel-4.jpg", alt: "1Expert" },
+            { src: "/carousel-5.jpg", alt: "1Expert" },
+          ]}
+        />
       </section>
     </main>
   );
