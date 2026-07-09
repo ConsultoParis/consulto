@@ -4,7 +4,8 @@ import { createEscrowPayment } from "@/lib/stripe";
 
 // POST /api/checkout — appelé quand le client valide sa réservation.
 // Crée la réservation en base (status "confirmed", payment_status "pending")
-// puis un PaymentIntent Stripe en mode séquestre (capture manuelle).
+// puis un PaymentIntent Stripe en mode séquestre (capture manuelle), réparti
+// automatiquement entre l'expert (80%) et 1Expert (20% de commission).
 export async function POST(req: NextRequest) {
   const supabase = await createClient();
   const {
@@ -30,15 +31,30 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Ce créneau n'est plus disponible" }, { status: 409 });
   }
 
-  // 2. Crée le PaymentIntent Stripe (séquestre)
+  // 2. Vérifie que l'expert a bien connecté son compte de paiement
+  const { data: expert } = await supabase
+    .from("experts")
+    .select("stripe_account_id, stripe_charges_enabled")
+    .eq("id", expertId)
+    .single();
+
+  if (!expert?.stripe_account_id || !expert.stripe_charges_enabled) {
+    return NextResponse.json(
+      { error: "Cet expert n'a pas encore activé la réception des paiements. Réessayez plus tard." },
+      { status: 409 }
+    );
+  }
+
+  // 3. Crée le PaymentIntent Stripe (séquestre, réparti 80/20)
   const finalPrice = Math.max(0, price - (creditsUsed || 0));
   const paymentIntent = await createEscrowPayment({
     amountEuros: finalPrice,
     bookingId: slotId,
     clientEmail,
+    expertStripeAccountId: expert.stripe_account_id,
   });
 
-  // 3. Crée la réservation en base
+  // 4. Crée la réservation en base
   const { data: booking, error } = await supabase
     .from("bookings")
     .insert({
@@ -62,7 +78,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // 4. Marque le créneau comme réservé
+  // 5. Marque le créneau comme réservé
   await supabase.from("availability_slots").update({ is_booked: true }).eq("id", slotId);
 
   return NextResponse.json({
