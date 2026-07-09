@@ -7,7 +7,7 @@ export default function ImageCarousel({
   images,
   intervalMs = 4000,
 }: {
-  images: { src: string; alt: string }[];
+  images: { src: string; alt: string; caption?: string }[];
   intervalMs?: number;
 }) {
   const [index, setIndex] = useState(0);
@@ -31,6 +31,19 @@ export default function ImageCarousel({
           style={{ opacity: i === index ? 1 : 0 }}
         >
           <Image src={img.src} alt={img.alt} fill className="object-cover" priority={i === 0} />
+
+          {img.caption && (
+            <div
+              className="absolute bottom-4 right-4 rounded-full px-4 py-2 font-display text-sm font-medium sm:text-base"
+              style={{
+                backgroundColor: "rgba(59,31,53,0.72)",
+                color: "#FBEEE0",
+                backdropFilter: "blur(4px)",
+              }}
+            >
+              {img.caption}
+            </div>
+          )}
         </div>
       ))}
 
