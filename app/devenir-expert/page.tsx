@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { Profession } from "@/lib/types";
+import { Paperclip, X, Camera } from "lucide-react";
 
 const inputClass =
   "mt-1.5 w-full rounded-[3px] border border-ink/15 px-3.5 py-2.5 text-[15px] outline-none focus:border-ink";
@@ -25,10 +26,12 @@ export default function DevenirExpertPage() {
   const [numeroRpps, setNumeroRpps] = useState("");
   const [numeroOrdreMedecins, setNumeroOrdreMedecins] = useState("");
   const [certification, setCertification] = useState("");
+  const [documents, setDocuments] = useState<File[]>([]);
 
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [uploadStep, setUploadStep] = useState("");
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -36,6 +39,15 @@ export default function DevenirExpertPage() {
       setCheckingAuth(false);
     });
   }, [supabase]);
+
+  function addFiles(fileList: FileList | null) {
+    if (!fileList) return;
+    setDocuments((d) => [...d, ...Array.from(fileList)]);
+  }
+
+  function removeDocument(index: number) {
+    setDocuments((d) => d.filter((_, i) => i !== index));
+  }
 
   function validate() {
     if (!profession) return "Choisissez une profession";
@@ -48,6 +60,7 @@ export default function DevenirExpertPage() {
       if (!/^\d{11}$/.test(numeroRpps.trim())) return "Le N° RPPS doit comporter 11 chiffres";
       if (!numeroOrdreMedecins.trim()) return "N° d'inscription à l'Ordre des médecins requis";
     }
+    if (documents.length === 0) return "Joignez au moins un justificatif (carte professionnelle, diplôme, attestation d'inscription...)";
     return "";
   }
 
@@ -60,6 +73,7 @@ export default function DevenirExpertPage() {
     setLoading(true);
     setError("");
 
+    setUploadStep("Création du profil...");
     const { error: insertError } = await supabase.from("experts").insert({
       id: userId,
       profession,
@@ -75,8 +89,33 @@ export default function DevenirExpertPage() {
       verification_status: "pending",
     });
 
+    if (insertError) {
+      setLoading(false);
+      setUploadStep("");
+      return setError(insertError.message);
+    }
+
+    // Envoi des justificatifs dans le stockage privé, puis référence en base.
+    setUploadStep("Envoi des justificatifs...");
+    for (const file of documents) {
+      const filePath = `${userId}/${Date.now()}-${file.name}`;
+      const { error: uploadError } = await supabase.storage.from("expert-documents").upload(filePath, file);
+
+      if (uploadError) {
+        setLoading(false);
+        setUploadStep("");
+        return setError(`Erreur lors de l'envoi de "${file.name}" : ${uploadError.message}`);
+      }
+
+      await supabase.from("expert_documents").insert({
+        expert_id: userId,
+        file_name: file.name,
+        file_path: filePath,
+      });
+    }
+
     setLoading(false);
-    if (insertError) return setError(insertError.message);
+    setUploadStep("");
     setSubmitted(true);
   }
 
@@ -223,6 +262,38 @@ export default function DevenirExpertPage() {
           />
         </div>
 
+        {/* Justificatifs */}
+        <div>
+          <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate">Pièces justificatives</label>
+          <p className="mt-1 text-xs text-slate">
+            Carte professionnelle, diplôme, attestation d'inscription à l'Ordre... au moins un document.
+          </p>
+
+          <div className="mt-2.5 flex flex-wrap gap-2">
+            <label className="flex cursor-pointer items-center gap-1.5 rounded-full border border-ink/15 px-3.5 py-2 font-mono text-xs transition hover:bg-ink/5">
+              <Paperclip className="h-3.5 w-3.5" /> Choisir un fichier
+              <input type="file" multiple className="hidden" onChange={(e) => addFiles(e.target.files)} />
+            </label>
+            <label className="flex cursor-pointer items-center gap-1.5 rounded-full border border-ink/15 px-3.5 py-2 font-mono text-xs transition hover:bg-ink/5">
+              <Camera className="h-3.5 w-3.5" /> Prendre une photo
+              <input type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => addFiles(e.target.files)} />
+            </label>
+          </div>
+
+          {documents.length > 0 && (
+            <ul className="mt-3 space-y-2">
+              {documents.map((f, i) => (
+                <li key={i} className="flex items-center justify-between rounded-[3px] border border-ink/15 px-3 py-2 text-sm">
+                  <span className="truncate">{f.name}</span>
+                  <button type="button" onClick={() => removeDocument(i)} className="ml-2 shrink-0 text-red-700">
+                    <X className="h-4 w-4" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
         {error && <p className="text-sm text-red-700">{error}</p>}
 
         <button
@@ -230,7 +301,7 @@ export default function DevenirExpertPage() {
           disabled={loading}
           className="w-full rounded-[6px] bg-ink py-3.5 text-sm font-medium text-parchment disabled:opacity-50"
         >
-          {loading ? "Envoi..." : "Envoyer ma candidature"}
+          {loading ? uploadStep || "Envoi..." : "Envoyer ma candidature"}
         </button>
       </form>
     </main>
