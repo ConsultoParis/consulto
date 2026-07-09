@@ -28,7 +28,7 @@ export default async function HomePage() {
               "radial-gradient(650px circle at 12% 10%, #F2A65A, transparent 60%), radial-gradient(550px circle at 88% 0%, #E0668A, transparent 55%), radial-gradient(600px circle at 55% 100%, #7A4B8C, transparent 55%)",
           }}
         />
-        <div className="relative mx-auto max-w-6xl px-6 py-14 md:py-20">
+        <div className="relative mx-auto max-w-6xl px-6 py-10 md:py-20">
           <p className="flex items-center gap-1.5 font-mono text-xs font-medium" style={{ color: "#E07A3F" }}>
             <Sparkles className="h-3.5 w-3.5" /> Plus de 10&nbsp;000 consultations réalisées
           </p>
