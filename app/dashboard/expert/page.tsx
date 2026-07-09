@@ -5,6 +5,7 @@ import AddSlotForm from "@/components/AddSlotForm";
 import SendDocumentsForm from "@/components/SendDocumentsForm";
 import CompleteBookingButton from "@/components/CompleteBookingButton";
 import CompleteExpertProfileForm from "@/components/CompleteExpertProfileForm";
+import StripeConnectButton from "@/components/StripeConnectButton";
 import { Star, Calendar, Eye, Award, TrendingUp, Zap, PlusCircle, CheckCircle2, Wallet } from "lucide-react";
 
 export default async function ExpertDashboardPage() {
@@ -151,6 +152,19 @@ export default async function ExpertDashboardPage() {
         <div className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
           <p className="font-display text-3xl font-semibold">{satisfaction ? `${satisfaction}%` : "—"}</p>
           <p className="mt-1 font-mono text-[10px] uppercase text-muted">Satisfaction</p>
+        </div>
+      </div>
+
+      <div
+        className="card-soft mt-8 p-5"
+        style={{
+          backgroundColor: expert.stripe_charges_enabled ? "#1E8F6B0F" : "#E07A3F0F",
+          border: `1px solid ${expert.stripe_charges_enabled ? "#1E8F6B30" : "#E07A3F30"}`,
+        }}
+      >
+        <p className="font-medium">Recevoir mes paiements</p>
+        <div className="mt-2">
+          <StripeConnectButton chargesEnabled={expert.stripe_charges_enabled} />
         </div>
       </div>
 
