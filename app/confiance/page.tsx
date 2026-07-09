@@ -1,3 +1,5 @@
+import ImageCarousel from "@/components/ImageCarousel";
+
 const SECTIONS = [
   {
     title: "Comment les experts sont sélectionnés",
@@ -31,36 +33,60 @@ const FAQ = [
 
 export default function ConfiancePage() {
   return (
-    <main className="mx-auto max-w-4xl px-6 py-16">
-      <p className="font-mono text-xs uppercase tracking-[0.16em] text-seal">Centre de confiance</p>
-      <h1 className="mt-3 font-display text-3xl font-medium">Pourquoi avoir confiance en nous ?</h1>
+    <main>
+      <section className="relative overflow-hidden">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.18]"
+          style={{
+            background:
+              "radial-gradient(500px circle at 8% 0%, #E0668A, transparent 55%), radial-gradient(450px circle at 95% 25%, #F2A65A, transparent 55%)",
+          }}
+        />
+        <div className="relative mx-auto max-w-4xl px-6 pb-10 pt-16">
+          <p className="font-mono text-xs uppercase tracking-[0.16em] text-seal">Centre de confiance</p>
+          <h1 className="mt-3 font-display text-3xl font-medium md:text-4xl">Pourquoi avoir confiance en nous ?</h1>
+          <p className="mt-3 max-w-xl text-muted">
+            Vérification, séquestre, remboursement, confidentialité — tout ce qui protège votre expérience sur 1Expert.
+          </p>
+        </div>
+      </section>
 
-      <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {SECTIONS.map((s, i) => (
-          <div key={i} id={s.title.includes("remboursement") ? "remboursement" : undefined} className="card-soft p-6" style={{ backgroundColor: "var(--card)" }}>
-            <div
-              className="flex h-11 w-11 items-center justify-center rounded-full font-display text-sm font-semibold"
-              style={{ backgroundColor: `${s.color}15`, color: s.color }}
-            >
-              {i + 1}
+      <div className="mx-auto max-w-4xl px-6 pb-16">
+        <ImageCarousel
+          images={[
+            { src: "/carousel-5.jpg", alt: "1Expert", caption: "Chaque expert est vérifié" },
+            { src: "/carousel-3.jpg", alt: "1Expert", caption: "Justificatif professionnel obligatoire" },
+            { src: "/carousel-4.jpg", alt: "1Expert", caption: "Identité contrôlée" },
+          ]}
+        />
+
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {SECTIONS.map((s, i) => (
+            <div key={i} id={s.title.includes("remboursement") ? "remboursement" : undefined} className="card-soft p-6" style={{ backgroundColor: "var(--card)" }}>
+              <div
+                className="flex h-11 w-11 items-center justify-center rounded-full font-display text-sm font-semibold"
+                style={{ backgroundColor: `${s.color}15`, color: s.color }}
+              >
+                {i + 1}
+              </div>
+              <h3 className="mt-3 font-display text-lg font-medium">{s.title}</h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-muted">{s.text}</p>
             </div>
-            <h3 className="mt-3 font-display text-lg font-medium">{s.title}</h3>
-            <p className="mt-1.5 text-sm leading-relaxed text-muted">{s.text}</p>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      <h2 id="remboursement" className="mt-14 font-display text-2xl font-medium">Questions fréquentes</h2>
-      <div className="mt-6 divide-y divide-ink/10 border-y border-ink/10">
-        {FAQ.map((item, i) => (
-          <details key={i} className="group py-5">
-            <summary className="flex cursor-pointer list-none items-center justify-between font-display text-lg font-medium">
-              {item.q}
-              <span className="font-mono text-sm text-muted group-open:rotate-180">▾</span>
-            </summary>
-            <p className="mt-3 pr-8 text-sm leading-relaxed text-muted">{item.a}</p>
-          </details>
-        ))}
+        <h2 id="remboursement" className="mt-14 font-display text-2xl font-medium">Questions fréquentes</h2>
+        <div className="mt-6 divide-y divide-ink/10 border-y border-ink/10">
+          {FAQ.map((item, i) => (
+            <details key={i} className="group py-5">
+              <summary className="flex cursor-pointer list-none items-center justify-between font-display text-lg font-medium">
+                {item.q}
+                <span className="font-mono text-sm text-muted group-open:rotate-180">▾</span>
+              </summary>
+              <p className="mt-3 pr-8 text-sm leading-relaxed text-muted">{item.a}</p>
+            </details>
+          ))}
+        </div>
       </div>
     </main>
   );
