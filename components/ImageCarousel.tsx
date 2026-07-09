@@ -1,0 +1,55 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Image from "next/image";
+
+export default function ImageCarousel({
+  images,
+  intervalMs = 4000,
+}: {
+  images: { src: string; alt: string }[];
+  intervalMs?: number;
+}) {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const timer = setInterval(() => {
+      setIndex((i) => (i + 1) % images.length);
+    }, intervalMs);
+    return () => clearInterval(timer);
+  }, [images.length, intervalMs]);
+
+  if (images.length === 0) return null;
+
+  return (
+    <div className="relative overflow-hidden rounded-[10px]" style={{ aspectRatio: "16 / 7" }}>
+      {images.map((img, i) => (
+        <div
+          key={img.src}
+          className="absolute inset-0 transition-opacity duration-700"
+          style={{ opacity: i === index ? 1 : 0 }}
+        >
+          <Image src={img.src} alt={img.alt} fill className="object-cover" priority={i === 0} />
+        </div>
+      ))}
+
+      {images.length > 1 && (
+        <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
+          {images.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setIndex(i)}
+              aria-label={`Image ${i + 1}`}
+              className="h-2 rounded-full transition-all"
+              style={{
+                width: i === index ? 20 : 8,
+                backgroundColor: i === index ? "#FBEEE0" : "rgba(251,238,224,0.5)",
+              }}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
