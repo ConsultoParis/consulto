@@ -119,7 +119,7 @@ export default async function HomePage() {
 
       {/* CARROUSEL */}
       <section className="mx-auto max-w-6xl px-6 py-16">
-      <ImageCarousel
+        <ImageCarousel
           images={[
             { src: "/carousel-5.jpg", alt: "1Expert", caption: "Chaque expert est vérifié" },
             { src: "/carousel-3.jpg", alt: "1Expert", caption: "Disponible immédiatement" },
@@ -127,7 +127,6 @@ export default async function HomePage() {
             { src: "/carousel-1.jpg", alt: "1Expert", caption: "Paiement sécurisé en séquestre" },
             { src: "/carousel-2.jpg", alt: "1Expert", caption: "Aucun abonnement caché" },
           ]}
-        /> 
         />
       </section>
     </main>
