@@ -48,4 +48,21 @@ export default function ImageCarousel({
       ))}
 
       {images.length > 1 && (
-        <div className="absolute bottom-4 left-1/2
+        <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
+          {images.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setIndex(i)}
+              aria-label={`Image ${i + 1}`}
+              className="h-2 rounded-full transition-all"
+              style={{
+                width: i === index ? 20 : 8,
+                backgroundColor: i === index ? "#F4F8FF" : "rgba(244,248,255,0.5)",
+              }}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
