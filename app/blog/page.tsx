@@ -72,8 +72,3 @@ export default async function BlogPage() {
     </main>
   );
 }
-Terminé
-Déjà bon aussi. Il ne reste que les tableaux de bord et les fiches expert. Vérifions-les :
-
-
-Vérification finale de ce qui reste réellement à corriger
