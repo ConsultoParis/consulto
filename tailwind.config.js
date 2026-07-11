@@ -7,15 +7,15 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        ink: "#3B1F35",
-        parchment: "#FBEEE0",
-        card: "#FFF8EF",
-        seal: "#E07A3F",
+        ink: "#0A2540",
+        parchment: "#F4F8FF",
+        card: "#FFFFFF",
+        seal: "#3E8EF7",
         verified: "#2B6E4E",
-        slate: "#8a6f63",
+        slate: "#6b84a0",
       },
       fontFamily: {
-        display: ["Fraunces", "serif"],
+        display: ["Playfair Display", "serif"],
         body: ["Inter", "sans-serif"],
         mono: ["IBM Plex Mono", "monospace"],
       },
