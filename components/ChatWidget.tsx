@@ -113,18 +113,18 @@ export default function ChatWidget() {
           <div className="absolute inset-0 bg-black/40" onClick={() => setOpen(false)} />
           <div
             className="relative flex h-[80vh] max-h-[34rem] w-full max-w-sm flex-col overflow-hidden rounded-[10px] border shadow-2xl"
-            style={{ backgroundColor: "#FFFFFF", borderColor: "#E8D5C4" }}
+            style={{ backgroundColor: "#FFFFFF", borderColor: "#c3d7ee" }}
           >
-            <div className="flex shrink-0 items-center justify-between px-4 py-3.5" style={{ backgroundColor: "#3B1F35" }}>
+            <div className="flex shrink-0 items-center justify-between px-4 py-3.5" style={{ backgroundColor: "#0A2540" }}>
               <div className="flex items-center gap-2">
-                <div style={{ backgroundColor: "#E07A3F", color: "#FFFFFF" }} className="flex h-7 w-7 items-center justify-center rounded-full font-display text-xs">
+                <div style={{ backgroundColor: "#3E8EF7", color: "#FFFFFF" }} className="flex h-7 w-7 items-center justify-center rounded-full font-display text-xs">
                   1
                 </div>
-                <span className="font-display text-sm font-medium" style={{ color: "#FBEEE0" }}>
+                <span className="font-display text-sm font-medium" style={{ color: "#F4F8FF" }}>
                   Assistant 1Expert
                 </span>
               </div>
-              <button onClick={() => setOpen(false)} className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-white/10" style={{ color: "#FBEEE0" }}>
+              <button onClick={() => setOpen(false)} className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-white/10" style={{ color: "#F4F8FF" }}>
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -136,8 +136,8 @@ export default function ChatWidget() {
                     className="max-w-[85%] rounded-[6px] px-3.5 py-2.5 text-sm leading-relaxed"
                     style={
                       m.role === "user"
-                        ? { backgroundColor: "#3B1F35", color: "#FBEEE0" }
-                        : { backgroundColor: "#FBEEE0", color: "#3B1F35", border: "1px solid #E8D5C4" }
+                        ? { backgroundColor: "#0A2540", color: "#F4F8FF" }
+                        : { backgroundColor: "#F4F8FF", color: "#0A2540", border: "1px solid #c3d7ee" }
                     }
                   >
                     {m.content}
@@ -148,7 +148,7 @@ export default function ChatWidget() {
                 <div className="flex justify-start">
                   <div
                     className="flex items-center gap-2 rounded-[6px] px-3.5 py-2.5 text-sm"
-                    style={{ backgroundColor: "#FBEEE0", color: "#8a6f63", border: "1px solid #E8D5C4" }}
+                    style={{ backgroundColor: "#F4F8FF", color: "#6b84a0", border: "1px solid #c3d7ee" }}
                   >
                     <Loader2 className="h-3.5 w-3.5 animate-spin" /> L'assistant écrit...
                   </div>
@@ -156,10 +156,10 @@ export default function ChatWidget() {
               )}
             </div>
 
-            <div className="flex shrink-0 items-center gap-2 border-t p-3" style={{ borderColor: "#E8D5C4", backgroundColor: "#FFFFFF" }}>
+            <div className="flex shrink-0 items-center gap-2 border-t p-3" style={{ borderColor: "#c3d7ee", backgroundColor: "#FFFFFF" }}>
               <input
                 className="flex-1 rounded-full border px-4 py-2.5 text-sm outline-none"
-                style={{ borderColor: "#E8D5C4", backgroundColor: "#FFFFFF", color: "#3B1F35" }}
+                style={{ borderColor: "#c3d7ee", backgroundColor: "#FFFFFF", color: "#0A2540" }}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => {
@@ -175,7 +175,7 @@ export default function ChatWidget() {
                 onClick={sendMessage}
                 disabled={loading || !input.trim()}
                 style={{
-                  backgroundColor: loading || !input.trim() ? "#e0a074" : "#E07A3F",
+                  backgroundColor: loading || !input.trim() ? "#9fbde0" : "#3E8EF7",
                   color: "#FFFFFF",
                   cursor: loading || !input.trim() ? "not-allowed" : "pointer",
                 }}
@@ -193,7 +193,7 @@ export default function ChatWidget() {
         <button
           onClick={() => setOpen(true)}
           className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition hover:opacity-90"
-          style={{ backgroundColor: "#3B1F35", color: "#FBEEE0" }}
+          style={{ backgroundColor: "#0A2540", color: "#F4F8FF" }}
           aria-label="Ouvrir l'assistant"
         >
           <MessageCircle className="h-5 w-5" />
