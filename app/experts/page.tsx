@@ -34,7 +34,7 @@ export default async function ExpertsPage({
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-16">
-      <p className="font-mono text-xs uppercase tracking-[0.16em]" style={{ color: "#E07A3F" }}>Le registre</p>
+      <p className="font-mono text-xs uppercase tracking-[0.16em]" style={{ color: "#3E8EF7" }}>Le registre</p>
       <h1 className="mt-3 font-display text-3xl font-medium">Trouver un expert</h1>
 
       <form className="mt-8 flex flex-col gap-4 sm:flex-row" method="get">
@@ -93,7 +93,7 @@ export default async function ExpertsPage({
               <p className="mt-3 text-sm text-muted">
                 {expert.specialite} · {expert.experience_years} ans
               </p>
-              <p className="mt-3 font-display text-lg font-semibold" style={{ color: "#E07A3F" }}>
+              <p className="mt-3 font-display text-lg font-semibold" style={{ color: "#3E8EF7" }}>
                 {expert.price} €
               </p>
             </div>
