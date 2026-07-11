@@ -17,7 +17,7 @@ export default function Avatar({
   profession?: Profession | string;
   size?: number;
 }) {
-  const color = profession && profession in PROFESSION_COLORS ? PROFESSION_COLORS[profession as Profession] : "#3B1F35";
+  const color = profession && profession in PROFESSION_COLORS ? PROFESSION_COLORS[profession as Profession] : "#0A2540";
   return (
     <div
       className="flex shrink-0 items-center justify-center rounded-full font-display font-semibold"
