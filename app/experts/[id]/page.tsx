@@ -95,7 +95,7 @@ export default async function ExpertDetailPage({
                   {slot.start_time} · {slot.duration_min} min
                 </span>
               </span>
-              <span className="font-mono text-xs" style={{ color: "#E07A3F" }}>Choisir →</span>
+              <span className="font-mono text-xs" style={{ color: "#3E8EF7" }}>Choisir →</span>
             </Link>
           ))}
         </div>
@@ -112,7 +112,7 @@ export default async function ExpertDetailPage({
             <div key={r.id} className="card-soft p-4" style={{ backgroundColor: "var(--card)" }}>
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">{r.profiles?.full_name}</span>
-                <span className="font-mono text-xs" style={{ color: "#E07A3F" }}>★ {r.rating}</span>
+                <span className="font-mono text-xs" style={{ color: "#3E8EF7" }}>★ {r.rating}</span>
               </div>
               <p className="mt-2 text-sm text-muted">{r.comment}</p>
             </div>
