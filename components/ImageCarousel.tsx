@@ -36,8 +36,8 @@ export default function ImageCarousel({
             <div
               className="absolute bottom-4 right-4 rounded-full px-4 py-2 font-display text-sm font-medium sm:text-base"
               style={{
-                backgroundColor: "rgba(59,31,53,0.72)",
-                color: "#FBEEE0",
+                backgroundColor: "rgba(10,37,64,0.72)",
+                color: "#F4F8FF",
                 backdropFilter: "blur(4px)",
               }}
             >
@@ -48,21 +48,4 @@ export default function ImageCarousel({
       ))}
 
       {images.length > 1 && (
-        <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
-          {images.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setIndex(i)}
-              aria-label={`Image ${i + 1}`}
-              className="h-2 rounded-full transition-all"
-              style={{
-                width: i === index ? 20 : 8,
-                backgroundColor: i === index ? "#FBEEE0" : "rgba(251,238,224,0.5)",
-              }}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
+        <div className="absolute bottom-4 left-1/2
