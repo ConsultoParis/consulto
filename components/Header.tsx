@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Menu, X, User as UserIcon, Search } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import ThemeToggle from "@/components/ThemeToggle";
+import LogoAnimated from "@/components/LogoAnimated";
 import type { User } from "@supabase/supabase-js";
 
 const navLinks = [
@@ -40,11 +40,8 @@ export default function Header() {
         style={{ borderColor: "var(--border)", backgroundColor: "var(--header-bg)" }}
       >
         <div className="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
-          {/* Logo + nom, à gauche */}
-          <Link href="/" className="flex items-center gap-2.5">
-            <Image src="/logo-1expert-icon.png" alt="1Expert" width={40} height={36} className="h-9 w-auto" />
-            <span className="font-display text-xl font-semibold sm:text-2xl">1Expert</span>
-          </Link>
+          {/* Logo animé */}
+          <LogoAnimated size="sm" />
 
           {/* Icônes, visibles sur toutes les tailles d'écran */}
           <div className="flex items-center gap-1.5">
