@@ -22,7 +22,7 @@ export default async function BlogPage() {
           className="pointer-events-none absolute inset-0 opacity-[0.18]"
           style={{
             background:
-              "radial-gradient(500px circle at 95% 0%, #7A4B8C, transparent 55%), radial-gradient(450px circle at 5% 30%, #F2A65A, transparent 55%)",
+              "radial-gradient(500px circle at 95% 0%, #123b64, transparent 55%), radial-gradient(450px circle at 5% 30%, #3E8EF7, transparent 55%)",
           }}
         />
         <div className="relative mx-auto max-w-6xl px-6 pb-10 pt-16">
@@ -44,7 +44,7 @@ export default async function BlogPage() {
         <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
           {posts?.map((post: any) => {
             const profession = post.experts?.profession;
-            const color = profession ? PROFESSION_COLORS[profession as keyof typeof PROFESSION_COLORS] : "#3B1F35";
+            const color = profession ? PROFESSION_COLORS[profession as keyof typeof PROFESSION_COLORS] : "#0A2540";
             return (
               <Link
                 key={post.id}
@@ -72,3 +72,8 @@ export default async function BlogPage() {
     </main>
   );
 }
+Terminé
+Déjà bon aussi. Il ne reste que les tableaux de bord et les fiches expert. Vérifions-les :
+
+
+Vérification finale de ce qui reste réellement à corriger
