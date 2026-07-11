@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap");
 
 body {
   font-family: "Inter", sans-serif;
@@ -12,27 +12,27 @@ body {
 }
 
 :root {
-  --bg: #fbeee0;
-  --card: #fff8ef;
-  --text: #3b1f35;
-  --text-secondary: #6b5347;
-  --text-tertiary: #8a6f63;
-  --text-quaternary: #a08b7d;
-  --border: #e8d5c4;
+  --bg: #f4f8ff;
+  --card: #ffffff;
+  --text: #0a2540;
+  --text-secondary: #3d5978;
+  --text-tertiary: #6b84a0;
+  --text-quaternary: #93a8c2;
+  --border: #d8e4f2;
   --input-bg: #ffffff;
-  --header-bg: #fbeee0;
+  --header-bg: #f4f8ff;
 }
 
 [data-theme="dark"] {
-  --bg: #211621;
-  --card: #2e2030;
-  --text: #f3e6dc;
-  --text-secondary: #e8d6c8;
-  --text-tertiary: #c9b8ae;
-  --text-quaternary: #a6968d;
-  --border: #4a2f45;
-  --input-bg: #2e2030;
-  --header-bg: #1a1119;
+  --bg: #0a2540;
+  --card: #123b64;
+  --text: #f4f8ff;
+  --text-secondary: #c9dcf5;
+  --text-tertiary: #9fbde0;
+  --text-quaternary: #7fa9de;
+  --border: #1c4a75;
+  --input-bg: #123b64;
+  --header-bg: #081d33;
 }
 
 .bg-app { background-color: var(--bg); }
@@ -45,16 +45,16 @@ body {
 .card-soft {
   border-radius: 10px;
   box-shadow:
-    0 1px 2px rgba(59, 31, 53, 0.05),
-    0 10px 24px -10px rgba(59, 31, 53, 0.16);
+    0 1px 2px rgba(10, 37, 64, 0.06),
+    0 10px 24px -10px rgba(10, 37, 64, 0.18);
   transition:
     box-shadow 0.2s,
     transform 0.2s;
 }
 .card-soft:hover {
   box-shadow:
-    0 2px 4px rgba(59, 31, 53, 0.06),
-    0 14px 30px -10px rgba(59, 31, 53, 0.2);
+    0 2px 4px rgba(10, 37, 64, 0.08),
+    0 14px 30px -10px rgba(10, 37, 64, 0.24);
 }
 
 /* Tous les champs de formulaire du site s'adaptent au thème clair/sombre,
@@ -73,17 +73,38 @@ textarea::placeholder {
 /* Bouton d'action principal, cohérent sur tout le site : ombre et léger
    soulèvement au survol, pour un rendu plus premium. */
 .btn-primary {
-  background-color: #3b1f35;
-  color: #fbeee0;
-  box-shadow: 0 6px 18px -6px rgba(59, 31, 53, 0.45);
+  background-color: #0a2540;
+  color: #f4f8ff;
+  box-shadow: 0 6px 18px -6px rgba(10, 37, 64, 0.45);
   transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
 }
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px -6px rgba(59, 31, 53, 0.5);
+  box-shadow: 0 10px 24px -6px rgba(10, 37, 64, 0.5);
   opacity: 0.95;
 }
 .btn-primary:disabled {
   opacity: 0.5;
   transform: none;
+}
+
+/* Logo animé 1Expert */
+@keyframes logoEntranceBadge {
+  0% { opacity: 0; transform: scale(0.4) rotate(-25deg); }
+  60% { opacity: 1; transform: scale(1.08) rotate(4deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+@keyframes logoEntranceText {
+  0% { opacity: 0; transform: translateX(-8px); filter: blur(4px); }
+  100% { opacity: 1; transform: translateX(0); filter: blur(0); }
+}
+@keyframes shimmerSweep {
+  0% { transform: translateX(-140%) rotate(20deg); }
+  100% { transform: translateX(240%) rotate(20deg); }
+}
+@keyframes shimmerIntro {
+  0% { opacity: 0; transform: translateX(-140%) rotate(20deg); }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(240%) rotate(20deg); }
 }
