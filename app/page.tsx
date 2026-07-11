@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Avatar from "@/components/Avatar";
 import ImageCarousel from "@/components/ImageCarousel";
+import LogoAnimated from "@/components/LogoAnimated";
 import { Sparkles, Star, Lock, Globe } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { PROFESSION_LABELS, PROFESSION_COLORS, type Expert } from "@/lib/types";
@@ -25,11 +26,14 @@ export default async function HomePage() {
           className="pointer-events-none absolute inset-0 opacity-30"
           style={{
             background:
-              "radial-gradient(650px circle at 12% 10%, #F2A65A, transparent 60%), radial-gradient(550px circle at 88% 0%, #E0668A, transparent 55%), radial-gradient(600px circle at 55% 100%, #7A4B8C, transparent 55%)",
+              "radial-gradient(650px circle at 12% 10%, #3E8EF7, transparent 60%), radial-gradient(550px circle at 88% 0%, #123b64, transparent 55%), radial-gradient(600px circle at 55% 100%, #0A2540, transparent 55%)",
           }}
         />
         <div className="relative mx-auto max-w-6xl px-6 py-10 md:py-20">
-          <p className="flex items-center gap-1.5 font-mono text-xs font-medium" style={{ color: "#E07A3F" }}>
+          <div className="mb-8 flex justify-center md:justify-start">
+            <LogoAnimated size="lg" />
+          </div>
+          <p className="flex items-center gap-1.5 font-mono text-xs font-medium" style={{ color: "#3E8EF7" }}>
             <Sparkles className="h-3.5 w-3.5" /> Plus de 10&nbsp;000 consultations réalisées
           </p>
           <p className="mt-3 font-mono text-xs uppercase tracking-[0.16em] text-mutedmore">
@@ -45,13 +49,13 @@ export default async function HomePage() {
 
           <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
             <span className="flex items-center gap-1.5 text-sm text-muted">
-              <Star className="h-4 w-4" style={{ color: "#E07A3F" }} /> 2&nbsp;500 experts vérifiés
+              <Star className="h-4 w-4" style={{ color: "#3E8EF7" }} /> 2&nbsp;500 experts vérifiés
             </span>
             <span className="flex items-center gap-1.5 text-sm text-muted">
-              <Lock className="h-4 w-4" style={{ color: "#E07A3F" }} /> Paiement sécurisé
+              <Lock className="h-4 w-4" style={{ color: "#3E8EF7" }} /> Paiement sécurisé
             </span>
             <span className="flex items-center gap-1.5 text-sm text-muted">
-              <Globe className="h-4 w-4" style={{ color: "#E07A3F" }} /> Experts basés en France
+              <Globe className="h-4 w-4" style={{ color: "#3E8EF7" }} /> Experts basés en France
             </span>
           </div>
 
@@ -59,13 +63,13 @@ export default async function HomePage() {
             <Link
               href="/experts"
               className="rounded-[6px] px-7 py-3.5 text-base font-semibold transition hover:-translate-y-0.5"
-              style={{ backgroundColor: "#3B1F35", color: "#FBEEE0", boxShadow: "0 6px 18px -6px rgba(59,31,53,0.45)" }}
+              style={{ backgroundColor: "#0A2540", color: "#F4F8FF", boxShadow: "0 6px 18px -6px rgba(10,37,64,0.45)" }}
             >
               Trouver mon expert
             </Link>
             <Link
               href="/devenir-expert"
-              className="font-mono text-xs uppercase tracking-[0.1em] text-muted underline decoration-[#E07A3F] decoration-2 underline-offset-4"
+              className="font-mono text-xs uppercase tracking-[0.1em] text-muted underline decoration-[#3E8EF7] decoration-2 underline-offset-4"
             >
               Proposer mes services en tant qu'expert
             </Link>
@@ -76,7 +80,7 @@ export default async function HomePage() {
       {/* EXPERTS VÉRIFIÉS */}
       <section className="border-b py-16" style={{ borderColor: "var(--border)" }}>
         <div className="mx-auto max-w-6xl px-6">
-          <p className="font-mono text-xs uppercase tracking-[0.16em]" style={{ color: "#E07A3F" }}>Le registre</p>
+          <p className="font-mono text-xs uppercase tracking-[0.16em]" style={{ color: "#3E8EF7" }}>Le registre</p>
           <h2 className="mt-2 font-display text-3xl font-medium">Des experts, pas des inconnus</h2>
 
           {!experts || experts.length === 0 ? (
@@ -106,7 +110,7 @@ export default async function HomePage() {
                       </div>
                     </div>
                     <p className="mt-3 text-sm text-muted">{expert.specialite}</p>
-                    <p className="mt-3 font-display text-lg font-semibold" style={{ color: "#E07A3F" }}>
+                    <p className="mt-3 font-display text-lg font-semibold" style={{ color: "#3E8EF7" }}>
                       {expert.price} €
                     </p>
                   </div>
