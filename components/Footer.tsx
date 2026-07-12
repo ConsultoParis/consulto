@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 import { Instagram, Facebook, Twitter, Youtube } from "lucide-react";
 
@@ -11,12 +12,12 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="mt-16 text-white" style={{ backgroundColor: "#211621" }}>
+    <footer className="mt-16 text-white" style={{ backgroundColor: "#0A2540" }}>
       <div className="mx-auto grid max-w-6xl grid-cols-2 gap-3 border-b border-white/10 px-6 py-6 sm:grid-cols-4">
         {socials.map((s, i) => {
           const Icon = s.icon;
           return (
-            <a
+            
               key={i}
               href="#"
               onClick={(e) => e.preventDefault()}
