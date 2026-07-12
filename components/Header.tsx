@@ -39,6 +39,10 @@ export default function Header() {
         className="sticky top-0 z-30 border-b backdrop-blur transition-colors"
         style={{ borderColor: "var(--border)", backgroundColor: "var(--header-bg)" }}
       >
+        <div
+          className="pointer-events-none absolute bottom-0 left-0 h-px w-full"
+          style={{ background: "linear-gradient(90deg, transparent, #3E8EF7, transparent)", opacity: 0.5 }}
+        />
         <div className="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
           {/* Logo animé */}
           <LogoAnimated size="sm" />
@@ -48,7 +52,7 @@ export default function Header() {
             <ThemeToggle />
             <Link
               href="/experts"
-              className="flex h-9 w-9 items-center justify-center rounded-full border transition hover:opacity-80"
+              className="flex h-9 w-9 items-center justify-center rounded-full border transition-all hover:scale-105 hover:border-[#3E8EF7] hover:shadow-[0_0_12px_-2px_rgba(62,142,247,0.5)]"
               style={{ borderColor: "var(--border)" }}
               title="Trouver un expert"
             >
@@ -56,7 +60,7 @@ export default function Header() {
             </Link>
             <Link
               href={user ? "/dashboard/client" : "/connexion"}
-              className="flex h-9 w-9 items-center justify-center rounded-full border transition hover:opacity-80"
+              className="flex h-9 w-9 items-center justify-center rounded-full border transition-all hover:scale-105 hover:border-[#3E8EF7] hover:shadow-[0_0_12px_-2px_rgba(62,142,247,0.5)]"
               style={{ borderColor: "var(--border)" }}
               title="Mon compte"
             >
@@ -64,7 +68,7 @@ export default function Header() {
             </Link>
             <button
               onClick={() => setMenuOpen(true)}
-              className="flex h-9 w-9 items-center justify-center rounded-full border transition hover:opacity-80"
+              className="flex h-9 w-9 items-center justify-center rounded-full border transition-all hover:scale-105 hover:border-[#3E8EF7] hover:shadow-[0_0_12px_-2px_rgba(62,142,247,0.5)]"
               style={{ borderColor: "var(--border)" }}
               title="Menu"
             >
