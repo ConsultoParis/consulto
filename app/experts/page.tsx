@@ -59,7 +59,7 @@ export default async function ExpertsPage({
             </option>
           ))}
         </select>
-        <button type="submit" className="rounded-[3px] bg-ink px-6 py-2.5 text-sm font-medium text-parchment">
+        <button type="submit" className="btn-primary rounded-[3px] px-6 py-2.5 text-sm font-medium">
           Rechercher
         </button>
       </form>
