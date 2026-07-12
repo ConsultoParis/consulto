@@ -17,7 +17,7 @@ export default function Footer() {
         {socials.map((s, i) => {
           const Icon = s.icon;
           return (
-            
+<a            
               key={i}
               href="#"
               onClick={(e) => e.preventDefault()}
