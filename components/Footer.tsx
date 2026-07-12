@@ -12,16 +12,16 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="mt-16 text-white" style={{ backgroundColor: "#0A2540" }}>
+    <footer className="mt-16 text-white" style={{ backgroundColor: "#040f1a" }}>
       <div className="mx-auto grid max-w-6xl grid-cols-2 gap-3 border-b border-white/10 px-6 py-6 sm:grid-cols-4">
         {socials.map((s, i) => {
           const Icon = s.icon;
           return (
-<a            
+            
               key={i}
               href="#"
               onClick={(e) => e.preventDefault()}
-              className="flex items-center justify-center gap-2 rounded-full border border-white/15 py-2.5 text-sm text-white/80 transition hover:border-white/40 hover:text-white"
+              className="flex items-center justify-center gap-2 rounded-full border border-white/15 py-2.5 text-sm text-white/80 transition-all hover:scale-[1.02] hover:border-[#3E8EF7] hover:text-white hover:shadow-[0_0_16px_-3px_rgba(62,142,247,0.6)]"
             >
               <Icon className="h-4 w-4" /> {s.label}
             </a>
