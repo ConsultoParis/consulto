@@ -109,4 +109,35 @@ export default function Header() {
                   className="group flex items-center gap-3 rounded-[3px] px-3.5 py-3 text-sm transition-colors hover:bg-[#3E8EF7]/10"
                 >
                   <span
-                    className="h-1.5 w-1.5 shrink-0 rounded-full opacity-0 transition-opacity
+                    className="h-1.5 w-1.5 shrink-0 rounded-full opacity-0 transition-opacity group-hover:opacity-100"
+                    style={{ backgroundColor: "#3E8EF7" }}
+                  />
+                  {l.label}
+                </Link>
+              ))}
+              <div className="mt-auto pt-4">
+                {user ? (
+                  <button
+                    onClick={handleLogout}
+                    className="w-full rounded-[3px] border px-3.5 py-3 text-left text-sm transition-colors hover:bg-[#3E8EF7]/10"
+                    style={{ borderColor: "var(--border)" }}
+                  >
+                    Déconnexion
+                  </button>
+                ) : (
+                  <Link
+                    href="/connexion"
+                    onClick={() => setMenuOpen(false)}
+                    className="btn-primary block w-full rounded-[3px] px-3.5 py-3 text-center text-sm font-medium"
+                  >
+                    Connexion
+                  </Link>
+                )}
+              </div>
+            </nav>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
