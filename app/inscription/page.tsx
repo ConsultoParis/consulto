@@ -25,9 +25,6 @@ export default function InscriptionPage() {
 
     setLoading(true);
 
-    // Crée le compte d'authentification Supabase. Le rôle et le nom sont
-    // transmis en métadonnées : c'est le trigger SQL (0002_auto_profile_trigger.sql)
-    // qui crée automatiquement la fiche "profiles" correspondante, côté serveur.
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
@@ -68,7 +65,7 @@ export default function InscriptionPage() {
         <div className="mt-8 space-y-3">
           <button
             onClick={() => setRole("client")}
-            className="w-full rounded-[6px] bg-ink py-3.5 text-sm font-medium text-parchment transition hover:opacity-90"
+            className="btn-primary w-full rounded-[6px] py-3.5 text-sm font-medium"
           >
             Je suis client
           </button>
@@ -84,17 +81,17 @@ export default function InscriptionPage() {
           <button
             type="button"
             onClick={() => setRole(null)}
-            className="font-mono text-xs uppercase tracking-[0.1em] text-slate"
+            className="font-mono text-xs uppercase tracking-[0.1em] text-muted"
           >
             ← Retour
           </button>
 
           <div>
-            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate">
+            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
               Nom complet
             </label>
             <input
-              className="mt-1.5 w-full rounded-[3px] border border-ink/15 px-3.5 py-2.5 text-[15px] outline-none focus:border-ink"
+              className="mt-1.5 w-full rounded-[3px] border border-app px-3.5 py-2.5 text-[15px] outline-none focus:border-ink"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               placeholder="Camille Dubois"
@@ -102,12 +99,12 @@ export default function InscriptionPage() {
           </div>
 
           <div>
-            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate">
+            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
               Email
             </label>
             <input
               type="email"
-              className="mt-1.5 w-full rounded-[3px] border border-ink/15 px-3.5 py-2.5 text-[15px] outline-none focus:border-ink"
+              className="mt-1.5 w-full rounded-[3px] border border-app px-3.5 py-2.5 text-[15px] outline-none focus:border-ink"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="vous@email.fr"
@@ -115,12 +112,12 @@ export default function InscriptionPage() {
           </div>
 
           <div>
-            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate">
+            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
               Mot de passe
             </label>
             <input
               type="password"
-              className="mt-1.5 w-full rounded-[3px] border border-ink/15 px-3.5 py-2.5 text-[15px] outline-none focus:border-ink"
+              className="mt-1.5 w-full rounded-[3px] border border-app px-3.5 py-2.5 text-[15px] outline-none focus:border-ink"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="8 caractères minimum"
@@ -132,13 +129,13 @@ export default function InscriptionPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-[6px] bg-ink py-3.5 text-sm font-medium text-parchment transition hover:opacity-90 disabled:opacity-50"
+            className="btn-primary w-full rounded-[6px] py-3.5 text-sm font-medium"
           >
             {loading ? "Création en cours..." : "Créer mon compte"}
           </button>
 
           {role === "expert" && (
-            <p className="text-xs text-slate">
+            <p className="text-xs text-muted">
               Vous serez ensuite redirigé vers le formulaire de candidature
               expert (justificatifs professionnels selon votre métier).
             </p>
