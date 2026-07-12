@@ -111,8 +111,8 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
               <button
                 key={m}
                 onClick={() => setMode(m)}
-                className={`rounded-[3px] border px-4 py-2 text-sm ${
-                  mode === m ? "border-ink bg-ink text-parchment" : "border-app"
+                className={`rounded-[3px] border px-4 py-2 text-sm transition-all ${
+                  mode === m ? "btn-primary border-transparent" : "border-app hover:border-[#3E8EF7]"
                 }`}
               >
                 {m === "video" ? "Visio" : m === "chat" ? "Tchat" : "Physique"}
@@ -126,8 +126,10 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
               <button
                 key={slot.id}
                 onClick={() => setSelectedSlot(slot)}
-                className={`rounded-[3px] border px-4 py-3 text-left ${
-                  selectedSlot?.id === slot.id ? "border-ink bg-ink/5" : "border-app"
+                className={`rounded-[3px] border px-4 py-3 text-left transition-all ${
+                  selectedSlot?.id === slot.id
+                    ? "border-[#3E8EF7] bg-[#3E8EF7]/10 shadow-[0_0_0_1px_rgba(62,142,247,0.3),0_0_16px_-4px_rgba(62,142,247,0.4)]"
+                    : "border-app hover:border-[#3E8EF7]"
                 }`}
               >
                 <span className="block text-sm capitalize">
