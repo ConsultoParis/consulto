@@ -35,7 +35,7 @@ export default function StripeConnectButton({ chargesEnabled }: { chargesEnabled
       <button
         onClick={handleConnect}
         disabled={loading}
-        className="mt-3 flex items-center gap-2 rounded-[3px] bg-ink px-5 py-2.5 text-sm font-medium text-parchment disabled:opacity-50"
+        className="btn-primary mt-3 flex items-center gap-2 rounded-[3px] px-5 py-2.5 text-sm font-medium"
       >
         <CreditCard className="h-4 w-4" />
         {loading ? "Redirection..." : "Connecter mon compte bancaire"}
