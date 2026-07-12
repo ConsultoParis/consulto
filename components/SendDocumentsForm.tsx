@@ -34,7 +34,7 @@ export default function SendDocumentsForm({
   return (
     <div>
       {existing.length > 0 && (
-        <ul className="mb-3 space-y-1 text-sm text-slate">
+        <ul className="mb-3 space-y-1 text-sm text-muted">
           {existing.map((d) => (
             <li key={d.id}>{d.file_name}</li>
           ))}
@@ -53,7 +53,7 @@ export default function SendDocumentsForm({
 
       {files.length > 0 && (
         <>
-          <ul className="mt-2 space-y-1 text-sm text-slate">
+          <ul className="mt-2 space-y-1 text-sm text-muted">
             {files.map((f, i) => (
               <li key={i}>{f.name}</li>
             ))}
@@ -61,7 +61,7 @@ export default function SendDocumentsForm({
           <button
             onClick={handleSend}
             disabled={status === "sending"}
-            className="mt-2 rounded-[3px] bg-ink px-4 py-2 text-sm font-medium text-parchment disabled:opacity-50"
+            className="btn-primary mt-2 rounded-[3px] px-4 py-2 text-sm font-medium"
           >
             {status === "sending" ? "Envoi..." : `Envoyer ${files.length} document(s) au client`}
           </button>
