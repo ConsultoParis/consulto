@@ -87,7 +87,6 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
   }
 
   async function handlePaymentSuccess() {
-    // Upload des documents joints, une fois la réservation créée
     for (const file of docs) {
       const formData = new FormData();
       formData.append("file", file);
@@ -113,7 +112,7 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
                 key={m}
                 onClick={() => setMode(m)}
                 className={`rounded-[3px] border px-4 py-2 text-sm ${
-                  mode === m ? "border-ink bg-ink text-parchment" : "border-ink/15"
+                  mode === m ? "border-ink bg-ink text-parchment" : "border-app"
                 }`}
               >
                 {m === "video" ? "Visio" : m === "chat" ? "Tchat" : "Physique"}
@@ -128,7 +127,7 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
                 key={slot.id}
                 onClick={() => setSelectedSlot(slot)}
                 className={`rounded-[3px] border px-4 py-3 text-left ${
-                  selectedSlot?.id === slot.id ? "border-ink bg-ink/5" : "border-ink/15"
+                  selectedSlot?.id === slot.id ? "border-ink bg-ink/5" : "border-app"
                 }`}
               >
                 <span className="block text-sm capitalize">
@@ -143,7 +142,7 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
             Pièces justificatives (optionnel)
           </h2>
           <div className="mt-3 flex flex-wrap gap-2">
-            <label className="cursor-pointer rounded-full border border-ink/15 px-3.5 py-2 font-mono text-xs">
+            <label className="cursor-pointer rounded-full border border-app px-3.5 py-2 font-mono text-xs">
               Choisir un fichier
               <input
                 type="file"
@@ -152,7 +151,7 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
                 onChange={(e) => setDocs((d) => [...d, ...Array.from(e.target.files || [])])}
               />
             </label>
-            <label className="cursor-pointer rounded-full border border-ink/15 px-3.5 py-2 font-mono text-xs">
+            <label className="cursor-pointer rounded-full border border-app px-3.5 py-2 font-mono text-xs">
               Prendre une photo
               <input
                 type="file"
@@ -174,7 +173,7 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
           <h2 className="mt-8 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Email</h2>
           <input
             type="email"
-            className="mt-2 w-full rounded-[3px] border border-ink/15 px-3.5 py-2.5 text-[15px] outline-none focus:border-ink"
+            className="mt-2 w-full rounded-[3px] border border-app px-3.5 py-2.5 text-[15px] outline-none focus:border-ink"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -184,7 +183,7 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
           <button
             onClick={handleContinueToPayment}
             disabled={loading}
-            className="mt-8 w-full rounded-[6px] bg-ink py-3.5 text-sm font-medium text-parchment disabled:opacity-50"
+            className="btn-primary mt-8 w-full rounded-[6px] py-3.5 text-sm font-medium"
           >
             {loading ? "Préparation..." : `Continuer — ${expert.price} €`}
           </button>
