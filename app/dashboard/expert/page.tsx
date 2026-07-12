@@ -64,16 +64,19 @@ export default async function ExpertDashboardPage() {
   const avgRating = reviews && reviews.length > 0 ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : null;
   const satisfaction = avgRating ? Math.round((avgRating / 5) * 100) : null;
 
+  // 4. Prochain rendez-vous
   const nextBooking = [...upcoming].sort((a, b) => (a.date + a.start_time).localeCompare(b.date + b.start_time))[0];
 
+  // 5. Créneaux libres groupés par date
   const slotsByDate: Record<string, typeof freeSlots> = {};
   freeSlots.forEach((s) => {
     slotsByDate[s.date] = slotsByDate[s.date] || [];
     slotsByDate[s.date].push(s);
   });
 
+  // 8. Badges
   const badges: { label: string; icon: any; color: string }[] = [];
-  if (avgRating && avgRating >= 4.7) badges.push({ label: "Top Expert", icon: Award, color: "#E07A3F" });
+  if (avgRating && avgRating >= 4.7) badges.push({ label: "Top Expert", icon: Award, color: "#3E8EF7" });
   if (completed.length >= 10) badges.push({ label: "Expert confirmé", icon: TrendingUp, color: "#3457A6" });
   if (freeSlots.length > 0) badges.push({ label: "Disponible", icon: Zap, color: "#1E8F6B" });
 
@@ -84,14 +87,16 @@ export default async function ExpertDashboardPage() {
           <p className="font-mono text-xs uppercase tracking-[0.16em] text-seal">Espace expert</p>
           <h1 className="mt-3 font-display text-3xl font-medium">Tableau de bord</h1>
         </div>
+        {/* 6. Lien profil public */}
         <Link
           href={`/experts/${expert.id}`}
-          className="flex items-center gap-1.5 rounded-[3px] border border-ink/15 px-4 py-2 font-mono text-xs uppercase tracking-[0.08em] transition hover:bg-ink/5"
+          className="flex items-center gap-1.5 rounded-[3px] border border-app px-4 py-2 font-mono text-xs uppercase tracking-[0.08em] transition hover:bg-ink/5"
         >
           <Eye className="h-3.5 w-3.5" /> Voir mon profil public
         </Link>
       </div>
 
+      {/* 8. Badges */}
       {badges.length > 0 && (
         <div className="mt-4 flex flex-wrap gap-2">
           {badges.map((b, i) => {
@@ -109,9 +114,10 @@ export default async function ExpertDashboardPage() {
         </div>
       )}
 
+      {/* 1. État vide */}
       {hasNothingYet && (
         <div className="card-soft mt-8 p-8 text-center" style={{ backgroundColor: "var(--card)" }}>
-          <PlusCircle className="mx-auto h-8 w-8" style={{ color: "#E07A3F" }} />
+          <PlusCircle className="mx-auto h-8 w-8" style={{ color: "#3E8EF7" }} />
           <p className="mt-3 font-display text-xl font-medium">Ajoutez vos premiers créneaux</p>
           <p className="mt-2 text-sm text-muted">
             Vos disponibilités apparaissent immédiatement dans le registre — les clients pourront réserver dès aujourd'hui.
@@ -119,6 +125,7 @@ export default async function ExpertDashboardPage() {
         </div>
       )}
 
+      {/* 4. Prochain rendez-vous */}
       {nextBooking && (
         <div className="card-soft mt-8 p-5" style={{ backgroundColor: "#1E8F6B0F", border: "1px solid #1E8F6B30" }}>
           <p className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.1em]" style={{ color: "#1E8F6B" }}>
@@ -142,24 +149,27 @@ export default async function ExpertDashboardPage() {
           <p className="font-display text-3xl font-semibold text-seal">{revenusSequestre} €</p>
           <p className="mt-1 font-mono text-[10px] uppercase text-seal">En séquestre</p>
         </div>
+        {/* 2. Note moyenne */}
         <div className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
           <p className="flex items-center gap-1 font-display text-3xl font-semibold">
             {avgRating ? avgRating.toFixed(1) : "—"}
-            {avgRating && <Star className="h-5 w-5 fill-current" style={{ color: "#E07A3F" }} />}
+            {avgRating && <Star className="h-5 w-5 fill-current" style={{ color: "#3E8EF7" }} />}
           </p>
           <p className="mt-1 font-mono text-[10px] uppercase text-muted">{reviews?.length || 0} avis</p>
         </div>
+        {/* 3. Taux de satisfaction */}
         <div className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
-          <p className="font-display text-3xl font-semibold">{satisfaction ? `${satisfaction}%` : "—"}</p>
+          <p className="font-display text-3xl font-semibold text-gradient">{satisfaction ? `${satisfaction}%` : "—"}</p>
           <p className="mt-1 font-mono text-[10px] uppercase text-muted">Satisfaction</p>
         </div>
       </div>
 
+      {/* Paiements — Stripe Connect */}
       <div
         className="card-soft mt-8 p-5"
         style={{
-          backgroundColor: expert.stripe_charges_enabled ? "#1E8F6B0F" : "#E07A3F0F",
-          border: `1px solid ${expert.stripe_charges_enabled ? "#1E8F6B30" : "#E07A3F30"}`,
+          backgroundColor: expert.stripe_charges_enabled ? "#1E8F6B0F" : "#3E8EF70F",
+          border: `1px solid ${expert.stripe_charges_enabled ? "#1E8F6B30" : "#3E8EF730"}`,
         }}
       >
         <p className="font-medium">Recevoir mes paiements</p>
@@ -168,6 +178,7 @@ export default async function ExpertDashboardPage() {
         </div>
       </div>
 
+      {/* 7. Compléter le profil */}
       {!expert.bio && (
         <div className="card-soft mt-8 p-5" style={{ backgroundColor: "var(--card)" }}>
           <p className="font-medium">Complétez votre profil</p>
@@ -181,6 +192,7 @@ export default async function ExpertDashboardPage() {
         <AddSlotForm expertId={user.id} />
       </div>
 
+      {/* 5. Agenda groupé par date */}
       {freeSlots.length > 0 && (
         <>
           <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Mes créneaux disponibles</h2>
@@ -192,7 +204,7 @@ export default async function ExpertDashboardPage() {
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">
                   {daySlots.map((s) => (
-                    <span key={s.id} className="rounded-[3px] border border-ink/15 px-2.5 py-1 font-mono text-xs">
+                    <span key={s.id} className="rounded-[3px] border border-app px-2.5 py-1 font-mono text-xs">
                       {s.start_time} · {s.duration_min} min
                     </span>
                   ))}
@@ -262,6 +274,7 @@ export default async function ExpertDashboardPage() {
         )}
       </div>
 
+      {/* 2. Derniers avis */}
       {reviews && reviews.length > 0 && (
         <>
           <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Derniers avis</h2>
@@ -270,7 +283,7 @@ export default async function ExpertDashboardPage() {
               <div key={r.id} className="card-soft p-4" style={{ backgroundColor: "var(--card)" }}>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">{r.profiles?.full_name}</span>
-                  <span className="flex items-center gap-1 font-mono text-xs" style={{ color: "#E07A3F" }}>
+                  <span className="flex items-center gap-1 font-mono text-xs" style={{ color: "#3E8EF7" }}>
                     <Star className="h-3 w-3 fill-current" /> {r.rating}
                   </span>
                 </div>
@@ -281,6 +294,7 @@ export default async function ExpertDashboardPage() {
         </>
       )}
 
+      {/* 9. Comment ça marche */}
       <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Comment ça marche</h2>
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
