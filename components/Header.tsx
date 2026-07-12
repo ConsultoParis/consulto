@@ -81,16 +81,20 @@ export default function Header() {
       {/* Overlay menu — en dehors du <header> pour ne pas être affecté par son flou */}
       {menuOpen && (
         <div className="fixed inset-0 z-50">
-          <div className="absolute inset-0 bg-black/40" onClick={() => setMenuOpen(false)} />
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" onClick={() => setMenuOpen(false)} />
           <div
             className="absolute right-0 top-0 flex h-full w-72 max-w-[85vw] flex-col border-l"
-            style={{ backgroundColor: "var(--header-bg)", borderColor: "var(--border)" }}
+            style={{ backgroundColor: "var(--header-bg)", borderColor: "var(--border)", boxShadow: "-12px 0 40px -12px rgba(10,37,64,0.35)" }}
           >
+            <div
+              className="pointer-events-none absolute left-0 top-0 h-px w-full"
+              style={{ background: "linear-gradient(90deg, transparent, #3E8EF7, transparent)", opacity: 0.6 }}
+            />
             <div className="flex items-center justify-between border-b px-5 py-4" style={{ borderColor: "var(--border)" }}>
               <span className="font-display text-lg font-semibold">Menu</span>
               <button
                 onClick={() => setMenuOpen(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-full border"
+                className="flex h-8 w-8 items-center justify-center rounded-full border transition-all hover:scale-105 hover:border-[#3E8EF7] hover:shadow-[0_0_12px_-2px_rgba(62,142,247,0.5)]"
                 style={{ borderColor: "var(--border)" }}
               >
                 <X className="h-4 w-4" />
@@ -98,23 +102,11 @@ export default function Header() {
             </div>
             <nav className="flex flex-1 flex-col gap-1 p-4">
               {navLinks.map((l) => (
-                <Link key={l.href} href={l.href} onClick={() => setMenuOpen(false)} className="rounded-[3px] px-3.5 py-3 text-sm">
-                  {l.label}
-                </Link>
-              ))}
-              {user ? (
-                <button onClick={handleLogout} className="rounded-[3px] px-3.5 py-3 text-left text-sm">
-                  Déconnexion
-                </button>
-              ) : (
-                <Link href="/connexion" onClick={() => setMenuOpen(false)} className="rounded-[3px] px-3.5 py-3 text-sm">
-                  Connexion
-                </Link>
-              )}
-            </nav>
-          </div>
-        </div>
-      )}
-    </>
-  );
-}
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  onClick={() => setMenuOpen(false)}
+                  className="group flex items-center gap-3 rounded-[3px] px-3.5 py-3 text-sm transition-colors hover:bg-[#3E8EF7]/10"
+                >
+                  <span
+                    className="h-1.5 w-1.5 shrink-0 rounded-full opacity-0 transition-opacity
