@@ -64,7 +64,7 @@ export default async function ExpertDetailPage({
           <p className="font-mono text-[11px] text-mutedmore">par session</p>
           <Link
             href={`/booking/${expert.id}`}
-            className="mt-3 block rounded-[3px] bg-ink px-5 py-2.5 text-sm font-medium text-parchment"
+            className="btn-primary mt-3 block rounded-[3px] px-5 py-2.5 text-sm font-medium"
           >
             Réserver
           </Link>
