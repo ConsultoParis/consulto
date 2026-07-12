@@ -1,143 +1,69 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { Menu, X, User as UserIcon, Search } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
-import ThemeToggle from "@/components/ThemeToggle";
-import LogoAnimated from "@/components/LogoAnimated";
-import type { User } from "@supabase/supabase-js";
+import { Instagram, Facebook, Twitter, Youtube } from "lucide-react";
 
-const navLinks = [
-  { href: "/", label: "Accueil" },
-  { href: "/experts", label: "Trouver un expert" },
-  { href: "/devenir-expert", label: "Devenir expert" },
-  { href: "/blog", label: "Blog" },
+const socials = [
+  { icon: Instagram, label: "Instagram" },
+  { icon: Facebook, label: "Facebook" },
+  { icon: Twitter, label: "X" },
+  { icon: Youtube, label: "YouTube" },
 ];
 
-export default function Header() {
-  const supabase = createClient();
-  const [user, setUser] = useState<User | null>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUser(data.user));
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-    return () => listener.subscription.unsubscribe();
-  }, [supabase]);
-
-  async function handleLogout() {
-    await supabase.auth.signOut();
-    window.location.href = "/";
-  }
-
+export default function Footer() {
   return (
-    <>
-      <header
-        className="sticky top-0 z-30 border-b backdrop-blur transition-colors"
-        style={{ borderColor: "var(--border)", backgroundColor: "var(--header-bg)" }}
-      >
-        <div
-          className="pointer-events-none absolute bottom-0 left-0 h-px w-full"
-          style={{ background: "linear-gradient(90deg, transparent, #3E8EF7, transparent)", opacity: 0.5 }}
-        />
-        <div className="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
-          {/* Logo animé */}
-          <LogoAnimated size="sm" />
+    <footer className="mt-16 text-white" style={{ backgroundColor: "#061829" }}>
+      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-3 border-b border-white/10 px-6 py-6 sm:grid-cols-4">
+        {socials.map((s, i) => {
+          const Icon = s.icon;
+          return (
+            
+              key={i}
+              href="#"
+              onClick={(e) => e.preventDefault()}
+              className="flex items-center justify-center gap-2 rounded-full border border-white/15 py-2.5 text-sm text-white/80 transition hover:border-white/40 hover:text-white"
+            >
+              <Icon className="h-4 w-4" /> {s.label}
+            </a>
+          );
+        })}
+      </div>
 
-          {/* Icônes, visibles sur toutes les tailles d'écran */}
-          <div className="flex items-center gap-1.5">
-            <ThemeToggle />
-            <Link
-              href="/experts"
-              className="flex h-9 w-9 items-center justify-center rounded-full border transition-all hover:scale-105 hover:border-[#3E8EF7] hover:shadow-[0_0_12px_-2px_rgba(62,142,247,0.5)]"
-              style={{ borderColor: "var(--border)" }}
-              title="Trouver un expert"
-            >
-              <Search className="h-4 w-4" />
-            </Link>
-            <Link
-              href={user ? "/dashboard/client" : "/connexion"}
-              className="flex h-9 w-9 items-center justify-center rounded-full border transition-all hover:scale-105 hover:border-[#3E8EF7] hover:shadow-[0_0_12px_-2px_rgba(62,142,247,0.5)]"
-              style={{ borderColor: "var(--border)" }}
-              title="Mon compte"
-            >
-              <UserIcon className="h-4 w-4" strokeWidth={1.75} />
-            </Link>
-            <button
-              onClick={() => setMenuOpen(true)}
-              className="flex h-9 w-9 items-center justify-center rounded-full border transition-all hover:scale-105 hover:border-[#3E8EF7] hover:shadow-[0_0_12px_-2px_rgba(62,142,247,0.5)]"
-              style={{ borderColor: "var(--border)" }}
-              title="Menu"
-            >
-              <Menu className="h-4 w-4" />
-            </button>
+      <div className="mx-auto max-w-6xl px-6 py-10">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+          <div>
+            <h3 className="font-mono text-xs uppercase tracking-[0.1em] text-white/50">Découvrir</h3>
+            <ul className="mt-4 space-y-3 text-sm text-white/85">
+              <li><Link href="/experts" className="hover:text-white">Trouver un expert</Link></li>
+              <li><Link href="/devenir-expert" className="hover:text-white">Devenir expert</Link></li>
+              <li><Link href="/blog" className="hover:text-white">Blog</Link></li>
+              <li><Link href="/dashboard/client" className="hover:text-white">Espace client</Link></li>
+              <li><Link href="/dashboard/expert" className="hover:text-white">Espace expert</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-mono text-xs uppercase tracking-[0.1em] text-white/50">Besoin d'aide</h3>
+            <ul className="mt-4 space-y-3 text-sm text-white/85">
+              <li><Link href="/confiance" className="hover:text-white">Questions fréquentes</Link></li>
+              <li><Link href="/confiance" className="hover:text-white">Centre de confiance</Link></li>
+              <li><Link href="/confiance#remboursement" className="hover:text-white">Politique de remboursement</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="font-mono text-xs uppercase tracking-[0.1em] text-white/50">À propos</h3>
+            <ul className="mt-4 space-y-3 text-sm text-white/85">
+              <li><Link href="/confiance" className="hover:text-white">Vérification des experts</Link></li>
+              <li><Link href="/mentions-legales" className="hover:text-white">Mentions légales</Link></li>
+            </ul>
           </div>
         </div>
-      </header>
+      </div>
 
-      {/* Overlay menu — en dehors du <header> pour ne pas être affecté par son flou */}
-      {menuOpen && (
-        <div className="fixed inset-0 z-50">
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" onClick={() => setMenuOpen(false)} />
-          <div
-            className="absolute right-0 top-0 flex h-full w-72 max-w-[85vw] flex-col border-l"
-            style={{ backgroundColor: "var(--header-bg)", borderColor: "var(--border)", boxShadow: "-12px 0 40px -12px rgba(10,37,64,0.35)" }}
-          >
-            <div
-              className="pointer-events-none absolute left-0 top-0 h-px w-full"
-              style={{ background: "linear-gradient(90deg, transparent, #3E8EF7, transparent)", opacity: 0.6 }}
-            />
-            <div className="flex items-center justify-between border-b px-5 py-4" style={{ borderColor: "var(--border)" }}>
-              <span className="font-display text-lg font-semibold">Menu</span>
-              <button
-                onClick={() => setMenuOpen(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-full border transition-all hover:scale-105 hover:border-[#3E8EF7] hover:shadow-[0_0_12px_-2px_rgba(62,142,247,0.5)]"
-                style={{ borderColor: "var(--border)" }}
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-            <nav className="flex flex-1 flex-col gap-1 p-4">
-              {navLinks.map((l) => (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  onClick={() => setMenuOpen(false)}
-                  className="group flex items-center gap-3 rounded-[3px] px-3.5 py-3 text-sm transition-colors hover:bg-[#3E8EF7]/10"
-                >
-                  <span
-                    className="h-1.5 w-1.5 shrink-0 rounded-full opacity-0 transition-opacity group-hover:opacity-100"
-                    style={{ backgroundColor: "#3E8EF7" }}
-                  />
-                  {l.label}
-                </Link>
-              ))}
-              <div className="mt-auto pt-4">
-                {user ? (
-                  <button
-                    onClick={handleLogout}
-                    className="w-full rounded-[3px] border px-3.5 py-3 text-left text-sm transition-colors hover:bg-[#3E8EF7]/10"
-                    style={{ borderColor: "var(--border)" }}
-                  >
-                    Déconnexion
-                  </button>
-                ) : (
-                  <Link
-                    href="/connexion"
-                    onClick={() => setMenuOpen(false)}
-                    className="btn-primary block w-full rounded-[3px] px-3.5 py-3 text-center text-sm font-medium"
-                  >
-                    Connexion
-                  </Link>
-                )}
-              </div>
-            </nav>
-          </div>
+      <div className="border-t border-white/10">
+        <div className="mx-auto max-w-6xl px-6 py-6 text-xs text-white/50">
+          © 1Expert {new Date().getFullYear()} — plateforme d'experts vérifiés, France
         </div>
-      )}
-    </>
+      </div>
+    </footer>
   );
 }
