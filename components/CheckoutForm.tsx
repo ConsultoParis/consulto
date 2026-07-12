@@ -38,11 +38,11 @@ export default function CheckoutForm({ onSuccess }: { onSuccess: () => void }) {
       <button
         type="submit"
         disabled={!stripe || loading}
-        className="w-full rounded-[6px] bg-ink py-3.5 text-sm font-medium text-parchment disabled:opacity-50"
+        className="btn-primary w-full rounded-[6px] py-3.5 text-sm font-medium"
       >
         {loading ? "Traitement..." : "Payer et confirmer"}
       </button>
-      <p className="text-center text-xs text-slate">
+      <p className="text-center text-xs text-muted">
         Paiement conservé en séquestre jusqu'à la fin de la consultation.
       </p>
     </form>
