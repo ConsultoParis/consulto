@@ -42,19 +42,37 @@ body {
 .text-mutedmore { color: var(--text-tertiary); }
 .border-app { border-color: var(--border); }
 
+/* Grille tech en arrière-plan — donne une texture "logiciel/dashboard"
+   discrète, utilisée derrière le hero et les sections d'en-tête. */
+.bg-tech-grid {
+  background-image:
+    linear-gradient(rgba(62, 142, 247, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(62, 142, 247, 0.08) 1px, transparent 1px);
+  background-size: 44px 44px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+}
+
 .card-soft {
-  border-radius: 10px;
+  position: relative;
+  border-radius: 12px;
+  border: 1px solid transparent;
   box-shadow:
     0 1px 2px rgba(10, 37, 64, 0.06),
     0 10px 24px -10px rgba(10, 37, 64, 0.18);
   transition:
-    box-shadow 0.2s,
-    transform 0.2s;
+    box-shadow 0.25s ease,
+    transform 0.25s ease,
+    border-color 0.25s ease;
 }
 .card-soft:hover {
+  transform: translateY(-3px);
+  border-color: rgba(62, 142, 247, 0.35);
   box-shadow:
     0 2px 4px rgba(10, 37, 64, 0.08),
-    0 14px 30px -10px rgba(10, 37, 64, 0.24);
+    0 18px 36px -12px rgba(10, 37, 64, 0.28),
+    0 0 0 1px rgba(62, 142, 247, 0.12),
+    0 0 24px -6px rgba(62, 142, 247, 0.35);
 }
 
 /* Tous les champs de formulaire du site s'adaptent au thème clair/sombre,
@@ -64,28 +82,93 @@ textarea,
 select {
   background-color: var(--input-bg);
   color: var(--text);
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 input::placeholder,
 textarea::placeholder {
   color: var(--text-quaternary);
 }
+input:focus,
+textarea:focus,
+select:focus {
+  box-shadow: 0 0 0 3px rgba(62, 142, 247, 0.18);
+}
 
-/* Bouton d'action principal, cohérent sur tout le site : ombre et léger
-   soulèvement au survol, pour un rendu plus premium. */
+/* Bouton d'action principal : dégradé bleu marine → électrique, avec un
+   effet de brillance qui balaie le bouton au survol (façon interface tech). */
 .btn-primary {
-  background-color: #0a2540;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0a2540 0%, #123b64 100%);
   color: #f4f8ff;
-  box-shadow: 0 6px 18px -6px rgba(10, 37, 64, 0.45);
-  transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+  box-shadow: 0 6px 18px -6px rgba(10, 37, 64, 0.5), 0 0 0 1px rgba(62, 142, 247, 0.15);
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+}
+.btn-primary::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.6s ease;
 }
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px -6px rgba(10, 37, 64, 0.5);
-  opacity: 0.95;
+  box-shadow: 0 10px 28px -6px rgba(10, 37, 64, 0.55), 0 0 20px -2px rgba(62, 142, 247, 0.4);
+  opacity: 1;
+}
+.btn-primary:hover::after {
+  left: 130%;
 }
 .btn-primary:disabled {
   opacity: 0.5;
   transform: none;
+}
+
+/* Chiffres clés en dégradé bleu électrique — tableaux de bord, statistiques. */
+.text-gradient {
+  background: linear-gradient(135deg, #0a2540 0%, #3e8ef7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+[data-theme="dark"] .text-gradient {
+  background: linear-gradient(135deg, #a9cbf7 0%, #3e8ef7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* Badge/pill façon verre dépoli, pour les étiquettes flottantes. */
+.badge-glass {
+  backdrop-filter: blur(6px);
+  background-color: rgba(62, 142, 247, 0.12);
+  border: 1px solid rgba(62, 142, 247, 0.3);
+}
+
+/* Lien de navigation avec soulignement animé au survol. */
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0%;
+  height: 2px;
+  background: #3e8ef7;
+  transition: width 0.25s ease;
+}
+.nav-link:hover::after {
+  width: 100%;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.6; }
 }
 
 /* Logo animé 1Expert */
