@@ -17,12 +17,7 @@ export default function Footer() {
         {socials.map((s, i) => {
           const Icon = s.icon;
           return (
-            
-              key={i}
-              href="#"
-              onClick={(e) => e.preventDefault()}
-              className="flex items-center justify-center gap-2 rounded-full border border-white/15 py-2.5 text-sm text-white/80 transition-all hover:scale-[1.02] hover:border-[#3E8EF7] hover:text-white hover:shadow-[0_0_16px_-3px_rgba(62,142,247,0.6)]"
-            >
+            <a key={i} href="#" onClick={(e) => e.preventDefault()} className="flex items-center justify-center gap-2 rounded-full border border-white/15 py-2.5 text-sm text-white/80 transition-all hover:scale-[1.02] hover:border-[#3E8EF7] hover:text-white hover:shadow-[0_0_16px_-3px_rgba(62,142,247,0.6)]">
               <Icon className="h-4 w-4" /> {s.label}
             </a>
           );
