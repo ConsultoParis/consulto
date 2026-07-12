@@ -7,7 +7,7 @@ import type { Profession } from "@/lib/types";
 import { Paperclip, X, Camera } from "lucide-react";
 
 const inputClass =
-  "mt-1.5 w-full rounded-[3px] border border-ink/15 px-3.5 py-2.5 text-[15px] outline-none focus:border-ink";
+  "mt-1.5 w-full rounded-[3px] border border-app px-3.5 py-2.5 text-[15px] outline-none focus:border-ink";
 
 export default function DevenirExpertPage() {
   const router = useRouter();
@@ -95,7 +95,6 @@ export default function DevenirExpertPage() {
       return setError(insertError.message);
     }
 
-    // Envoi des justificatifs dans le stockage privé, puis référence en base.
     setUploadStep("Envoi des justificatifs...");
     for (const file of documents) {
       const filePath = `${userId}/${Date.now()}-${file.name}`;
@@ -124,10 +123,10 @@ export default function DevenirExpertPage() {
   if (!userId) {
     return (
       <main className="mx-auto max-w-2xl px-6 py-16 text-center">
-        <p className="text-slate">
+        <p className="text-muted">
           Créez d'abord un compte pour déposer votre candidature d'expert.
         </p>
-        <a href="/inscription" className="mt-4 inline-block rounded-[3px] bg-ink px-6 py-3 text-sm font-medium text-parchment">
+        <a href="/inscription" className="btn-primary mt-4 inline-block rounded-[3px] px-6 py-3 text-sm font-medium">
           Créer mon compte
         </a>
       </main>
@@ -139,7 +138,7 @@ export default function DevenirExpertPage() {
       <main className="mx-auto max-w-2xl px-6 py-16 text-center">
         <div className="card-soft bg-verified/5 p-8">
           <h1 className="font-display text-2xl font-medium">Candidature enregistrée</h1>
-          <p className="mt-2 text-slate">
+          <p className="mt-2 text-muted">
             Votre dossier et vos justificatifs professionnels seront vérifiés manuellement avant
             l'activation de votre profil. Vous recevrez un email dès que c'est fait.
           </p>
@@ -152,11 +151,11 @@ export default function DevenirExpertPage() {
     <main className="mx-auto max-w-2xl px-6 py-16">
       <p className="font-mono text-xs uppercase tracking-[0.16em] text-seal">Candidature expert</p>
       <h1 className="mt-3 font-display text-3xl font-medium">Rejoindre le registre</h1>
-      <p className="mt-3 text-slate">Chaque profil est vérifié manuellement avant mise en ligne.</p>
+      <p className="mt-3 text-muted">Chaque profil est vérifié manuellement avant mise en ligne.</p>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-5">
         <div>
-          <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate">Profession</label>
+          <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Profession</label>
           <select
             className={inputClass}
             value={profession}
@@ -173,13 +172,13 @@ export default function DevenirExpertPage() {
 
         {profession === "medecin" && (
           <div className="rounded-[6px] border border-seal/40 bg-seal/5 p-5">
-            <p className="text-sm text-slate">
+            <p className="text-sm text-muted">
               Conformément à la réglementation française sur la télémédecine, le N° RPPS et
               l'inscription à l'Ordre des médecins sont obligatoires et vérifiés avant activation.
             </p>
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate">N° RPPS</label>
+                <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">N° RPPS</label>
                 <input
                   className={inputClass}
                   value={numeroRpps}
@@ -189,7 +188,7 @@ export default function DevenirExpertPage() {
                 />
               </div>
               <div>
-                <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate">
+                <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
                   N° Ordre des médecins
                 </label>
                 <input
@@ -204,14 +203,14 @@ export default function DevenirExpertPage() {
 
         {profession === "avocat" && (
           <div>
-            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate">N° au Barreau</label>
+            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">N° au Barreau</label>
             <input className={inputClass} value={numeroBarreau} onChange={(e) => setNumeroBarreau(e.target.value)} />
           </div>
         )}
 
         {profession === "comptable" && (
           <div>
-            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate">
+            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
               N° d'inscription à l'Ordre des experts-comptables
             </label>
             <input
@@ -224,14 +223,14 @@ export default function DevenirExpertPage() {
 
         {profession === "therapeute" && (
           <div>
-            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate">N° ADELI</label>
+            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">N° ADELI</label>
             <input className={inputClass} value={numeroAdeli} onChange={(e) => setNumeroAdeli(e.target.value)} />
           </div>
         )}
 
         {profession === "coach" && (
           <div>
-            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate">
+            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
               Certification (facultatif)
             </label>
             <input className={inputClass} value={certification} onChange={(e) => setCertification(e.target.value)} />
@@ -239,12 +238,12 @@ export default function DevenirExpertPage() {
         )}
 
         <div>
-          <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate">Spécialité</label>
+          <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Spécialité</label>
           <input className={inputClass} value={specialite} onChange={(e) => setSpecialite(e.target.value)} />
         </div>
 
         <div>
-          <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate">Présentation</label>
+          <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Présentation</label>
           <textarea
             className={inputClass + " min-h-[100px]"}
             value={bio}
@@ -253,7 +252,7 @@ export default function DevenirExpertPage() {
         </div>
 
         <div>
-          <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate">Tarif par session (€)</label>
+          <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Tarif par session (€)</label>
           <input
             type="number"
             className={inputClass + " max-w-[160px]"}
@@ -262,19 +261,18 @@ export default function DevenirExpertPage() {
           />
         </div>
 
-        {/* Justificatifs */}
         <div>
-          <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-slate">Pièces justificatives</label>
-          <p className="mt-1 text-xs text-slate">
+          <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Pièces justificatives</label>
+          <p className="mt-1 text-xs text-muted">
             Carte professionnelle, diplôme, attestation d'inscription à l'Ordre... au moins un document.
           </p>
 
           <div className="mt-2.5 flex flex-wrap gap-2">
-            <label className="flex cursor-pointer items-center gap-1.5 rounded-full border border-ink/15 px-3.5 py-2 font-mono text-xs transition hover:bg-ink/5">
+            <label className="flex cursor-pointer items-center gap-1.5 rounded-full border border-app px-3.5 py-2 font-mono text-xs transition hover:bg-ink/5">
               <Paperclip className="h-3.5 w-3.5" /> Choisir un fichier
               <input type="file" multiple className="hidden" onChange={(e) => addFiles(e.target.files)} />
             </label>
-            <label className="flex cursor-pointer items-center gap-1.5 rounded-full border border-ink/15 px-3.5 py-2 font-mono text-xs transition hover:bg-ink/5">
+            <label className="flex cursor-pointer items-center gap-1.5 rounded-full border border-app px-3.5 py-2 font-mono text-xs transition hover:bg-ink/5">
               <Camera className="h-3.5 w-3.5" /> Prendre une photo
               <input type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => addFiles(e.target.files)} />
             </label>
@@ -283,7 +281,7 @@ export default function DevenirExpertPage() {
           {documents.length > 0 && (
             <ul className="mt-3 space-y-2">
               {documents.map((f, i) => (
-                <li key={i} className="flex items-center justify-between rounded-[3px] border border-ink/15 px-3 py-2 text-sm">
+                <li key={i} className="flex items-center justify-between rounded-[3px] border border-app px-3 py-2 text-sm">
                   <span className="truncate">{f.name}</span>
                   <button type="button" onClick={() => removeDocument(i)} className="ml-2 shrink-0 text-red-700">
                     <X className="h-4 w-4" />
@@ -299,7 +297,7 @@ export default function DevenirExpertPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-[6px] bg-ink py-3.5 text-sm font-medium text-parchment disabled:opacity-50"
+          className="btn-primary w-full rounded-[6px] py-3.5 text-sm font-medium"
         >
           {loading ? uploadStep || "Envoi..." : "Envoyer ma candidature"}
         </button>
