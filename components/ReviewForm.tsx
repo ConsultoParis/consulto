@@ -37,7 +37,7 @@ export default function ReviewForm({ bookingId, expertId }: { bookingId: string;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
-      <p className="font-mono text-[11px] uppercase tracking-[0.1em] text-slate">Laisser un avis</p>
+      <p className="font-mono text-[11px] uppercase tracking-[0.1em] text-muted">Laisser un avis</p>
       <div className="flex gap-1">
         {[1, 2, 3, 4, 5].map((i) => (
           <button key={i} type="button" onClick={() => setRating(i)} className="text-2xl">
@@ -55,7 +55,7 @@ export default function ReviewForm({ bookingId, expertId }: { bookingId: string;
       <button
         type="submit"
         disabled={loading}
-        className="rounded-[3px] bg-ink px-5 py-2.5 text-sm font-medium text-parchment disabled:opacity-50"
+        className="btn-primary rounded-[3px] px-5 py-2.5 text-sm font-medium"
       >
         {loading ? "Envoi..." : "Publier l'avis"}
       </button>
