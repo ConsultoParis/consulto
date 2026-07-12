@@ -22,21 +22,23 @@ export default async function HomePage() {
     <main>
       {/* HERO */}
       <section className="relative overflow-hidden">
+        <div className="bg-tech-grid pointer-events-none absolute inset-0" />
         <div
-          className="pointer-events-none absolute inset-0 opacity-30"
+          className="pointer-events-none absolute inset-0 opacity-40"
           style={{
             background:
               "radial-gradient(650px circle at 12% 10%, #3E8EF7, transparent 60%), radial-gradient(550px circle at 88% 0%, #123b64, transparent 55%), radial-gradient(600px circle at 55% 100%, #0A2540, transparent 55%)",
+            animation: "pulseGlow 6s ease-in-out infinite",
           }}
         />
         <div className="relative mx-auto max-w-6xl px-6 py-10 md:py-20">
           <div className="mb-8 flex justify-center md:justify-start">
             <LogoAnimated size="lg" />
           </div>
-          <p className="flex items-center gap-1.5 font-mono text-xs font-medium" style={{ color: "#3E8EF7" }}>
+          <span className="badge-glass inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-mono text-xs font-medium" style={{ color: "#3E8EF7" }}>
             <Sparkles className="h-3.5 w-3.5" /> Plus de 10&nbsp;000 consultations réalisées
-          </p>
-          <p className="mt-3 font-mono text-xs uppercase tracking-[0.16em] text-mutedmore">
+          </span>
+          <p className="mt-4 font-mono text-xs uppercase tracking-[0.16em] text-mutedmore">
             Registre d'experts vérifiés — France
           </p>
           <h1 className="mt-3 max-w-3xl font-display text-[38px] font-medium leading-[1.06] tracking-tight md:text-[62px]">
@@ -60,11 +62,7 @@ export default async function HomePage() {
           </div>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <Link
-              href="/experts"
-              className="rounded-[6px] px-7 py-3.5 text-base font-semibold transition hover:-translate-y-0.5"
-              style={{ backgroundColor: "#0A2540", color: "#F4F8FF", boxShadow: "0 6px 18px -6px rgba(10,37,64,0.45)" }}
-            >
+            <Link href="/experts" className="btn-primary rounded-[6px] px-7 py-3.5 text-base font-semibold">
               Trouver mon expert
             </Link>
             <Link
