@@ -45,7 +45,7 @@ export default async function HomePage() {
             Un vrai expert, en 20&nbsp;minutes, sans mauvaise surprise sur la facture.
           </h1>
           <p className="mt-5 max-w-xl text-lg text-muted">
-            Avocats, notaires, médecins généralistes, garagistes et barbers/coiffeurs — tous
+            Avocats, notaires, médecins généralistes, garagistes, barbers/coiffeurs et experts-comptables — tous
             vérifiés, tous francophones, aucun abonnement caché.
           </p>
 
