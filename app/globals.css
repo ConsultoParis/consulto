@@ -171,6 +171,41 @@ select:focus {
   50% { opacity: 0.6; }
 }
 
+/* Ligne séparatrice argentée — utilisée entre toutes les sections du site. */
+.divider-silver {
+  position: relative;
+  height: 1px;
+  overflow: hidden;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(232, 240, 252, 0.05) 15%,
+    #e8f0fc 50%,
+    rgba(232, 240, 252, 0.05) 85%,
+    transparent
+  );
+  box-shadow: 0 0 12px 1px rgba(232, 240, 252, 0.35);
+}
+
+/* Variante avec reflet qui balaie une seule fois, au chargement de la page
+   (utilisée uniquement pour la toute première ligne de l'accueil). */
+.divider-silver-intro::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -30%;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.95), transparent);
+  animation: sweepOnce 1.8s ease-out 0.4s 1 both;
+}
+@keyframes sweepOnce {
+  0% { left: -30%; opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { left: 100%; opacity: 0; }
+}
+
 /* Logo animé 1Expert */
 @keyframes logoEntranceBadge {
   0% { opacity: 0; transform: scale(0.4) rotate(-25deg); }
