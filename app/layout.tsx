@@ -7,7 +7,7 @@ import ChatWidget from "@/components/ChatWidget";
 export const metadata: Metadata = {
   title: "1Expert — L'expertise à portée de tous",
   description:
-    "Avocats, notaires, médecins généralistes, garagistes et barbers/coiffeurs vérifiés. Consultation en 20-30 minutes, paiement sécurisé en séquestre.",
+    "Avocats, notaires, médecins généralistes, garagistes, barbers/coiffeurs et experts-comptables vérifiés. Consultation en 20-30 minutes, paiement sécurisé en séquestre.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
