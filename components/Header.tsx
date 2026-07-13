@@ -39,13 +39,12 @@ export default function Header() {
         className="sticky top-0 z-30 border-b backdrop-blur transition-colors"
         style={{ borderColor: "var(--border)", backgroundColor: "var(--header-bg)" }}
       >
-        <div
-          className="pointer-events-none absolute bottom-0 left-0 h-px w-full"
-          style={{ background: "linear-gradient(90deg, transparent, #3E8EF7, transparent)", opacity: 0.5 }}
-        />
+        <div className="divider-silver pointer-events-none absolute bottom-0 left-0 w-full" />
         <div className="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
+          {/* Logo animé */}
           <LogoAnimated size="sm" />
 
+          {/* Icônes, visibles sur toutes les tailles d'écran */}
           <div className="flex items-center gap-1.5">
             <ThemeToggle />
             <Link
@@ -76,6 +75,7 @@ export default function Header() {
         </div>
       </header>
 
+      {/* Overlay menu — en dehors du <header> pour ne pas être affecté par son flou */}
       {menuOpen && (
         <div className="fixed inset-0 z-50">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" onClick={() => setMenuOpen(false)} />
@@ -83,10 +83,7 @@ export default function Header() {
             className="absolute right-0 top-0 flex h-full w-72 max-w-[85vw] flex-col border-l"
             style={{ backgroundColor: "var(--header-bg)", borderColor: "var(--border)", boxShadow: "-12px 0 40px -12px rgba(10,37,64,0.35)" }}
           >
-            <div
-              className="pointer-events-none absolute left-0 top-0 h-px w-full"
-              style={{ background: "linear-gradient(90deg, transparent, #3E8EF7, transparent)", opacity: 0.6 }}
-            />
+            <div className="divider-silver pointer-events-none absolute left-0 top-0 w-full" />
             <div className="flex items-center justify-between border-b px-5 py-4" style={{ borderColor: "var(--border)" }}>
               <span className="font-display text-lg font-semibold">Menu</span>
               <button
