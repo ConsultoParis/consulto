@@ -28,6 +28,10 @@ const CHAT_RULES: { keywords: string[]; reply: string }[] = [
     reply: "Les barbers/coiffeurs n'ont pas d'ordre professionnel officiel, mais une certification (CAP Coiffure, Brevet de maîtrise...) est recommandée et affichée si elle existe.",
   },
   {
+    keywords: ["comptable", "expert-comptable", "ordre des experts"],
+    reply: "Les experts-comptables doivent justifier de leur inscription à l'Ordre des experts-comptables avant activation.",
+  },
+  {
     keywords: ["vérifi", "sérieux", "confiance", "diplôme", "identité"],
     reply: "Chaque expert est vérifié manuellement : justificatif professionnel obligatoire selon son métier, plus un contrôle d'identité avant activation.",
   },
