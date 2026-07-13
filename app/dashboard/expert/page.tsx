@@ -178,7 +178,7 @@ export default async function ExpertDashboardPage() {
 
       <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Ajouter un créneau</h2>
       <div className="mt-3 card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
-        <AddSlotForm expertId={user.id} />
+        <AddSlotForm expertId={user.id} profession={expert.profession} />
       </div>
 
       {freeSlots.length > 0 && (
