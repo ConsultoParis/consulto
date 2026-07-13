@@ -16,16 +16,16 @@ const CHAT_RULES: { keywords: string[]; reply: string }[] = [
     reply: "Chaque avocat doit fournir son numéro d'inscription au Barreau, vérifié avant la mise en ligne de son profil.",
   },
   {
-    keywords: ["comptable", "expert-comptable", "ordre des experts"],
-    reply: "Les experts-comptables doivent justifier de leur inscription à l'Ordre des experts-comptables avant activation.",
+    keywords: ["notaire", "office notarial"],
+    reply: "Chaque notaire doit fournir son numéro d'inscription / office notarial, vérifié avant la mise en ligne de son profil.",
   },
   {
-    keywords: ["thérapeute", "psycholog", "adeli"],
-    reply: "Les thérapeutes fournissent leur numéro ADELI ou leur diplôme, contrôlé avant l'activation du profil.",
+    keywords: ["garagiste", "garage", "mécanicien", "siret"],
+    reply: "Les garagistes fournissent leur numéro SIRET, vérifié avant l'activation du profil.",
   },
   {
-    keywords: ["coach"],
-    reply: "Les coachs n'ont pas d'ordre professionnel officiel, mais une certification (ICF, RNCP...) est recommandée et affichée si elle existe.",
+    keywords: ["coiffeur", "barber", "coiffure", "barbier"],
+    reply: "Les barbers/coiffeurs n'ont pas d'ordre professionnel officiel, mais une certification (CAP Coiffure, Brevet de maîtrise...) est recommandée et affichée si elle existe.",
   },
   {
     keywords: ["vérifi", "sérieux", "confiance", "diplôme", "identité"],
@@ -53,7 +53,7 @@ const CHAT_RULES: { keywords: string[]; reply: string }[] = [
   },
   {
     keywords: ["devenir expert", "inscri", "candidature", "rejoindre"],
-    reply: "Rendez-vous dans l'onglet « Devenir expert » : le formulaire s'adapte selon votre profession (Barreau, Ordre, ADELI, RPPS...). Votre dossier est vérifié avant activation.",
+    reply: "Rendez-vous dans l'onglet « Devenir expert » : le formulaire s'adapte selon votre profession (Barreau, office notarial, RPPS, SIRET...). Votre dossier est vérifié avant activation.",
   },
   {
     keywords: ["réserv", "rendez-vous", "créneau", "book"],
