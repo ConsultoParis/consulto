@@ -257,7 +257,23 @@ export default function DevenirExpertPage() {
 
         <div>
           <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Spécialité</label>
-          <input className={inputClass} value={specialite} onChange={(e) => setSpecialite(e.target.value)} />
+          {profession === "medecin" ? (
+            <select className={inputClass} value={specialite} onChange={(e) => setSpecialite(e.target.value)}>
+              <option value="">Sélectionnez une spécialité</option>
+              <option value="Médecin généraliste">Médecin généraliste</option>
+              <option value="Dermatologue">Dermatologue</option>
+              <option value="Psychiatre">Psychiatre</option>
+            </select>
+          ) : profession === "avocat" ? (
+            <select className={inputClass} value={specialite} onChange={(e) => setSpecialite(e.target.value)}>
+              <option value="">Sélectionnez une spécialité</option>
+              <option value="Droit du travail">Droit du travail</option>
+              <option value="Droit de la famille">Droit de la famille</option>
+              <option value="Droit immobilier / logement">Droit immobilier / logement</option>
+            </select>
+          ) : (
+            <input className={inputClass} value={specialite} onChange={(e) => setSpecialite(e.target.value)} />
+          )}
         </div>
 
         <div>
