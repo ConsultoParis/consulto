@@ -21,10 +21,10 @@ export default function DevenirExpertPage() {
   const [bio, setBio] = useState("");
   const [price, setPrice] = useState("");
   const [numeroBarreau, setNumeroBarreau] = useState("");
-  const [numeroOrdreComptable, setNumeroOrdreComptable] = useState("");
-  const [numeroAdeli, setNumeroAdeli] = useState("");
+  const [numeroNotaire, setNumeroNotaire] = useState("");
   const [numeroRpps, setNumeroRpps] = useState("");
   const [numeroOrdreMedecins, setNumeroOrdreMedecins] = useState("");
+  const [numeroSiret, setNumeroSiret] = useState("");
   const [certification, setCertification] = useState("");
   const [documents, setDocuments] = useState<File[]>([]);
 
@@ -54,8 +54,8 @@ export default function DevenirExpertPage() {
     if (!specialite.trim()) return "Indiquez votre spécialité";
     if (!price || Number(price) <= 0) return "Indiquez un tarif par session";
     if (profession === "avocat" && !numeroBarreau.trim()) return "N° au Barreau requis";
-    if (profession === "comptable" && !numeroOrdreComptable.trim()) return "N° d'inscription à l'Ordre requis";
-    if (profession === "therapeute" && !numeroAdeli.trim()) return "N° ADELI requis";
+    if (profession === "notaire" && !numeroNotaire.trim()) return "N° de notaire / office notarial requis";
+    if (profession === "garagiste" && !numeroSiret.trim()) return "N° SIRET requis";
     if (profession === "medecin") {
       if (!/^\d{11}$/.test(numeroRpps.trim())) return "Le N° RPPS doit comporter 11 chiffres";
       if (!numeroOrdreMedecins.trim()) return "N° d'inscription à l'Ordre des médecins requis";
@@ -81,11 +81,11 @@ export default function DevenirExpertPage() {
       bio,
       price: Number(price),
       numero_barreau: profession === "avocat" ? numeroBarreau : null,
-      numero_ordre_comptable: profession === "comptable" ? numeroOrdreComptable : null,
-      numero_adeli: profession === "therapeute" ? numeroAdeli : null,
+      numero_notaire: profession === "notaire" ? numeroNotaire : null,
       numero_rpps: profession === "medecin" ? numeroRpps : null,
       numero_ordre_medecins: profession === "medecin" ? numeroOrdreMedecins : null,
-      certification: profession === "coach" ? certification : null,
+      numero_siret: profession === "garagiste" ? numeroSiret : null,
+      certification: profession === "coiffeur" ? certification : null,
       verification_status: "pending",
     });
 
@@ -163,10 +163,10 @@ export default function DevenirExpertPage() {
           >
             <option value="">Sélectionnez votre profession</option>
             <option value="avocat">Avocat</option>
-            <option value="comptable">Expert-comptable</option>
-            <option value="coach">Coach</option>
-            <option value="therapeute">Thérapeute</option>
+            <option value="notaire">Notaire</option>
             <option value="medecin">Médecin généraliste</option>
+            <option value="garagiste">Garagiste</option>
+            <option value="coiffeur">Barber / Coiffeur</option>
           </select>
         </div>
 
@@ -208,32 +208,33 @@ export default function DevenirExpertPage() {
           </div>
         )}
 
-        {profession === "comptable" && (
+        {profession === "notaire" && (
           <div>
             <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-              N° d'inscription à l'Ordre des experts-comptables
+              N° de notaire / office notarial
+            </label>
+            <input className={inputClass} value={numeroNotaire} onChange={(e) => setNumeroNotaire(e.target.value)} />
+          </div>
+        )}
+
+        {profession === "garagiste" && (
+          <div>
+            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">N° SIRET</label>
+            <input className={inputClass} value={numeroSiret} onChange={(e) => setNumeroSiret(e.target.value)} />
+          </div>
+        )}
+
+        {profession === "coiffeur" && (
+          <div>
+            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
+              Certification / diplôme (facultatif)
             </label>
             <input
               className={inputClass}
-              value={numeroOrdreComptable}
-              onChange={(e) => setNumeroOrdreComptable(e.target.value)}
+              value={certification}
+              onChange={(e) => setCertification(e.target.value)}
+              placeholder="CAP Coiffure, Brevet de maîtrise..."
             />
-          </div>
-        )}
-
-        {profession === "therapeute" && (
-          <div>
-            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">N° ADELI</label>
-            <input className={inputClass} value={numeroAdeli} onChange={(e) => setNumeroAdeli(e.target.value)} />
-          </div>
-        )}
-
-        {profession === "coach" && (
-          <div>
-            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-              Certification (facultatif)
-            </label>
-            <input className={inputClass} value={certification} onChange={(e) => setCertification(e.target.value)} />
           </div>
         )}
 
@@ -264,7 +265,7 @@ export default function DevenirExpertPage() {
         <div>
           <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Pièces justificatives</label>
           <p className="mt-1 text-xs text-muted">
-            Carte professionnelle, diplôme, attestation d'inscription à l'Ordre... au moins un document.
+            Carte professionnelle, diplôme, attestation d'inscription... au moins un document.
           </p>
 
           <div className="mt-2.5 flex flex-wrap gap-2">
