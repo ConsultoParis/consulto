@@ -50,7 +50,6 @@ export default async function ClientDashboardPage() {
       <p className="font-mono text-xs uppercase tracking-[0.16em] text-seal">Espace client</p>
       <h1 className="mt-3 font-display text-3xl font-medium">Mes rendez-vous</h1>
 
-      {/* 1. État vide avec bouton d'action */}
       {hasNoBookings && (
         <div className="card-soft mt-8 p-8 text-center" style={{ backgroundColor: "var(--card)" }}>
           <p className="font-display text-xl font-medium">Vous n'avez pas encore de rendez-vous</p>
@@ -59,8 +58,7 @@ export default async function ClientDashboardPage() {
           </p>
           <Link
             href="/experts"
-            className="mt-5 inline-block rounded-[6px] px-7 py-3 text-sm font-semibold transition hover:-translate-y-0.5"
-            style={{ backgroundColor: "#3B1F35", color: "#FBEEE0" }}
+            className="btn-primary mt-5 inline-block rounded-[6px] px-7 py-3 text-sm font-semibold"
           >
             Trouver mon expert
           </Link>
@@ -69,29 +67,27 @@ export default async function ClientDashboardPage() {
 
       <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <div className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
-          <p className="font-display text-3xl font-semibold">{upcoming.length}</p>
+          <p className="font-display text-3xl font-semibold text-gradient">{upcoming.length}</p>
           <p className="mt-1 font-mono text-[10px] uppercase text-muted">Prochains RDV</p>
         </div>
         <div className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
-          <p className="font-display text-3xl font-semibold">{past.length}</p>
+          <p className="font-display text-3xl font-semibold text-gradient">{past.length}</p>
           <p className="mt-1 font-mono text-[10px] uppercase text-muted">Consultations passées</p>
         </div>
         <div className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
-          <p className="font-display text-3xl font-semibold">{favorites?.length || 0}</p>
+          <p className="font-display text-3xl font-semibold text-gradient">{favorites?.length || 0}</p>
           <p className="mt-1 font-mono text-[10px] uppercase text-muted">Favoris</p>
         </div>
-        {/* 3. Crédits fidélité */}
-        <div className="card-soft p-5" style={{ backgroundColor: "#E07A3F0F" }}>
-          <p className="flex items-center gap-1 font-display text-3xl font-semibold" style={{ color: "#E07A3F" }}>
+        <div className="card-soft p-5" style={{ backgroundColor: "#3E8EF70F" }}>
+          <p className="flex items-center gap-1 font-display text-3xl font-semibold" style={{ color: "#3E8EF7" }}>
             {Number(profile?.credits_balance || 0).toFixed(0)} €
           </p>
-          <p className="mt-1 flex items-center gap-1 font-mono text-[10px] uppercase" style={{ color: "#E07A3F" }}>
+          <p className="mt-1 flex items-center gap-1 font-mono text-[10px] uppercase" style={{ color: "#3E8EF7" }}>
             <Wallet className="h-3 w-3" /> Crédits fidélité
           </p>
         </div>
       </div>
 
-      {/* 7. Compléter mon profil */}
       {profile && !profile.phone && (
         <div className="card-soft mt-8 p-5" style={{ backgroundColor: "var(--card)" }}>
           <p className="font-medium">Complétez votre profil</p>
@@ -100,7 +96,6 @@ export default async function ClientDashboardPage() {
         </div>
       )}
 
-      {/* 2. Mes favoris */}
       {favorites && favorites.length > 0 && (
         <>
           <h2 className="mt-10 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
@@ -120,14 +115,13 @@ export default async function ClientDashboardPage() {
                     {PROFESSION_LABELS[f.experts?.profession as keyof typeof PROFESSION_LABELS]} · {f.experts?.specialite}
                   </p>
                 </div>
-                <Heart className="h-4 w-4 shrink-0 fill-current" style={{ color: "#E07A3F" }} />
+                <Heart className="h-4 w-4 shrink-0 fill-current" style={{ color: "#3E8EF7" }} />
               </Link>
             ))}
           </div>
         </>
       )}
 
-      {/* 4. Experts recommandés */}
       {recommended && recommended.length > 0 && (
         <>
           <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Experts à découvrir</h2>
@@ -147,7 +141,7 @@ export default async function ClientDashboardPage() {
                 </p>
                 <p className="mt-1 font-display text-lg font-medium">{expert.profiles?.full_name}</p>
                 <p className="text-sm text-muted">{expert.specialite}</p>
-                <p className="mt-3 font-display text-lg font-semibold" style={{ color: "#E07A3F" }}>
+                <p className="mt-3 font-display text-lg font-semibold" style={{ color: "#3E8EF7" }}>
                   {expert.price} €
                 </p>
               </Link>
@@ -156,7 +150,6 @@ export default async function ClientDashboardPage() {
         </>
       )}
 
-      {/* 5. Parrainage */}
       <div className="card-soft mt-10 p-5" style={{ backgroundColor: "var(--card)" }}>
         <h3 className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
           <Gift className="h-4 w-4" /> Parrainage
@@ -167,7 +160,6 @@ export default async function ClientDashboardPage() {
         <ReferralCode code={referralCode} />
       </div>
 
-      {/* 9. Comment ça marche */}
       <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Comment ça marche</h2>
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
@@ -187,7 +179,6 @@ export default async function ClientDashboardPage() {
         </div>
       </div>
 
-      {/* Liste des rendez-vous */}
       {!hasNoBookings && (
         <>
           <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Tous mes rendez-vous</h2>
@@ -210,6 +201,15 @@ export default async function ClientDashboardPage() {
                       {b.status === "completed" || isPast ? "Terminé" : "À venir"}
                     </span>
                   </div>
+
+                  {b.status !== "cancelled_by_client" && b.status !== "cancelled_by_expert" && (
+                    <Link
+                      href={`/consultation/${b.id}`}
+                      className="btn-primary mt-3 inline-block rounded-[3px] px-4 py-2 text-xs font-medium"
+                    >
+                      Accéder à la consultation
+                    </Link>
+                  )}
 
                   {(clientDocs.length > 0 || expertDocs.length > 0) && (
                     <div className="mt-3 grid grid-cols-1 gap-4 border-t border-ink/10 pt-3 sm:grid-cols-2">
