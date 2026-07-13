@@ -75,8 +75,10 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <div className="divider-silver divider-silver-intro" />
+
       {/* EXPERTS VÉRIFIÉS */}
-      <section className="border-b py-16" style={{ borderColor: "var(--border)" }}>
+      <section className="py-16">
         <div className="mx-auto max-w-6xl px-6">
           <p className="font-mono text-xs uppercase tracking-[0.16em]" style={{ color: "#3E8EF7" }}>Le registre</p>
           <h2 className="mt-2 font-display text-3xl font-medium">Des experts, pas des inconnus</h2>
@@ -118,6 +120,8 @@ export default async function HomePage() {
           )}
         </div>
       </section>
+
+      <div className="divider-silver" />
 
       {/* CARROUSEL */}
       <section className="mx-auto max-w-6xl px-6 py-16">
