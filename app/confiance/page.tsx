@@ -3,7 +3,7 @@ import ImageCarousel from "@/components/ImageCarousel";
 const SECTIONS = [
   {
     title: "Comment les experts sont sélectionnés",
-    text: "Chaque candidature est vérifiée manuellement : justificatif professionnel obligatoire (N° au Barreau, Ordre, ADELI, ou RPPS + Ordre des médecins), identité contrôlée, et cohérence du profil avant toute mise en ligne.",
+    text: "Chaque candidature est vérifiée manuellement : justificatif professionnel obligatoire (N° au Barreau, office notarial, N° RPPS + Ordre des médecins, SIRET, ou certification), identité contrôlée, et cohérence du profil avant toute mise en ligne.",
     color: "#3457A6",
   },
   {
