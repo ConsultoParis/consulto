@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { slotId, expertId, mode, clientEmail, creditsUsed } = body;
+  const { slotId, expertId, mode, clientEmail, clientNote, creditsUsed } = body;
 
   // 1. Vérifie que le créneau est toujours disponible
   const { data: slot } = await supabase
@@ -78,6 +78,7 @@ export async function POST(req: NextRequest) {
       stripe_payment_intent_id: paymentIntent.id,
       payment_status: "pending",
       client_email: clientEmail,
+      client_note: clientNote || null,
     })
     .select()
     .single();
