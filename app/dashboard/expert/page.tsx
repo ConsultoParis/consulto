@@ -231,6 +231,13 @@ export default async function ExpertDashboardPage() {
                 Accéder à la consultation
               </Link>
 
+              {b.client_note && (
+                <div className="mt-3 border-t border-ink/10 pt-3">
+                  <p className="font-mono text-[11px] uppercase text-muted">Message du client</p>
+                  <p className="mt-1 text-sm">{b.client_note}</p>
+                </div>
+              )}
+
               {clientDocs.length > 0 && (
                 <div className="mt-3 border-t border-ink/10 pt-3">
                   <p className="font-mono text-[11px] uppercase text-muted">
