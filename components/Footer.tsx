@@ -13,7 +13,7 @@ const socials = [
 export default function Footer() {
   return (
     <footer className="mt-16 text-white" style={{ backgroundColor: "#040f1a" }}>
-      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-3 border-b border-white/10 px-6 py-6 sm:grid-cols-4">
+      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-3 px-6 py-6 sm:grid-cols-4">
         {socials.map((s, i) => {
           const Icon = s.icon;
           return (
@@ -23,6 +23,8 @@ export default function Footer() {
           );
         })}
       </div>
+
+      <div className="divider-silver" />
 
       <div className="mx-auto max-w-6xl px-6 py-10">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
@@ -54,7 +56,8 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-white/10">
+      <div className="divider-silver" />
+      <div>
         <div className="mx-auto max-w-6xl px-6 py-6 text-xs text-white/50">
           © 1Expert {new Date().getFullYear()} — plateforme d'experts vérifiés, France
         </div>
