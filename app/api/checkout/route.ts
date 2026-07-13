@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { slotId, expertId, mode, price, clientEmail, creditsUsed } = body;
+  const { slotId, expertId, mode, clientEmail, creditsUsed } = body;
 
   // 1. Vérifie que le créneau est toujours disponible
   const { data: slot } = await supabase
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
   // 2. Vérifie que l'expert a bien connecté son compte de paiement
   const { data: expert } = await supabase
     .from("experts")
-    .select("stripe_account_id, stripe_charges_enabled")
+    .select("price, stripe_account_id, stripe_charges_enabled")
     .eq("id", expertId)
     .single();
 
@@ -44,6 +44,14 @@ export async function POST(req: NextRequest) {
       { status: 409 }
     );
   }
+
+  // Le prix et le mode sont déterminés par le serveur à partir du créneau,
+  // jamais fait confiance à ce que le navigateur envoie — évite toute
+  // manipulation du prix. Les créneaux de 5 min sont le "Devis rapide"
+  // à prix fixe (5€), obligatoirement en visio.
+  const isQuickQuote = slot.duration_min === 5;
+  const price = isQuickQuote ? 5 : Number(expert.price);
+  const finalMode = isQuickQuote ? "video" : mode;
 
   // 3. Crée le PaymentIntent Stripe (séquestre, réparti 80/20)
   const finalPrice = Math.max(0, price - (creditsUsed || 0));
@@ -64,7 +72,7 @@ export async function POST(req: NextRequest) {
       date: slot.date,
       start_time: slot.start_time,
       duration_min: slot.duration_min,
-      mode,
+      mode: finalMode,
       price: finalPrice,
       credits_used: creditsUsed || 0,
       stripe_payment_intent_id: paymentIntent.id,
