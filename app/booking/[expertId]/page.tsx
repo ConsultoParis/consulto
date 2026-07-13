@@ -21,6 +21,7 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
   const [selectedSlot, setSelectedSlot] = useState<AvailabilitySlot | null>(null);
   const [mode, setMode] = useState<ConsultationMode>("video");
   const [docs, setDocs] = useState<File[]>([]);
+  const [note, setNote] = useState("");
   const [email, setEmail] = useState("");
   const [clientSecret, setClientSecret] = useState("");
   const [bookingId, setBookingId] = useState("");
@@ -74,6 +75,7 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
         mode: isQuickQuote ? "video" : mode,
         price: isQuickQuote ? 5 : expert.price,
         clientEmail: email,
+        clientNote: note,
         creditsUsed: 0,
       }),
     });
@@ -193,6 +195,17 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
               ))}
             </ul>
           )}
+
+          <h2 className="mt-8 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
+            Message pour l'expert (optionnel)
+          </h2>
+          <textarea
+            className="mt-2 w-full rounded-[3px] border border-app px-3.5 py-2.5 text-[15px] outline-none focus:border-ink"
+            style={{ minHeight: 90 }}
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="Précisez votre situation, votre besoin, toute information utile avant le rendez-vous..."
+          />
 
           <h2 className="mt-8 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Email</h2>
           <input
