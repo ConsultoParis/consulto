@@ -64,6 +64,7 @@ export interface Booking {
   status: BookingStatus;
   refunded: boolean;
   client_email: string;
+client_note: string | null;
   created_at: string;
 }
 
