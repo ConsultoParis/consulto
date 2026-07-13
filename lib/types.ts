@@ -1,4 +1,4 @@
-export type Profession = "avocat" | "comptable" | "coach" | "therapeute" | "medecin";
+export type Profession = "avocat" | "notaire" | "medecin" | "garagiste" | "coiffeur";
 export type ConsultationMode = "video" | "chat" | "physique";
 export type BookingStatus = "confirmed" | "cancelled_by_client" | "cancelled_by_expert" | "completed";
 export type PaymentStatus = "pending" | "held" | "released" | "refunded";
@@ -26,10 +26,10 @@ export interface Expert {
   languages: string[];
   domains: string[];
   numero_barreau: string | null;
-  numero_ordre_comptable: string | null;
-  numero_adeli: string | null;
+  numero_notaire: string | null;
   numero_rpps: string | null;
   numero_ordre_medecins: string | null;
+  numero_siret: string | null;
   certification: string | null;
   verification_status: "pending" | "verified" | "rejected";
   available_now: boolean;
@@ -90,16 +90,16 @@ export interface Review {
 
 export const PROFESSION_LABELS: Record<Profession, string> = {
   avocat: "Avocat",
-  comptable: "Expert-comptable",
-  coach: "Coach",
-  therapeute: "Thérapeute",
+  notaire: "Notaire",
   medecin: "Médecin généraliste",
+  garagiste: "Garagiste",
+  coiffeur: "Barber / Coiffeur",
 };
 
 export const PROFESSION_COLORS: Record<Profession, string> = {
   avocat: "#3457A6",
-  comptable: "#1E8F6B",
-  coach: "#D98A1F",
-  therapeute: "#C14F82",
+  notaire: "#8B5E34",
   medecin: "#1E93A6",
+  garagiste: "#D98A1F",
+  coiffeur: "#C14F82",
 };
