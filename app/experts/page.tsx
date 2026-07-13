@@ -1,14 +1,15 @@
 import Link from "next/link";
 import Avatar from "@/components/Avatar";
+import ExpertSearchForm from "@/components/ExpertSearchForm";
 import { createClient } from "@/lib/supabase/server";
-import { PROFESSION_LABELS, PROFESSION_COLORS, type Expert, type Profession } from "@/lib/types";
+import { PROFESSION_LABELS, PROFESSION_COLORS, type Expert } from "@/lib/types";
 
 export const revalidate = 30;
 
 export default async function ExpertsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ profession?: string; q?: string }>;
+  searchParams: Promise<{ profession?: string; q?: string; specialite?: string }>;
 }) {
   const params = await searchParams;
   const supabase = await createClient();
@@ -20,6 +21,10 @@ export default async function ExpertsPage({
 
   if (params.profession) {
     query = query.eq("profession", params.profession);
+  }
+
+  if (params.specialite) {
+    query = query.eq("specialite", params.specialite);
   }
 
   const { data: experts } = await query.order("created_at", { ascending: false });
@@ -37,32 +42,7 @@ export default async function ExpertsPage({
       <p className="font-mono text-xs uppercase tracking-[0.16em]" style={{ color: "#3E8EF7" }}>Le registre</p>
       <h1 className="mt-3 font-display text-3xl font-medium">Trouver un expert</h1>
 
-      <form className="mt-8 flex flex-col gap-4 sm:flex-row" method="get">
-        <input
-          type="text"
-          name="q"
-          defaultValue={params.q}
-          placeholder="Nom, spécialité..."
-          className="flex-1 rounded-[3px] border px-4 py-2.5 text-[15px] outline-none"
-          style={{ borderColor: "var(--border)", backgroundColor: "var(--input-bg)", color: "var(--text)" }}
-        />
-        <select
-          name="profession"
-          defaultValue={params.profession || ""}
-          className="rounded-[3px] border px-4 py-2.5 text-[15px] outline-none sm:w-64"
-          style={{ borderColor: "var(--border)", backgroundColor: "var(--input-bg)", color: "var(--text)" }}
-        >
-          <option value="">Toutes les professions</option>
-          {(Object.keys(PROFESSION_LABELS) as Profession[]).map((p) => (
-            <option key={p} value={p}>
-              {PROFESSION_LABELS[p]}
-            </option>
-          ))}
-        </select>
-        <button type="submit" className="btn-primary rounded-[3px] px-6 py-2.5 text-sm font-medium">
-          Rechercher
-        </button>
-      </form>
+      <ExpertSearchForm defaultQ={params.q} defaultProfession={params.profession} defaultSpecialite={params.specialite} />
 
       <p className="mt-6 font-mono text-xs text-mutedmore">
         {filtered?.length || 0} expert{(filtered?.length || 0) !== 1 ? "s" : ""} trouvé
