@@ -64,17 +64,14 @@ export default async function ExpertDashboardPage() {
   const avgRating = reviews && reviews.length > 0 ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : null;
   const satisfaction = avgRating ? Math.round((avgRating / 5) * 100) : null;
 
-  // 4. Prochain rendez-vous
   const nextBooking = [...upcoming].sort((a, b) => (a.date + a.start_time).localeCompare(b.date + b.start_time))[0];
 
-  // 5. Créneaux libres groupés par date
   const slotsByDate: Record<string, typeof freeSlots> = {};
   freeSlots.forEach((s) => {
     slotsByDate[s.date] = slotsByDate[s.date] || [];
     slotsByDate[s.date].push(s);
   });
 
-  // 8. Badges
   const badges: { label: string; icon: any; color: string }[] = [];
   if (avgRating && avgRating >= 4.7) badges.push({ label: "Top Expert", icon: Award, color: "#3E8EF7" });
   if (completed.length >= 10) badges.push({ label: "Expert confirmé", icon: TrendingUp, color: "#3457A6" });
@@ -87,7 +84,6 @@ export default async function ExpertDashboardPage() {
           <p className="font-mono text-xs uppercase tracking-[0.16em] text-seal">Espace expert</p>
           <h1 className="mt-3 font-display text-3xl font-medium">Tableau de bord</h1>
         </div>
-        {/* 6. Lien profil public */}
         <Link
           href={`/experts/${expert.id}`}
           className="flex items-center gap-1.5 rounded-[3px] border border-app px-4 py-2 font-mono text-xs uppercase tracking-[0.08em] transition hover:bg-ink/5"
@@ -96,7 +92,6 @@ export default async function ExpertDashboardPage() {
         </Link>
       </div>
 
-      {/* 8. Badges */}
       {badges.length > 0 && (
         <div className="mt-4 flex flex-wrap gap-2">
           {badges.map((b, i) => {
@@ -114,7 +109,6 @@ export default async function ExpertDashboardPage() {
         </div>
       )}
 
-      {/* 1. État vide */}
       {hasNothingYet && (
         <div className="card-soft mt-8 p-8 text-center" style={{ backgroundColor: "var(--card)" }}>
           <PlusCircle className="mx-auto h-8 w-8" style={{ color: "#3E8EF7" }} />
@@ -125,7 +119,6 @@ export default async function ExpertDashboardPage() {
         </div>
       )}
 
-      {/* 4. Prochain rendez-vous */}
       {nextBooking && (
         <div className="card-soft mt-8 p-5" style={{ backgroundColor: "#1E8F6B0F", border: "1px solid #1E8F6B30" }}>
           <p className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.1em]" style={{ color: "#1E8F6B" }}>
@@ -149,7 +142,6 @@ export default async function ExpertDashboardPage() {
           <p className="font-display text-3xl font-semibold text-seal">{revenusSequestre} €</p>
           <p className="mt-1 font-mono text-[10px] uppercase text-seal">En séquestre</p>
         </div>
-        {/* 2. Note moyenne */}
         <div className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
           <p className="flex items-center gap-1 font-display text-3xl font-semibold">
             {avgRating ? avgRating.toFixed(1) : "—"}
@@ -157,14 +149,12 @@ export default async function ExpertDashboardPage() {
           </p>
           <p className="mt-1 font-mono text-[10px] uppercase text-muted">{reviews?.length || 0} avis</p>
         </div>
-        {/* 3. Taux de satisfaction */}
         <div className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
           <p className="font-display text-3xl font-semibold text-gradient">{satisfaction ? `${satisfaction}%` : "—"}</p>
           <p className="mt-1 font-mono text-[10px] uppercase text-muted">Satisfaction</p>
         </div>
       </div>
 
-      {/* Paiements — Stripe Connect */}
       <div
         className="card-soft mt-8 p-5"
         style={{
@@ -178,7 +168,6 @@ export default async function ExpertDashboardPage() {
         </div>
       </div>
 
-      {/* 7. Compléter le profil */}
       {!expert.bio && (
         <div className="card-soft mt-8 p-5" style={{ backgroundColor: "var(--card)" }}>
           <p className="font-medium">Complétez votre profil</p>
@@ -192,7 +181,6 @@ export default async function ExpertDashboardPage() {
         <AddSlotForm expertId={user.id} />
       </div>
 
-      {/* 5. Agenda groupé par date */}
       {freeSlots.length > 0 && (
         <>
           <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Mes créneaux disponibles</h2>
@@ -236,6 +224,13 @@ export default async function ExpertDashboardPage() {
                 </span>
               </div>
 
+              <Link
+                href={`/consultation/${b.id}`}
+                className="btn-primary mt-3 inline-block rounded-[3px] px-4 py-2 text-xs font-medium"
+              >
+                Accéder à la consultation
+              </Link>
+
               {clientDocs.length > 0 && (
                 <div className="mt-3 border-t border-ink/10 pt-3">
                   <p className="font-mono text-[11px] uppercase text-muted">
@@ -274,7 +269,6 @@ export default async function ExpertDashboardPage() {
         )}
       </div>
 
-      {/* 2. Derniers avis */}
       {reviews && reviews.length > 0 && (
         <>
           <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Derniers avis</h2>
@@ -294,7 +288,6 @@ export default async function ExpertDashboardPage() {
         </>
       )}
 
-      {/* 9. Comment ça marche */}
       <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Comment ça marche</h2>
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
