@@ -44,7 +44,7 @@ export interface AvailabilitySlot {
   expert_id: string;
   date: string;
   start_time: string;
-  duration_min: 20 | 30;
+  duration_min: 5 | 20 | 30;
   is_booked: boolean;
 }
 
