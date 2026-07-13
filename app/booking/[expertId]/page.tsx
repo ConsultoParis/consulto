@@ -63,14 +63,16 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
     setError("");
     setLoading(true);
 
+    const isQuickQuote = selectedSlot.duration_min === 5;
+
     const res = await fetch("/api/checkout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         slotId: selectedSlot.id,
         expertId,
-        mode,
-        price: expert.price,
+        mode: isQuickQuote ? "video" : mode,
+        price: isQuickQuote ? 5 : expert.price,
         clientEmail: email,
         creditsUsed: 0,
       }),
@@ -99,26 +101,39 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
 
   if (!expert) return null;
 
+  const isQuickQuote = selectedSlot?.duration_min === 5;
+
   return (
     <main className="mx-auto max-w-2xl px-6 py-16">
       <h1 className="font-display text-3xl font-medium">Réserver avec {expert.profiles?.full_name}</h1>
 
       {step === "creneaux" && (
         <div className="mt-8">
-          <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Mode de consultation</h2>
-          <div className="mt-3 flex gap-2">
-            {(["video", "chat", "physique"] as ConsultationMode[]).map((m) => (
-              <button
-                key={m}
-                onClick={() => setMode(m)}
-                className={`rounded-[3px] border px-4 py-2 text-sm transition-all ${
-                  mode === m ? "btn-primary border-transparent" : "border-app hover:border-[#3E8EF7]"
-                }`}
-              >
-                {m === "video" ? "Visio" : m === "chat" ? "Tchat" : "Physique"}
-              </button>
-            ))}
-          </div>
+          {isQuickQuote ? (
+            <div className="rounded-[6px] border border-seal/40 bg-seal/5 p-4">
+              <p className="text-sm font-medium">Devis rapide — 5 minutes en visio</p>
+              <p className="mt-1 text-sm text-muted">
+                Ce créneau est réservé au mode visio, pour un premier devis rapide à prix fixe.
+              </p>
+            </div>
+          ) : (
+            <>
+              <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Mode de consultation</h2>
+              <div className="mt-3 flex gap-2">
+                {(["video", "chat", "physique"] as ConsultationMode[]).map((m) => (
+                  <button
+                    key={m}
+                    onClick={() => setMode(m)}
+                    className={`rounded-[3px] border px-4 py-2 text-sm transition-all ${
+                      mode === m ? "btn-primary border-transparent" : "border-app hover:border-[#3E8EF7]"
+                    }`}
+                  >
+                    {m === "video" ? "Visio" : m === "chat" ? "Tchat" : "Physique"}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
 
           <h2 className="mt-8 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Créneau</h2>
           <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -135,7 +150,14 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
                 <span className="block text-sm capitalize">
                   {new Date(slot.date).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })}
                 </span>
-                <span className="font-mono text-xs text-muted">{slot.start_time} · {slot.duration_min} min</span>
+                <span className="font-mono text-xs text-muted">
+                  {slot.start_time} · {slot.duration_min} min
+                  {slot.duration_min === 5 && (
+                    <span className="ml-1.5 rounded-full px-1.5 py-0.5" style={{ backgroundColor: "#3E8EF71a", color: "#3E8EF7" }}>
+                      Devis rapide 5€
+                    </span>
+                  )}
+                </span>
               </button>
             ))}
           </div>
@@ -187,7 +209,7 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
             disabled={loading}
             className="btn-primary mt-8 w-full rounded-[6px] py-3.5 text-sm font-medium"
           >
-            {loading ? "Préparation..." : `Continuer — ${expert.price} €`}
+            {loading ? "Préparation..." : `Continuer — ${isQuickQuote ? 5 : expert.price} €`}
           </button>
         </div>
       )}
