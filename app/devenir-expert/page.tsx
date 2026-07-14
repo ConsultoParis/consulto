@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { Profession } from "@/lib/types";
 import { Paperclip, X, Camera } from "lucide-react";
+import CityAutocomplete from "@/components/CityAutocomplete";
 
 const inputClass =
   "mt-1.5 w-full rounded-[3px] border border-app px-3.5 py-2.5 text-[15px] outline-none focus:border-ink";
@@ -195,7 +196,7 @@ export default function DevenirExpertPage() {
                 />
               </div>
               <div>
-                <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
+                <label className="font-mono text-[-11px] uppercase tracking-[0.12em] text-muted">
                   N° Ordre des médecins
                 </label>
                 <input
@@ -281,11 +282,11 @@ export default function DevenirExpertPage() {
 
         <div>
           <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Ville</label>
-          <input
-            className={inputClass}
+          <CityAutocomplete
             value={ville}
-            onChange={(e) => setVille(e.target.value)}
+            onChange={setVille}
             placeholder="Lyon, Paris, Marseille..."
+            className={inputClass}
           />
           <p className="mt-1 text-xs text-muted">Utilisée pour la recherche "près de chez moi" des clients.</p>
         </div>
