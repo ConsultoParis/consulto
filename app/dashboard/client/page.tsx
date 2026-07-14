@@ -6,7 +6,7 @@ import CancelBookingButton from "@/components/CancelBookingButton";
 import CompleteProfileForm from "@/components/CompleteProfileForm";
 import ReferralCode from "@/components/ReferralCode";
 import { PROFESSION_LABELS, PROFESSION_COLORS } from "@/lib/types";
-import { Search, Calendar, MessageCircle, Heart, Wallet, Gift } from "lucide-react";
+import { Search, Calendar, MessageCircle, Heart, Wallet, Gift, FileText } from "lucide-react";
 
 export default async function ClientDashboardPage() {
   const supabase = await createClient();
@@ -48,8 +48,18 @@ export default async function ClientDashboardPage() {
 
   return (
     <main className="mx-auto max-w-4xl px-6 py-16">
-      <p className="font-mono text-xs uppercase tracking-[0.16em] text-seal">Espace client</p>
-      <h1 className="mt-3 font-display text-3xl font-medium">Mes rendez-vous</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="font-mono text-xs uppercase tracking-[0.16em] text-seal">Espace client</p>
+          <h1 className="mt-3 font-display text-3xl font-medium">Mes rendez-vous</h1>
+        </div>
+        <Link
+          href="/dashboard/client/documents"
+          className="flex items-center gap-1.5 rounded-[3px] border border-app px-4 py-2 font-mono text-xs uppercase tracking-[0.08em] transition hover:bg-ink/5"
+        >
+          <FileText className="h-3.5 w-3.5" /> Mes documents
+        </Link>
+      </div>
 
       {hasNoBookings && (
         <div className="card-soft mt-8 p-8 text-center" style={{ backgroundColor: "var(--card)" }}>
