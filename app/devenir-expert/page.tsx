@@ -20,6 +20,7 @@ export default function DevenirExpertPage() {
   const [profession, setProfession] = useState<Profession | "">("");
   const [specialite, setSpecialite] = useState("");
   const [ville, setVille] = useState("");
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [bio, setBio] = useState("");
   const [price, setPrice] = useState("");
   const [numeroBarreau, setNumeroBarreau] = useState("");
@@ -84,6 +85,8 @@ export default function DevenirExpertPage() {
       profession,
       specialite,
       ville,
+      lat: coords?.lat ?? null,
+      lng: coords?.lng ?? null,
       bio,
       price: Number(price),
       numero_barreau: profession === "avocat" ? numeroBarreau : null,
@@ -196,7 +199,7 @@ export default function DevenirExpertPage() {
                 />
               </div>
               <div>
-                <label className="font-mono text-[-11px] uppercase tracking-[0.12em] text-muted">
+                <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
                   N° Ordre des médecins
                 </label>
                 <input
@@ -281,14 +284,18 @@ export default function DevenirExpertPage() {
         </div>
 
         <div>
-          <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Ville</label>
+          <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Ville ou code postal</label>
           <CityAutocomplete
             value={ville}
-            onChange={setVille}
-            placeholder="Lyon, Paris, Marseille..."
+            onChange={(v) => {
+              setVille(v);
+              setCoords(null);
+            }}
+            onSelectCoords={(lat, lng) => setCoords({ lat, lng })}
+            placeholder="Lyon, 69001, Paris..."
             className={inputClass}
           />
-          <p className="mt-1 text-xs text-muted">Utilisée pour la recherche "près de chez moi" des clients.</p>
+          <p className="mt-1 text-xs text-muted">Sélectionnez une suggestion pour activer la recherche "près de chez moi" des clients.</p>
         </div>
 
         <div>
