@@ -3,13 +3,14 @@ import Avatar from "@/components/Avatar";
 import ExpertSearchForm from "@/components/ExpertSearchForm";
 import { createClient } from "@/lib/supabase/server";
 import { PROFESSION_LABELS, PROFESSION_COLORS, type Expert } from "@/lib/types";
+import { MapPin } from "lucide-react";
 
 export const revalidate = 30;
 
 export default async function ExpertsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ profession?: string; q?: string; specialite?: string }>;
+  searchParams: Promise<{ profession?: string; q?: string; specialite?: string; ville?: string }>;
 }) {
   const params = await searchParams;
   const supabase = await createClient();
@@ -27,6 +28,10 @@ export default async function ExpertsPage({
     query = query.eq("specialite", params.specialite);
   }
 
+  if (params.ville) {
+    query = query.ilike("ville", `%${params.ville}%`);
+  }
+
   const { data: experts } = await query.order("created_at", { ascending: false });
 
   const filtered = params.q
@@ -42,11 +47,17 @@ export default async function ExpertsPage({
       <p className="font-mono text-xs uppercase tracking-[0.16em]" style={{ color: "#3E8EF7" }}>Le registre</p>
       <h1 className="mt-3 font-display text-3xl font-medium">Trouver un expert</h1>
 
-      <ExpertSearchForm defaultQ={params.q} defaultProfession={params.profession} defaultSpecialite={params.specialite} />
+      <ExpertSearchForm
+        defaultQ={params.q}
+        defaultProfession={params.profession}
+        defaultSpecialite={params.specialite}
+        defaultVille={params.ville}
+      />
 
       <p className="mt-6 font-mono text-xs text-mutedmore">
         {filtered?.length || 0} expert{(filtered?.length || 0) !== 1 ? "s" : ""} trouvé
         {(filtered?.length || 0) !== 1 ? "s" : ""}
+        {params.ville ? ` près de ${params.ville}` : ""}
       </p>
 
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -73,6 +84,11 @@ export default async function ExpertsPage({
               <p className="mt-3 text-sm text-muted">
                 {expert.specialite} · {expert.experience_years} ans
               </p>
+              {expert.ville && (
+                <p className="mt-1 flex items-center gap-1 text-xs text-mutedmore">
+                  <MapPin className="h-3 w-3" /> {expert.ville}
+                </p>
+              )}
               <p className="mt-3 font-display text-lg font-semibold" style={{ color: "#3E8EF7" }}>
                 {expert.price} €
               </p>
