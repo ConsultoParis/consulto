@@ -57,14 +57,7 @@ export default async function ClientDocumentsPage() {
                 </div>
               </div>
               {d.url && (
-                
-                  href={d.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border transition-all hover:border-[#3E8EF7] hover:shadow-[0_0_12px_-2px_rgba(62,142,247,0.5)]"
-                  style={{ borderColor: "var(--border)" }}
-                  title="Télécharger"
-                >
+                <a href={d.url} target="_blank" rel="noopener noreferrer" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border transition-all hover:border-[#3E8EF7] hover:shadow-[0_0_12px_-2px_rgba(62,142,247,0.5)]" style={{ borderColor: "var(--border)" }} title="Télécharger">
                   <Download className="h-4 w-4" />
                 </a>
               )}
