@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { Profession } from "@/lib/types";
 import { PROFESSION_LABELS } from "@/lib/types";
 import { MapPin } from "lucide-react";
+import CityAutocomplete from "@/components/CityAutocomplete";
 
 const inputClass = "rounded-[3px] border px-4 py-2.5 text-[15px] outline-none";
 const inputStyle = { borderColor: "var(--border)", backgroundColor: "var(--input-bg)", color: "var(--text)" };
@@ -86,15 +87,16 @@ export default function ExpertSearchForm({
       )}
 
       <div className="flex flex-1 gap-2 sm:w-56 sm:flex-none">
-        <input
-          type="text"
-          name="ville"
-          value={ville}
-          onChange={(e) => setVille(e.target.value)}
-          placeholder="Ville"
-          className={`${inputClass} flex-1`}
-          style={inputStyle}
-        />
+        <div className="flex-1">
+          <CityAutocomplete
+            name="ville"
+            value={ville}
+            onChange={setVille}
+            placeholder="Ville"
+            className={inputClass + " w-full"}
+            style={inputStyle}
+          />
+        </div>
         <button
           type="button"
           onClick={useMyLocation}
