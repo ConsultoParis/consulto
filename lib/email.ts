@@ -52,3 +52,56 @@ export async function sendDocumentsEmail({
     `,
   });
 }
+
+/** Rappel automatique envoyé environ 24h avant une consultation. */
+export async function sendReminderEmail({
+  to,
+  otherPartyName,
+  date,
+  time,
+  bookingId,
+}: {
+  to: string;
+  otherPartyName: string;
+  date: string;
+  time: string;
+  bookingId: string;
+}) {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://1expert.fr";
+  return resend.emails.send({
+    from: FROM,
+    to,
+    subject: "Rappel : votre consultation 1Expert a lieu bientôt",
+    html: `
+      <h2>Rappel de rendez-vous</h2>
+      <p>Votre consultation avec <strong>${otherPartyName}</strong> a lieu le ${date} à ${time}.</p>
+      <p><a href="${siteUrl}/consultation/${bookingId}">Accéder à la consultation</a></p>
+    `,
+  });
+}
+
+/** Notifie l'autre partie qu'une réservation vient d'être annulée. */
+export async function sendCancellationEmail({
+  to,
+  otherPartyName,
+  date,
+  time,
+  refunded,
+}: {
+  to: string;
+  otherPartyName: string;
+  date: string;
+  time: string;
+  refunded: boolean;
+}) {
+  return resend.emails.send({
+    from: FROM,
+    to,
+    subject: "Une consultation 1Expert a été annulée",
+    html: `
+      <h2>Rendez-vous annulé</h2>
+      <p>La consultation avec <strong>${otherPartyName}</strong> prévue le ${date} à ${time} a été annulée.</p>
+      ${refunded ? "<p>Le paiement a été intégralement remboursé.</p>" : ""}
+    `,
+  });
+}
