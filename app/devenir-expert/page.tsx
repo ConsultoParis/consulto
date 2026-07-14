@@ -18,6 +18,7 @@ export default function DevenirExpertPage() {
 
   const [profession, setProfession] = useState<Profession | "">("");
   const [specialite, setSpecialite] = useState("");
+  const [ville, setVille] = useState("");
   const [bio, setBio] = useState("");
   const [price, setPrice] = useState("");
   const [numeroBarreau, setNumeroBarreau] = useState("");
@@ -53,6 +54,7 @@ export default function DevenirExpertPage() {
   function validate() {
     if (!profession) return "Choisissez une profession";
     if (!specialite.trim()) return "Indiquez votre spécialité";
+    if (!ville.trim()) return "Indiquez votre ville";
     if (!price || Number(price) <= 0) return "Indiquez un tarif par session";
     if (profession === "avocat" && !numeroBarreau.trim()) return "N° au Barreau requis";
     if (profession === "notaire" && !numeroNotaire.trim()) return "N° de notaire / office notarial requis";
@@ -80,6 +82,7 @@ export default function DevenirExpertPage() {
       id: userId,
       profession,
       specialite,
+      ville,
       bio,
       price: Number(price),
       numero_barreau: profession === "avocat" ? numeroBarreau : null,
@@ -175,167 +178,3 @@ export default function DevenirExpertPage() {
         </div>
 
         {profession === "medecin" && (
-          <div className="rounded-[6px] border border-seal/40 bg-seal/5 p-5">
-            <p className="text-sm text-muted">
-              Conformément à la réglementation française sur la télémédecine, le N° RPPS et
-              l'inscription à l'Ordre des médecins sont obligatoires et vérifiés avant activation.
-            </p>
-            <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div>
-                <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">N° RPPS</label>
-                <input
-                  className={inputClass}
-                  value={numeroRpps}
-                  onChange={(e) => setNumeroRpps(e.target.value)}
-                  placeholder="11 chiffres"
-                  maxLength={11}
-                />
-              </div>
-              <div>
-                <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-                  N° Ordre des médecins
-                </label>
-                <input
-                  className={inputClass}
-                  value={numeroOrdreMedecins}
-                  onChange={(e) => setNumeroOrdreMedecins(e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {profession === "avocat" && (
-          <div>
-            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">N° au Barreau</label>
-            <input className={inputClass} value={numeroBarreau} onChange={(e) => setNumeroBarreau(e.target.value)} />
-          </div>
-        )}
-
-        {profession === "notaire" && (
-          <div>
-            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-              N° de notaire / office notarial
-            </label>
-            <input className={inputClass} value={numeroNotaire} onChange={(e) => setNumeroNotaire(e.target.value)} />
-          </div>
-        )}
-
-        {profession === "garagiste" && (
-          <div>
-            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">N° SIRET</label>
-            <input className={inputClass} value={numeroSiret} onChange={(e) => setNumeroSiret(e.target.value)} />
-          </div>
-        )}
-
-        {profession === "coiffeur" && (
-          <div>
-            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-              Certification / diplôme (facultatif)
-            </label>
-            <input
-              className={inputClass}
-              value={certification}
-              onChange={(e) => setCertification(e.target.value)}
-              placeholder="CAP Coiffure, Brevet de maîtrise..."
-            />
-          </div>
-        )}
-
-        {profession === "comptable" && (
-          <div>
-            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-              N° d'inscription à l'Ordre des experts-comptables
-            </label>
-            <input
-              className={inputClass}
-              value={numeroOrdreComptable}
-              onChange={(e) => setNumeroOrdreComptable(e.target.value)}
-            />
-          </div>
-        )}
-
-        <div>
-          <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Spécialité</label>
-          {profession === "medecin" ? (
-            <select className={inputClass} value={specialite} onChange={(e) => setSpecialite(e.target.value)}>
-              <option value="">Sélectionnez une spécialité</option>
-              <option value="Médecin généraliste">Médecin généraliste</option>
-              <option value="Dermatologue">Dermatologue</option>
-              <option value="Psychiatre">Psychiatre</option>
-            </select>
-          ) : profession === "avocat" ? (
-            <select className={inputClass} value={specialite} onChange={(e) => setSpecialite(e.target.value)}>
-              <option value="">Sélectionnez une spécialité</option>
-              <option value="Droit du travail">Droit du travail</option>
-              <option value="Droit de la famille">Droit de la famille</option>
-              <option value="Droit immobilier / logement">Droit immobilier / logement</option>
-            </select>
-          ) : (
-            <input className={inputClass} value={specialite} onChange={(e) => setSpecialite(e.target.value)} />
-          )}
-        </div>
-
-        <div>
-          <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Présentation</label>
-          <textarea
-            className={inputClass + " min-h-[100px]"}
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-          />
-        </div>
-
-        <div>
-          <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Tarif par session (€)</label>
-          <input
-            type="number"
-            className={inputClass + " max-w-[160px]"}
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-          />
-        </div>
-
-        <div>
-          <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Pièces justificatives</label>
-          <p className="mt-1 text-xs text-muted">
-            Carte professionnelle, diplôme, attestation d'inscription... au moins un document.
-          </p>
-
-          <div className="mt-2.5 flex flex-wrap gap-2">
-            <label className="flex cursor-pointer items-center gap-1.5 rounded-full border border-app px-3.5 py-2 font-mono text-xs transition hover:bg-ink/5">
-              <Paperclip className="h-3.5 w-3.5" /> Choisir un fichier
-              <input type="file" multiple className="hidden" onChange={(e) => addFiles(e.target.files)} />
-            </label>
-            <label className="flex cursor-pointer items-center gap-1.5 rounded-full border border-app px-3.5 py-2 font-mono text-xs transition hover:bg-ink/5">
-              <Camera className="h-3.5 w-3.5" /> Prendre une photo
-              <input type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => addFiles(e.target.files)} />
-            </label>
-          </div>
-
-          {documents.length > 0 && (
-            <ul className="mt-3 space-y-2">
-              {documents.map((f, i) => (
-                <li key={i} className="flex items-center justify-between rounded-[3px] border border-app px-3 py-2 text-sm">
-                  <span className="truncate">{f.name}</span>
-                  <button type="button" onClick={() => removeDocument(i)} className="ml-2 shrink-0 text-red-700">
-                    <X className="h-4 w-4" />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-
-        {error && <p className="text-sm text-red-700">{error}</p>}
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="btn-primary w-full rounded-[6px] py-3.5 text-sm font-medium"
-        >
-          {loading ? uploadStep || "Envoi..." : "Envoyer ma candidature"}
-        </button>
-      </form>
-    </main>
-  );
-}
