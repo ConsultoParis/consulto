@@ -3,6 +3,7 @@ import Avatar from "@/components/Avatar";
 import ExpertSearchForm from "@/components/ExpertSearchForm";
 import { createClient } from "@/lib/supabase/server";
 import { PROFESSION_LABELS, PROFESSION_COLORS, type Expert } from "@/lib/types";
+import { distanceKm } from "@/lib/geo";
 import { MapPin } from "lucide-react";
 
 export const revalidate = 30;
@@ -10,7 +11,7 @@ export const revalidate = 30;
 export default async function ExpertsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ profession?: string; q?: string; specialite?: string; ville?: string }>;
+  searchParams: Promise<{ profession?: string; q?: string; specialite?: string; ville?: string; lat?: string; lng?: string }>;
 }) {
   const params = await searchParams;
   const supabase = await createClient();
@@ -28,19 +29,34 @@ export default async function ExpertsPage({
     query = query.eq("specialite", params.specialite);
   }
 
-  if (params.ville) {
-    query = query.ilike("ville", `%${params.ville}%`);
+  const { data: expertsRaw } = await query.order("created_at", { ascending: false });
+
+  let experts = (expertsRaw as Expert[] | null) || [];
+
+  if (params.q) {
+    experts = experts.filter(
+      (e) =>
+        e.specialite.toLowerCase().includes(params.q!.toLowerCase()) ||
+        e.profiles?.full_name.toLowerCase().includes(params.q!.toLowerCase())
+    );
   }
 
-  const { data: experts } = await query.order("created_at", { ascending: false });
+  const searchLat = params.lat ? parseFloat(params.lat) : null;
+  const searchLng = params.lng ? parseFloat(params.lng) : null;
+  const hasLocation = searchLat !== null && searchLng !== null && !isNaN(searchLat) && !isNaN(searchLng);
 
-  const filtered = params.q
-    ? (experts as Expert[] | null)?.filter(
-        (e) =>
-          e.specialite.toLowerCase().includes(params.q!.toLowerCase()) ||
-          e.profiles?.full_name.toLowerCase().includes(params.q!.toLowerCase())
-      )
-    : experts;
+  const withDistance = experts.map((e: any) => ({
+    ...e,
+    distance: hasLocation && e.lat && e.lng ? distanceKm(searchLat!, searchLng!, e.lat, e.lng) : null,
+  }));
+
+  const sorted = hasLocation
+    ? [...withDistance].sort((a, b) => {
+        if (a.distance === null) return 1;
+        if (b.distance === null) return -1;
+        return a.distance - b.distance;
+      })
+    : withDistance;
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-16">
@@ -55,13 +71,12 @@ export default async function ExpertsPage({
       />
 
       <p className="mt-6 font-mono text-xs text-mutedmore">
-        {filtered?.length || 0} expert{(filtered?.length || 0) !== 1 ? "s" : ""} trouvé
-        {(filtered?.length || 0) !== 1 ? "s" : ""}
-        {params.ville ? ` près de ${params.ville}` : ""}
+        {sorted.length} expert{sorted.length !== 1 ? "s" : ""} trouvé{sorted.length !== 1 ? "s" : ""}
+        {hasLocation ? " · trié par proximité" : ""}
       </p>
 
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered?.map((expert) => (
+        {sorted.map((expert: any) => (
           <Link
             key={expert.id}
             href={`/experts/${expert.id}`}
@@ -86,7 +101,9 @@ export default async function ExpertsPage({
               </p>
               {expert.ville && (
                 <p className="mt-1 flex items-center gap-1 text-xs text-mutedmore">
-                  <MapPin className="h-3 w-3" /> {expert.ville}
+                  <MapPin className="h-3 w-3" />
+                  {expert.ville}
+                  {expert.distance !== null && expert.distance !== undefined && ` · à ${Math.round(expert.distance)} km`}
                 </p>
               )}
               <p className="mt-3 font-display text-lg font-semibold" style={{ color: "#3E8EF7" }}>
@@ -95,7 +112,7 @@ export default async function ExpertsPage({
             </div>
           </Link>
         ))}
-        {filtered?.length === 0 && (
+        {sorted.length === 0 && (
           <p className="col-span-full text-sm text-muted">Aucun expert ne correspond à cette recherche.</p>
         )}
       </div>
