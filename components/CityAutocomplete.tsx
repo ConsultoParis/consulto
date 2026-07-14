@@ -2,10 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 
+type CitySuggestion = { label: string; lat: number; lng: number };
+
 export default function CityAutocomplete({
   name,
   value,
   onChange,
+  onSelectCoords,
   placeholder,
   className,
   style,
@@ -13,26 +16,35 @@ export default function CityAutocomplete({
   name?: string;
   value: string;
   onChange: (v: string) => void;
+  onSelectCoords?: (lat: number, lng: number) => void;
   placeholder?: string;
   className?: string;
   style?: React.CSSProperties;
 }) {
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<CitySuggestion[]>([]);
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (value.trim().length < 3) {
+    const trimmed = value.trim();
+    const isPostalCode = /^\d+$/.test(trimmed);
+
+    if ((isPostalCode && trimmed.length < 5) || (!isPostalCode && trimmed.length < 3)) {
       setSuggestions([]);
       return;
     }
+
     const timeout = setTimeout(async () => {
       try {
-        const res = await fetch(
-          `https://geo.api.gouv.fr/communes?nom=${encodeURIComponent(value.trim())}&fields=nom&boost=population&limit=6`
-        );
+        const param = isPostalCode ? `codePostal=${trimmed}` : `nom=${encodeURIComponent(trimmed)}`;
+        const res = await fetch(`https://geo.api.gouv.fr/communes?${param}&fields=nom,centre,codesPostaux&boost=population&limit=8`);
         const data = await res.json();
-        setSuggestions(data.map((c: any) => c.nom));
+        const results: CitySuggestion[] = data.map((c: any) => ({
+          label: isPostalCode ? `${c.nom} (${trimmed})` : c.nom,
+          lat: c.centre?.coordinates?.[1],
+          lng: c.centre?.coordinates?.[0],
+        }));
+        setSuggestions(results);
         setOpen(true);
       } catch {
         setSuggestions([]);
@@ -69,17 +81,18 @@ export default function CityAutocomplete({
           className="absolute left-0 top-full z-20 mt-1 w-full overflow-hidden rounded-[6px] border shadow-lg"
           style={{ borderColor: "var(--border)", backgroundColor: "var(--input-bg)" }}
         >
-          {suggestions.map((s) => (
-            <li key={s}>
+          {suggestions.map((s, i) => (
+            <li key={i}>
               <button
                 type="button"
                 onClick={() => {
-                  onChange(s);
+                  onChange(s.label.replace(/\s*\(\d+\)$/, ""));
+                  if (s.lat && s.lng && onSelectCoords) onSelectCoords(s.lat, s.lng);
                   setOpen(false);
                 }}
                 className="block w-full px-3.5 py-2 text-left text-sm transition hover:bg-[#3E8EF7]/10"
               >
-                {s}
+                {s.label}
               </button>
             </li>
           ))}
