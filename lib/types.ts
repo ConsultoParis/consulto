@@ -20,6 +20,8 @@ export interface Expert {
   profession: Profession;
   specialite: string;
 ville: string | null;
+lat: number | null;
+lng: number | null;
   bio: string | null;
   price: number;
   experience_years: number;
