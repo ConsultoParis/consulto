@@ -52,6 +52,7 @@ export default async function ExpertDetailPage({
           <h1 className="mt-1 font-display text-3xl font-medium">{expert.profiles?.full_name}</h1>
           <p className="mt-1 text-muted">
             {expert.specialite} · {expert.experience_years} ans d'expérience
+{expert.ville ? ` · ${expert.ville}` : ""}
           </p>
           {avgRating && (
             <p className="mt-2 font-mono text-sm text-muted">
