@@ -27,6 +27,7 @@ export default function ExpertSearchForm({
 }) {
   const [profession, setProfession] = useState(defaultProfession || "");
   const [ville, setVille] = useState(defaultVille || "");
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [locating, setLocating] = useState(false);
   const subOptions = SPECIALITES[profession];
 
@@ -35,10 +36,11 @@ export default function ExpertSearchForm({
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
       async (pos) => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        setCoords({ lat, lng });
         try {
-          const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`
-          );
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
           const data = await res.json();
           const city = data.address?.city || data.address?.town || data.address?.village || data.address?.municipality || "";
           if (city) setVille(city);
@@ -86,13 +88,16 @@ export default function ExpertSearchForm({
         </select>
       )}
 
-      <div className="flex flex-1 gap-2 sm:w-56 sm:flex-none">
+      <div className="flex flex-1 gap-2 sm:w-64 sm:flex-none">
         <div className="flex-1">
           <CityAutocomplete
-            name="ville"
             value={ville}
-            onChange={setVille}
-            placeholder="Ville"
+            onChange={(v) => {
+              setVille(v);
+              setCoords(null);
+            }}
+            onSelectCoords={(lat, lng) => setCoords({ lat, lng })}
+            placeholder="Ville ou code postal"
             className={inputClass + " w-full"}
             style={inputStyle}
           />
@@ -108,6 +113,10 @@ export default function ExpertSearchForm({
           <MapPin className="h-4 w-4" style={{ color: locating ? undefined : "#3E8EF7" }} />
         </button>
       </div>
+
+      <input type="hidden" name="ville" value={ville} />
+      {coords && <input type="hidden" name="lat" value={coords.lat} />}
+      {coords && <input type="hidden" name="lng" value={coords.lng} />}
 
       <button type="submit" className="btn-primary rounded-[3px] px-6 py-2.5 text-sm font-medium">
         Rechercher
