@@ -19,6 +19,7 @@ export interface Expert {
   id: string;
   profession: Profession;
   specialite: string;
+ville: string | null;
   bio: string | null;
   price: number;
   experience_years: number;
