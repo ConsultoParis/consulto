@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import ReviewForm from "@/components/ReviewForm";
+import CancelBookingButton from "@/components/CancelBookingButton";
 import CompleteProfileForm from "@/components/CompleteProfileForm";
 import ReferralCode from "@/components/ReferralCode";
 import { PROFESSION_LABELS, PROFESSION_COLORS } from "@/lib/types";
@@ -209,6 +210,12 @@ export default async function ClientDashboardPage() {
                     >
                       Accéder à la consultation
                     </Link>
+                  )}
+
+                  {!isPast && b.status === "confirmed" && (
+                    <div className="mt-3">
+                      <CancelBookingButton bookingId={b.id} isClient={true} appointmentDate={b.date} appointmentTime={b.start_time} />
+                    </div>
                   )}
 
                   {(clientDocs.length > 0 || expertDocs.length > 0) && (
