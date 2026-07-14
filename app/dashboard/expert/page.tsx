@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import AddSlotForm from "@/components/AddSlotForm";
 import SendDocumentsForm from "@/components/SendDocumentsForm";
 import CompleteBookingButton from "@/components/CompleteBookingButton";
+import CancelBookingButton from "@/components/CancelBookingButton";
 import CompleteExpertProfileForm from "@/components/CompleteExpertProfileForm";
 import StripeConnectButton from "@/components/StripeConnectButton";
 import { Star, Calendar, Eye, Award, TrendingUp, Zap, PlusCircle, CheckCircle2, Wallet } from "lucide-react";
@@ -230,6 +231,12 @@ export default async function ExpertDashboardPage() {
               >
                 Accéder à la consultation
               </Link>
+
+              {!isPast && b.status === "confirmed" && (
+                <div className="mt-3">
+                  <CancelBookingButton bookingId={b.id} isClient={false} appointmentDate={b.date} appointmentTime={b.start_time} />
+                </div>
+              )}
 
               {b.client_note && (
                 <div className="mt-3 border-t border-ink/10 pt-3">
