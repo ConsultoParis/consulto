@@ -73,13 +73,7 @@ export default async function AdminExpertsPage() {
                   <p className="font-mono text-[11px] uppercase text-muted">Justificatifs</p>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {expert.docsWithUrls.map((d: any) => (
-                      
-                        key={d.id}
-                        href={d.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 rounded-full border border-app px-3 py-1.5 text-xs transition hover:border-[#3E8EF7]"
-                      >
+                      <a key={d.id} href={d.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 rounded-full border border-app px-3 py-1.5 text-xs transition hover:border-[#3E8EF7]">
                         <FileText className="h-3.5 w-3.5" /> {d.file_name}
                       </a>
                     ))}
