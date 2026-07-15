@@ -105,3 +105,24 @@ export async function sendCancellationEmail({
     `,
   });
 }
+
+/** Message de bienvenue personnalisé, envoyé dès qu'un expert est validé. */
+export async function sendExpertWelcomeEmail({ to, expertName }: { to: string; expertName: string }) {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://1expert.fr";
+  return resend.emails.send({
+    from: FROM,
+    to,
+    subject: "Votre profil 1Expert est validé — bienvenue !",
+    html: `
+      <h2>Bienvenue sur 1Expert, ${expertName} !</h2>
+      <p>Votre dossier a été vérifié et votre profil est maintenant en ligne. Voici trois conseils pour bien démarrer :</p>
+      <ol>
+        <li><strong>Ajoutez au moins 5 créneaux cette semaine</strong> — sans disponibilité, les clients ne peuvent pas vous réserver.</li>
+        <li><strong>Complétez votre présentation (bio)</strong> — c'est souvent la première chose que lit un client avant de réserver.</li>
+        <li><strong>Répondez rapidement</strong> aux messages du tchat une fois une réservation reçue, ça améliore votre note.</li>
+      </ol>
+      <p><a href="${siteUrl}/dashboard/expert">Accéder à mon tableau de bord</a></p>
+      <p>À bientôt sur 1Expert !</p>
+    `,
+  });
+}
