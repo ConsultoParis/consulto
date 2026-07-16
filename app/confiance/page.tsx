@@ -1,4 +1,5 @@
 import ImageCarousel from "@/components/ImageCarousel";
+import PresentationVideo from "@/components/PresentationVideo";
 
 const SECTIONS = [
   {
@@ -39,7 +40,7 @@ export default function ConfiancePage() {
           className="pointer-events-none absolute inset-0 opacity-[0.18]"
           style={{
             background:
-              "radial-gradient(500px circle at 8% 0%, #E0668A, transparent 55%), radial-gradient(450px circle at 95% 25%, #F2A65A, transparent 55%)",
+              "radial-gradient(500px circle at 8% 0%, #3E8EF7, transparent 55%), radial-gradient(450px circle at 95% 25%, #123b64, transparent 55%)",
           }}
         />
         <div className="relative mx-auto max-w-4xl px-6 pb-10 pt-16">
@@ -50,8 +51,10 @@ export default function ConfiancePage() {
           </p>
         </div>
       </section>
-
       <div className="mx-auto max-w-4xl px-6 pb-16">
+        <div className="mb-10">
+          <PresentationVideo />
+        </div>
         <ImageCarousel
           images={[
             { src: "/carousel-5.jpg", alt: "1Expert", caption: "Chaque expert est vérifié" },
@@ -59,7 +62,6 @@ export default function ConfiancePage() {
             { src: "/carousel-4.jpg", alt: "1Expert", caption: "Identité contrôlée" },
           ]}
         />
-
         <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
           {SECTIONS.map((s, i) => (
             <div key={i} id={s.title.includes("remboursement") ? "remboursement" : undefined} className="card-soft p-6" style={{ backgroundColor: "var(--card)" }}>
@@ -74,7 +76,6 @@ export default function ConfiancePage() {
             </div>
           ))}
         </div>
-
         <h2 id="remboursement" className="mt-14 font-display text-2xl font-medium">Questions fréquentes</h2>
         <div className="mt-6 divide-y divide-ink/10 border-y border-ink/10">
           {FAQ.map((item, i) => (
