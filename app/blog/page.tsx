@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Avatar from "@/components/Avatar";
 import ImageCarousel from "@/components/ImageCarousel";
+import PresentationVideo from "@/components/PresentationVideo";
 import { createClient } from "@/lib/supabase/server";
 import { PROFESSION_LABELS, PROFESSION_COLORS } from "@/lib/types";
 
@@ -31,6 +32,10 @@ export default async function BlogPage() {
           <p className="mt-3 max-w-xl text-muted">Des conseils concrets, écrits par les professionnels vérifiés du registre.</p>
         </div>
       </section>
+
+      <div className="mx-auto max-w-4xl px-6 pb-10">
+        <PresentationVideo />
+      </div>
 
       <div className="mx-auto max-w-6xl px-6 pb-16">
         <ImageCarousel
