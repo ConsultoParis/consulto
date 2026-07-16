@@ -79,10 +79,13 @@ export default async function HomePage() {
       <div className="divider-silver divider-silver-intro" />
 
       {/* EXPERTS VÉRIFIÉS */}
-      <section className="py-16">
-        <div className="mx-auto max-w-6xl px-6">
-          <p className="font-mono text-xs uppercase tracking-[0.16em]" style={{ color: "#3E8EF7" }}>Le registre</p>
-          <h2 className="mt-2 font-display text-3xl font-medium">Des experts, pas des inconnus</h2>
+      <section className="relative overflow-hidden py-16">
+        <div className="bg-tech-grid pointer-events-none absolute inset-0 opacity-60" />
+        <div className="relative mx-auto max-w-6xl px-6">
+          <span className="badge-glass inline-flex items-center rounded-full px-3.5 py-1.5 font-mono text-xs font-medium" style={{ color: "#3E8EF7" }}>
+            Le registre
+          </span>
+          <h2 className="mt-3 font-display text-3xl font-medium">Des experts, pas des inconnus</h2>
 
           {!experts || experts.length === 0 ? (
             <p className="mt-6 text-sm text-muted">
@@ -125,11 +128,21 @@ export default async function HomePage() {
       <div className="divider-silver" />
 
       {/* VIDÉO DE PRÉSENTATION */}
-      <section className="mx-auto max-w-4xl px-6 py-16">
-        <p className="font-mono text-xs uppercase tracking-[0.16em]" style={{ color: "#3E8EF7" }}>Découvrir</p>
-        <h2 className="mt-2 font-display text-3xl font-medium">1Expert en une minute</h2>
-        <div className="mt-6">
-          <PresentationVideo />
+      <section className="relative overflow-hidden">
+        <div
+          className="pointer-events-none absolute inset-0 opacity-20"
+          style={{
+            background: "radial-gradient(500px circle at 50% 0%, #3E8EF7, transparent 60%)",
+          }}
+        />
+        <div className="relative mx-auto max-w-4xl px-6 py-16">
+          <span className="badge-glass inline-flex items-center rounded-full px-3.5 py-1.5 font-mono text-xs font-medium" style={{ color: "#3E8EF7" }}>
+            Découvrir
+          </span>
+          <h2 className="mt-3 font-display text-3xl font-medium">1Expert en une minute</h2>
+          <div className="mt-6">
+            <PresentationVideo />
+          </div>
         </div>
       </section>
 
