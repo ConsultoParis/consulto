@@ -1,4 +1,3 @@
-import ImageCarousel from "@/components/ImageCarousel";
 import PresentationVideo from "@/components/PresentationVideo";
 
 const SECTIONS = [
@@ -55,13 +54,6 @@ export default function ConfiancePage() {
         <div className="mb-10">
           <PresentationVideo />
         </div>
-        <ImageCarousel
-          images={[
-            { src: "/carousel-5.jpg", alt: "1Expert", caption: "Chaque expert est vérifié" },
-            { src: "/carousel-3.jpg", alt: "1Expert", caption: "Justificatif professionnel obligatoire" },
-            { src: "/carousel-4.jpg", alt: "1Expert", caption: "Identité contrôlée" },
-          ]}
-        />
         <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
           {SECTIONS.map((s, i) => (
             <div key={i} id={s.title.includes("remboursement") ? "remboursement" : undefined} className="card-soft p-6" style={{ backgroundColor: "var(--card)" }}>
