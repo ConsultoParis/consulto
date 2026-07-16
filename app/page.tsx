@@ -2,6 +2,7 @@ import Link from "next/link";
 import Avatar from "@/components/Avatar";
 import ImageCarousel from "@/components/ImageCarousel";
 import LogoAnimated from "@/components/LogoAnimated";
+import PresentationVideo from "@/components/PresentationVideo";
 import { Sparkles, Star, Lock, Globe } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { PROFESSION_LABELS, PROFESSION_COLORS, type Expert } from "@/lib/types";
@@ -122,6 +123,15 @@ export default async function HomePage() {
       </section>
 
       <div className="divider-silver" />
+
+      {/* VIDÉO DE PRÉSENTATION */}
+      <section className="mx-auto max-w-4xl px-6 py-16">
+        <p className="font-mono text-xs uppercase tracking-[0.16em]" style={{ color: "#3E8EF7" }}>Découvrir</p>
+        <h2 className="mt-2 font-display text-3xl font-medium">1Expert en une minute</h2>
+        <div className="mt-6">
+          <PresentationVideo />
+        </div>
+      </section>
 
       {/* CARROUSEL */}
       <section className="mx-auto max-w-6xl px-6 py-16">
