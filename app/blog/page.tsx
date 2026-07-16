@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Avatar from "@/components/Avatar";
-import ImageCarousel from "@/components/ImageCarousel";
 import PresentationVideo from "@/components/PresentationVideo";
 import { createClient } from "@/lib/supabase/server";
 import { PROFESSION_LABELS, PROFESSION_COLORS } from "@/lib/types";
@@ -38,14 +37,6 @@ export default async function BlogPage() {
       </div>
 
       <div className="mx-auto max-w-6xl px-6 pb-16">
-        <ImageCarousel
-          images={[
-            { src: "/carousel-1.jpg", alt: "1Expert", caption: "Paiement sécurisé en séquestre" },
-            { src: "/carousel-2.jpg", alt: "1Expert", caption: "Aucun abonnement caché" },
-            { src: "/carousel-5.jpg", alt: "1Expert", caption: "Chaque expert est vérifié" },
-          ]}
-        />
-
         <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
           {posts?.map((post: any) => {
             const profession = post.experts?.profession;
