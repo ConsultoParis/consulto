@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState, use as usePromise } from "react";
+import { useEffect, useState, useMemo, use as usePromise } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { createClient } from "@/lib/supabase/client";
 import CheckoutForm from "@/components/CheckoutForm";
+import BookingCalendar from "@/components/BookingCalendar";
 import type { AvailabilitySlot, ConsultationMode } from "@/lib/types";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -18,6 +19,7 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
 
   const [expert, setExpert] = useState<any>(null);
   const [slots, setSlots] = useState<AvailabilitySlot[]>([]);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<AvailabilitySlot | null>(null);
   const [mode, setMode] = useState<ConsultationMode>("video");
   const [docs, setDocs] = useState<File[]>([]);
@@ -49,7 +51,10 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
       const preselectSlotId = searchParams.get("slot");
       if (preselectSlotId && slotsData) {
         const preselect = slotsData.find((s) => s.id === preselectSlotId);
-        if (preselect) setSelectedSlot(preselect);
+        if (preselect) {
+          setSelectedSlot(preselect);
+          setSelectedDate(preselect.date);
+        }
       }
 
       const { data: userData } = await supabase.auth.getUser();
@@ -57,6 +62,17 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
     }
     load();
   }, [expertId]); // eslint-disable-line
+
+  const availableDates = useMemo(() => new Set(slots.map((s) => s.date)), [slots]);
+  const slotsForSelectedDate = useMemo(
+    () => (selectedDate ? slots.filter((s) => s.date === selectedDate) : []),
+    [slots, selectedDate]
+  );
+
+  function handleSelectDate(date: string) {
+    setSelectedDate(date);
+    setSelectedSlot(null);
+  }
 
   async function handleContinueToPayment() {
     if (!selectedSlot) return setError("Choisissez un créneau");
@@ -137,32 +153,43 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
             </>
           )}
 
-          <h2 className="mt-8 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Créneau</h2>
-          <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {slots.map((slot) => (
-              <button
-                key={slot.id}
-                onClick={() => setSelectedSlot(slot)}
-                className={`rounded-[3px] border px-4 py-3 text-left transition-all ${
-                  selectedSlot?.id === slot.id
-                    ? "border-[#3E8EF7] bg-[#3E8EF7]/10 shadow-[0_0_0_1px_rgba(62,142,247,0.3),0_0_16px_-4px_rgba(62,142,247,0.4)]"
-                    : "border-app hover:border-[#3E8EF7]"
-                }`}
-              >
-                <span className="block text-sm capitalize">
-                  {new Date(slot.date).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })}
-                </span>
-                <span className="font-mono text-xs text-muted">
-                  {slot.start_time} · {slot.duration_min} min
-                  {slot.duration_min === 5 && (
-                    <span className="ml-1.5 rounded-full px-1.5 py-0.5" style={{ backgroundColor: "#3E8EF71a", color: "#3E8EF7" }}>
-                      Devis rapide 5€
-                    </span>
-                  )}
-                </span>
-              </button>
-            ))}
+          <h2 className="mt-8 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Choisir une date</h2>
+          <div className="mt-3">
+            <BookingCalendar availableDates={availableDates} selectedDate={selectedDate} onSelectDate={handleSelectDate} />
           </div>
+
+          {selectedDate && (
+            <>
+              <h2 className="mt-6 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Créneaux du jour</h2>
+              {slotsForSelectedDate.length === 0 ? (
+                <p className="mt-3 text-sm text-muted">Aucun créneau restant pour cette date.</p>
+              ) : (
+                <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                  {slotsForSelectedDate.map((slot) => (
+                    <button
+                      key={slot.id}
+                      onClick={() => setSelectedSlot(slot)}
+                      className={`rounded-[3px] border px-4 py-3 text-left transition-all ${
+                        selectedSlot?.id === slot.id
+                          ? "border-[#3E8EF7] bg-[#3E8EF7]/10 shadow-[0_0_0_1px_rgba(62,142,247,0.3),0_0_16px_-4px_rgba(62,142,247,0.4)]"
+                          : "border-app hover:border-[#3E8EF7]"
+                      }`}
+                    >
+                      <span className="block text-sm font-medium">{slot.start_time}</span>
+                      <span className="font-mono text-xs text-muted">
+                        {slot.duration_min} min
+                        {slot.duration_min === 5 && (
+                          <span className="ml-1 rounded-full px-1.5 py-0.5" style={{ backgroundColor: "#3E8EF71a", color: "#3E8EF7" }}>
+                            Devis 5€
+                          </span>
+                        )}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
 
           <h2 className="mt-8 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
             Pièces justificatives (optionnel)
