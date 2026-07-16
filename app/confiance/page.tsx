@@ -76,7 +76,7 @@ export default function ConfiancePage() {
               className="group rounded-[8px] border p-5 transition-all hover:border-[#3E8EF7] hover:shadow-[0_0_16px_-4px_rgba(62,142,247,0.4)]"
               style={{ borderColor: "var(--border)", backgroundColor: "var(--card)" }}
             >
-              <summary className="flex cursor-pointer list-none items-center justify-between font-display text-lg font-medium">
+              <summary className="flex cursor-pointer list-none items-center justify-between font-display text-lg font-semibold" style={{ color: "#3E8EF7" }}>
                 {item.q}
                 <span className="font-mono text-sm text-muted group-open:rotate-180">▾</span>
               </summary>
