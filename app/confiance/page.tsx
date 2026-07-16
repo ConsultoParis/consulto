@@ -69,9 +69,13 @@ export default function ConfiancePage() {
           ))}
         </div>
         <h2 id="remboursement" className="mt-14 font-display text-2xl font-medium">Questions fréquentes</h2>
-        <div className="mt-6 divide-y divide-ink/10 border-y border-ink/10">
+        <div className="mt-6 space-y-3">
           {FAQ.map((item, i) => (
-            <details key={i} className="group py-5">
+            <details
+              key={i}
+              className="group rounded-[8px] border p-5 transition-all hover:border-[#3E8EF7] hover:shadow-[0_0_16px_-4px_rgba(62,142,247,0.4)]"
+              style={{ borderColor: "var(--border)", backgroundColor: "var(--card)" }}
+            >
               <summary className="flex cursor-pointer list-none items-center justify-between font-display text-lg font-medium">
                 {item.q}
                 <span className="font-mono text-sm text-muted group-open:rotate-180">▾</span>
