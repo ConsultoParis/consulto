@@ -12,6 +12,7 @@ const navLinks = [
   { href: "/", label: "Accueil" },
   { href: "/experts", label: "Trouver un expert" },
   { href: "/devenir-expert", label: "Devenir expert" },
+  { href: "/confiance", label: "Centre de confiance" },
   { href: "/blog", label: "Blog" },
 ];
 
@@ -41,10 +42,8 @@ export default function Header() {
       >
         <div className="divider-silver pointer-events-none absolute bottom-0 left-0 w-full" />
         <div className="relative mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
-          {/* Logo animé */}
           <LogoAnimated size="sm" />
 
-          {/* Icônes, visibles sur toutes les tailles d'écran */}
           <div className="flex items-center gap-1.5">
             <ThemeToggle />
             <Link
@@ -75,7 +74,6 @@ export default function Header() {
         </div>
       </header>
 
-      {/* Overlay menu — en dehors du <header> pour ne pas être affecté par son flou */}
       {menuOpen && (
         <div className="fixed inset-0 z-50">
           <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" onClick={() => setMenuOpen(false)} />
