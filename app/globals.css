@@ -42,8 +42,6 @@ body {
 .text-mutedmore { color: var(--text-tertiary); }
 .border-app { border-color: var(--border); }
 
-/* Grille tech en arrière-plan — donne une texture "logiciel/dashboard"
-   discrète, utilisée derrière le hero et les sections d'en-tête. */
 .bg-tech-grid {
   background-image:
     linear-gradient(rgba(62, 142, 247, 0.08) 1px, transparent 1px),
@@ -75,8 +73,6 @@ body {
     0 0 24px -6px rgba(62, 142, 247, 0.35);
 }
 
-/* Tous les champs de formulaire du site s'adaptent au thème clair/sombre,
-   au lieu de garder le fond blanc par défaut du navigateur. */
 input,
 textarea,
 select {
@@ -94,8 +90,6 @@ select:focus {
   box-shadow: 0 0 0 3px rgba(62, 142, 247, 0.18);
 }
 
-/* Bouton d'action principal : dégradé bleu marine → électrique, avec un
-   effet de brillance qui balaie le bouton au survol (façon interface tech). */
 .btn-primary {
   position: relative;
   overflow: hidden;
@@ -128,7 +122,25 @@ select:focus {
   transform: none;
 }
 
-/* Chiffres clés en dégradé bleu électrique — tableaux de bord, statistiques. */
+/* Bouton secondaire (contour) — même famille de micro-interaction que le
+   bouton principal, en plus discret : légère élévation + lueur bleue. */
+.btn-secondary {
+  border: 1px solid var(--border);
+  background-color: transparent;
+  color: var(--text);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, background-color 0.2s;
+}
+.btn-secondary:hover {
+  transform: translateY(-1px);
+  border-color: #3e8ef7;
+  background-color: rgba(62, 142, 247, 0.06);
+  box-shadow: 0 6px 16px -6px rgba(62, 142, 247, 0.3);
+}
+.btn-secondary:disabled {
+  opacity: 0.5;
+  transform: none;
+}
+
 .text-gradient {
   background: linear-gradient(135deg, #0a2540 0%, #3e8ef7 100%);
   -webkit-background-clip: text;
@@ -141,14 +153,12 @@ select:focus {
   background-clip: text;
 }
 
-/* Badge/pill façon verre dépoli, pour les étiquettes flottantes. */
 .badge-glass {
   backdrop-filter: blur(6px);
   background-color: rgba(62, 142, 247, 0.12);
   border: 1px solid rgba(62, 142, 247, 0.3);
 }
 
-/* Lien de navigation avec soulignement animé au survol. */
 .nav-link {
   position: relative;
 }
@@ -171,7 +181,6 @@ select:focus {
   50% { opacity: 0.6; }
 }
 
-/* Ligne séparatrice argentée — utilisée entre toutes les sections du site. */
 .divider-silver {
   position: relative;
   height: 1px;
@@ -187,8 +196,6 @@ select:focus {
   box-shadow: 0 0 12px 1px rgba(232, 240, 252, 0.35);
 }
 
-/* Variante avec reflet qui balaie une seule fois, au chargement de la page
-   (utilisée uniquement pour la toute première ligne de l'accueil). */
 .divider-silver-intro::after {
   content: "";
   position: absolute;
@@ -206,7 +213,6 @@ select:focus {
   100% { left: 100%; opacity: 0; }
 }
 
-/* Logo animé 1Expert */
 @keyframes logoEntranceBadge {
   0% { opacity: 0; transform: scale(0.4) rotate(-25deg); }
   60% { opacity: 1; transform: scale(1.08) rotate(4deg); }
