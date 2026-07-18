@@ -7,9 +7,52 @@ import { loadStripe } from "@stripe/stripe-js";
 import { createClient } from "@/lib/supabase/client";
 import CheckoutForm from "@/components/CheckoutForm";
 import BookingCalendar from "@/components/BookingCalendar";
+import { Check } from "lucide-react";
 import type { AvailabilitySlot, ConsultationMode } from "@/lib/types";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+
+const STEPS = [
+  { key: "creneaux", label: "Créneau" },
+  { key: "paiement", label: "Paiement" },
+  { key: "confirmation", label: "Confirmé" },
+];
+
+function StepIndicator({ step }: { step: "creneaux" | "paiement" | "confirmation" }) {
+  const currentIndex = STEPS.findIndex((s) => s.key === step);
+  return (
+    <div className="mt-6 flex items-center">
+      {STEPS.map((s, i) => {
+        const isDone = i < currentIndex;
+        const isActive = i === currentIndex;
+        return (
+          <div key={s.key} className="flex flex-1 items-center last:flex-none">
+            <div className="flex flex-col items-center gap-1.5">
+              <div
+                className="flex h-8 w-8 items-center justify-center rounded-full font-mono text-xs font-semibold transition-all"
+                style={
+                  isDone
+                    ? { backgroundColor: "#1E8F6B", color: "#FFFFFF" }
+                    : isActive
+                    ? { backgroundColor: "#0A2540", color: "#F4F8FF", boxShadow: "0 0 0 4px rgba(62,142,247,0.2)" }
+                    : { backgroundColor: "var(--input-bg)", color: "var(--text-quaternary)", border: "1px solid var(--border)" }
+                }
+              >
+                {isDone ? <Check className="h-4 w-4" /> : i + 1}
+              </div>
+              <span className="font-mono text-[10px] uppercase tracking-[0.06em]" style={{ color: isActive ? "#3E8EF7" : "var(--text-tertiary)" }}>
+                {s.label}
+              </span>
+            </div>
+            {i < STEPS.length - 1 && (
+              <div className="mx-2 h-px flex-1" style={{ backgroundColor: isDone ? "#1E8F6B" : "var(--border)" }} />
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 
 export default function BookingPage({ params }: { params: Promise<{ expertId: string }> }) {
   const { expertId } = usePromise(params);
@@ -124,6 +167,8 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
   return (
     <main className="mx-auto max-w-2xl px-6 py-16">
       <h1 className="font-display text-3xl font-medium">Réserver avec {expert.profiles?.full_name}</h1>
+
+      <StepIndicator step={step} />
 
       {step === "creneaux" && (
         <div className="mt-8">
