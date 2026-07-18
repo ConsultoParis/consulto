@@ -19,11 +19,13 @@ export default function ExpertSearchForm({
   defaultProfession,
   defaultSpecialite,
   defaultVille,
+  defaultTri,
 }: {
   defaultQ?: string;
   defaultProfession?: string;
   defaultSpecialite?: string;
   defaultVille?: string;
+  defaultTri?: string;
 }) {
   const [profession, setProfession] = useState(defaultProfession || "");
   const [ville, setVille] = useState(defaultVille || "");
@@ -113,6 +115,13 @@ export default function ExpertSearchForm({
           <MapPin className="h-4 w-4" style={{ color: locating ? undefined : "#3E8EF7" }} />
         </button>
       </div>
+
+      <select name="tri" defaultValue={defaultTri || ""} className={`${inputClass} sm:w-52`} style={inputStyle}>
+        <option value="">Pertinence</option>
+        <option value="prix_asc">Prix croissant</option>
+        <option value="prix_desc">Prix décroissant</option>
+        <option value="note">Mieux notés</option>
+      </select>
 
       <input type="hidden" name="ville" value={ville} />
       {coords && <input type="hidden" name="lat" value={coords.lat} />}
