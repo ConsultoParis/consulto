@@ -236,48 +236,52 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
             </>
           )}
 
-          <h2 className="mt-8 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-            Pièces justificatives (optionnel)
-          </h2>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <label className="cursor-pointer rounded-full border border-app px-3.5 py-2 font-mono text-xs">
-              Choisir un fichier
-              <input
-                type="file"
-                multiple
-                className="hidden"
-                onChange={(e) => setDocs((d) => [...d, ...Array.from(e.target.files || [])])}
-              />
-            </label>
-            <label className="cursor-pointer rounded-full border border-app px-3.5 py-2 font-mono text-xs">
-              Prendre une photo
-              <input
-                type="file"
-                accept="image/*"
-                capture="environment"
-                className="hidden"
-                onChange={(e) => setDocs((d) => [...d, ...Array.from(e.target.files || [])])}
-              />
-            </label>
-          </div>
-          {docs.length > 0 && (
-            <ul className="mt-3 space-y-1 text-sm text-muted">
-              {docs.map((f, i) => (
-                <li key={i}>{f.name}</li>
-              ))}
-            </ul>
-          )}
+          <details className="group mt-8 rounded-[6px] border" style={{ borderColor: "var(--border)" }}>
+            <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
+              Ajouter des précisions (optionnel)
+              <span className="font-mono text-sm group-open:rotate-180">▾</span>
+            </summary>
+            <div className="border-t px-4 py-4" style={{ borderColor: "var(--border)" }}>
+              <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Pièces justificatives</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <label className="cursor-pointer rounded-full border border-app px-3.5 py-2 font-mono text-xs">
+                  Choisir un fichier
+                  <input
+                    type="file"
+                    multiple
+                    className="hidden"
+                    onChange={(e) => setDocs((d) => [...d, ...Array.from(e.target.files || [])])}
+                  />
+                </label>
+                <label className="cursor-pointer rounded-full border border-app px-3.5 py-2 font-mono text-xs">
+                  Prendre une photo
+                  <input
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    className="hidden"
+                    onChange={(e) => setDocs((d) => [...d, ...Array.from(e.target.files || [])])}
+                  />
+                </label>
+              </div>
+              {docs.length > 0 && (
+                <ul className="mt-3 space-y-1 text-sm text-muted">
+                  {docs.map((f, i) => (
+                    <li key={i}>{f.name}</li>
+                  ))}
+                </ul>
+              )}
 
-          <h2 className="mt-8 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
-            Message pour l'expert (optionnel)
-          </h2>
-          <textarea
-            className="mt-2 w-full rounded-[3px] border border-app px-3.5 py-2.5 text-[15px] outline-none focus:border-ink"
-            style={{ minHeight: 90 }}
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            placeholder="Précisez votre situation, votre besoin, toute information utile avant le rendez-vous..."
-          />
+              <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Message pour l'expert</p>
+              <textarea
+                className="mt-2 w-full rounded-[3px] border border-app px-3.5 py-2.5 text-[15px] outline-none focus:border-ink"
+                style={{ minHeight: 90 }}
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="Précisez votre situation, votre besoin, toute information utile avant le rendez-vous..."
+              />
+            </div>
+          </details>
 
           <h2 className="mt-8 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Email</h2>
           <input
