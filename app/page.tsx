@@ -37,7 +37,8 @@ export default async function HomePage() {
             <LogoAnimated size="lg" />
           </div>
           <span className="badge-glass inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-mono text-xs font-medium" style={{ color: "#3E8EF7" }}>
-            <Sparkles className="h-3.5 w-3.5" /> Plus de 10&nbsp;000 consultations réalisées
+            <Sparkles className="h-3.5 w-3.5" />
+            La confiance avant la vitesse
           </span>
           <p className="mt-4 font-mono text-xs uppercase tracking-[0.16em] text-mutedmore">
             Registre d'experts vérifiés — France
@@ -52,7 +53,7 @@ export default async function HomePage() {
 
           <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
             <span className="flex items-center gap-1.5 text-sm text-muted">
-              <Star className="h-4 w-4" style={{ color: "#3E8EF7" }} /> 2&nbsp;500 experts vérifiés
+              <Star className="h-4 w-4" style={{ color: "#3E8EF7" }} /> Vérification manuelle systématique
             </span>
             <span className="flex items-center gap-1.5 text-sm text-muted">
               <Lock className="h-4 w-4" style={{ color: "#3E8EF7" }} /> Paiement sécurisé
