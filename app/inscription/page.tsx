@@ -1,10 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 export default function InscriptionPage() {
+  return (
+    <Suspense fallback={null}>
+      <InscriptionForm />
+    </Suspense>
+  );
+}
+
+function InscriptionForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const supabase = createClient();
