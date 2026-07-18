@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Avatar from "@/components/Avatar";
+import VerifiedBadge from "@/components/VerifiedBadge";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { PROFESSION_LABELS, PROFESSION_COLORS } from "@/lib/types";
@@ -52,17 +53,20 @@ export default async function ExpertDetailPage({
           <h1 className="mt-1 font-display text-3xl font-medium">{expert.profiles?.full_name}</h1>
           <p className="mt-1 text-muted">
             {expert.specialite} · {expert.experience_years} ans d'expérience
-{expert.ville ? ` · ${expert.ville}` : ""}
+            {expert.ville ? ` · ${expert.ville}` : ""}
           </p>
-          {avgRating && (
-            <p className="mt-2 font-mono text-sm text-muted">
-              ★ {avgRating.toFixed(1)} · {reviews!.length} avis
-            </p>
-          )}
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <VerifiedBadge />
+            {avgRating && (
+              <p className="font-mono text-sm text-muted">
+                ★ {avgRating.toFixed(1)} · {reviews!.length} avis
+              </p>
+            )}
+          </div>
         </div>
         <div className="card-soft p-5 text-center" style={{ backgroundColor: "var(--card)" }}>
           <p className="font-display text-2xl font-medium">{expert.price} €</p>
-          <p className="font-mono text-[11px] text-mutedmore">par session</p>
+          <p className="font-mono text-[11px] text-mutedmore">par session · sans frais caché</p>
           <Link
             href={`/booking/${expert.id}`}
             className="btn-primary mt-3 block rounded-[3px] px-5 py-2.5 text-sm font-medium"
@@ -73,6 +77,25 @@ export default async function ExpertDetailPage({
       </div>
 
       {expert.bio && <p className="mt-8 leading-relaxed text-muted">{expert.bio}</p>}
+
+      <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-mutedmore">
+        Avis certifiés ({reviews?.length || 0})
+      </h2>
+      {!reviews || reviews.length === 0 ? (
+        <p className="mt-4 text-sm text-muted">Aucun avis pour le moment.</p>
+      ) : (
+        <div className="mt-4 space-y-4">
+          {reviews.map((r) => (
+            <div key={r.id} className="card-soft p-4" style={{ backgroundColor: "var(--card)" }}>
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">{r.profiles?.full_name}</span>
+                <span className="font-mono text-xs" style={{ color: "#3E8EF7" }}>★ {r.rating}</span>
+              </div>
+              <p className="mt-2 text-sm text-muted">{r.comment}</p>
+            </div>
+          ))}
+        </div>
+      )}
 
       <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-mutedmore">
         Créneaux disponibles ({slots?.length || 0})
@@ -98,25 +121,6 @@ export default async function ExpertDetailPage({
               </span>
               <span className="font-mono text-xs" style={{ color: "#3E8EF7" }}>Choisir →</span>
             </Link>
-          ))}
-        </div>
-      )}
-
-      <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-mutedmore">
-        Avis certifiés ({reviews?.length || 0})
-      </h2>
-      {!reviews || reviews.length === 0 ? (
-        <p className="mt-4 text-sm text-muted">Aucun avis pour le moment.</p>
-      ) : (
-        <div className="mt-4 space-y-4">
-          {reviews.map((r) => (
-            <div key={r.id} className="card-soft p-4" style={{ backgroundColor: "var(--card)" }}>
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">{r.profiles?.full_name}</span>
-                <span className="font-mono text-xs" style={{ color: "#3E8EF7" }}>★ {r.rating}</span>
-              </div>
-              <p className="mt-2 text-sm text-muted">{r.comment}</p>
-            </div>
           ))}
         </div>
       )}
