@@ -10,7 +10,7 @@ import CityAutocomplete from "@/components/CityAutocomplete";
 const inputClass =
   "mt-1.5 w-full rounded-[3px] border border-app px-3.5 py-2.5 text-[15px] outline-none focus:border-ink";
 
-const STEP_LABELS = ["Profil", "Justificatif", "Offre", "Documents"];
+const STEP_LABELS = ["Profil", "Offre", "Justificatif", "Terminé"];
 
 function StepIndicator({ current }: { current: number }) {
   return (
@@ -98,6 +98,9 @@ export default function DevenirExpertPage() {
       if (!ville.trim()) return "Indiquez votre ville";
     }
     if (step === 1) {
+      if (!price || Number(price) <= 0) return "Indiquez un tarif par session";
+    }
+    if (step === 2) {
       if (profession === "avocat" && !numeroBarreau.trim()) return "N° au Barreau requis";
       if (profession === "notaire" && !numeroNotaire.trim()) return "N° de notaire / office notarial requis";
       if (profession === "garagiste" && !numeroSiret.trim()) return "N° SIRET requis";
@@ -106,9 +109,6 @@ export default function DevenirExpertPage() {
         if (!/^\d{11}$/.test(numeroRpps.trim())) return "Le N° RPPS doit comporter 11 chiffres";
         if (!numeroOrdreMedecins.trim()) return "N° d'inscription à l'Ordre des médecins requis";
       }
-    }
-    if (step === 2) {
-      if (!price || Number(price) <= 0) return "Indiquez un tarif par session";
     }
     if (step === 3) {
       if (documents.length === 0) return "Joignez au moins un justificatif";
@@ -193,7 +193,7 @@ export default function DevenirExpertPage() {
         <p className="text-muted">
           Créez d'abord un compte pour déposer votre candidature d'expert.
         </p>
-        <a href="/inscription" className="btn-primary mt-4 inline-block rounded-[3px] px-6 py-3 text-sm font-medium">
+        <a href="/inscription?role=expert" className="btn-primary mt-4 inline-block rounded-[3px] px-6 py-3 text-sm font-medium">
           Créer mon compte
         </a>
       </main>
@@ -292,6 +292,30 @@ export default function DevenirExpertPage() {
 
         {currentStep === 1 && (
           <>
+            <div>
+              <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Présentation</label>
+              <textarea
+                className={inputClass + " min-h-[100px]"}
+                value={bio}
+                onChange={(e) => setBio(e.target.value)}
+                placeholder="Votre parcours, votre approche, en quelques phrases..."
+              />
+            </div>
+
+            <div>
+              <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Tarif par session (€)</label>
+              <input
+                type="number"
+                className={inputClass + " max-w-[160px]"}
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+              />
+            </div>
+          </>
+        )}
+
+        {currentStep === 2 && (
+          <>
             {profession === "medecin" && (
               <div className="rounded-[6px] border border-seal/40 bg-seal/5 p-5">
                 <p className="text-sm text-muted">
@@ -375,30 +399,6 @@ export default function DevenirExpertPage() {
           </>
         )}
 
-        {currentStep === 2 && (
-          <>
-            <div>
-              <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Présentation</label>
-              <textarea
-                className={inputClass + " min-h-[100px]"}
-                value={bio}
-                onChange={(e) => setBio(e.target.value)}
-                placeholder="Votre parcours, votre approche, en quelques phrases..."
-              />
-            </div>
-
-            <div>
-              <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Tarif par session (€)</label>
-              <input
-                type="number"
-                className={inputClass + " max-w-[160px]"}
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-              />
-            </div>
-          </>
-        )}
-
         {currentStep === 3 && (
           <div>
             <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Pièces justificatives</label>
@@ -450,11 +450,11 @@ export default function DevenirExpertPage() {
             <button
               type="button"
               onClick={() => {
-                if (currentStep === 0 && !needsJustificatifStep) {
-                  const validationError = validateStep(0);
+                if (currentStep === 1 && !needsJustificatifStep) {
+                  const validationError = validateStep(1);
                   if (validationError) return setError(validationError);
                   setError("");
-                  setCurrentStep(2);
+                  setCurrentStep(3);
                   return;
                 }
                 handleNext();
