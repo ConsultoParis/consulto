@@ -3,7 +3,7 @@ import Avatar from "@/components/Avatar";
 import ImageCarousel from "@/components/ImageCarousel";
 import LogoAnimated from "@/components/LogoAnimated";
 import PresentationVideo from "@/components/PresentationVideo";
-import { Sparkles, Star, Lock, Globe, Search, Calendar, ShieldCheck } from "lucide-react";
+import { Sparkles, Star, Lock, Globe, Search, Calendar, ShieldCheck, Clock3 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { PROFESSION_LABELS, PROFESSION_COLORS, type Expert } from "@/lib/types";
 
@@ -130,6 +130,48 @@ export default async function HomePage() {
               <p className="mt-1.5 text-sm text-muted">Paiement sécurisé en séquestre, versé à l'expert une fois la session terminée.</p>
             </div>
           </div>
+        </div>
+      </section>
+
+      <div className="divider-silver" />
+
+      {/* POURQUOI NOUS FAIRE CONFIANCE */}
+      <section style={{ backgroundColor: "#0A2540" }}>
+        <div className="mx-auto max-w-6xl px-6 py-16">
+          <p className="font-mono text-xs uppercase tracking-[0.16em]" style={{ color: "#7FA9DE" }}>Confiance</p>
+          <h2 className="mt-2 font-display text-2xl font-medium" style={{ color: "#F4F8FF" }}>
+            Pourquoi nous faire confiance
+          </h2>
+          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3">
+            <div className="flex items-start gap-3">
+              <ShieldCheck className="h-5 w-5 shrink-0" style={{ color: "#3E8EF7" }} />
+              <div>
+                <p className="font-medium" style={{ color: "#F4F8FF" }}>Identité vérifiée</p>
+                <p className="mt-1 text-sm" style={{ color: "#9fbde0" }}>Justificatif professionnel contrôlé avant toute mise en ligne.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <Lock className="h-5 w-5 shrink-0" style={{ color: "#3E8EF7" }} />
+              <div>
+                <p className="font-medium" style={{ color: "#F4F8FF" }}>Paiement en séquestre</p>
+                <p className="mt-1 text-sm" style={{ color: "#9fbde0" }}>L'expert n'est payé qu'une fois votre consultation terminée.</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <Clock3 className="h-5 w-5 shrink-0" style={{ color: "#3E8EF7" }} />
+              <div>
+                <p className="font-medium" style={{ color: "#F4F8FF" }}>Remboursé sous 48h</p>
+                <p className="mt-1 text-sm" style={{ color: "#9fbde0" }}>Si la session ne correspond pas à ce qui était annoncé.</p>
+              </div>
+            </div>
+          </div>
+          <Link
+            href="/confiance"
+            className="mt-6 inline-block font-mono text-xs uppercase tracking-[0.1em] underline decoration-[#3E8EF7] decoration-2 underline-offset-4"
+            style={{ color: "#F4F8FF" }}
+          >
+            En savoir plus sur notre centre de confiance
+          </Link>
         </div>
       </section>
 
