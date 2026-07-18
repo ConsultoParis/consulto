@@ -12,7 +12,7 @@ export const revalidate = 30;
 export default async function ExpertsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ profession?: string; q?: string; specialite?: string; ville?: string; lat?: string; lng?: string }>;
+  searchParams: Promise<{ profession?: string; q?: string; specialite?: string; ville?: string; lat?: string; lng?: string; tri?: string }>;
 }) {
   const params = await searchParams;
   const supabase = await createClient();
@@ -57,13 +57,25 @@ export default async function ExpertsPage({
     };
   });
 
-  const sorted = hasLocation
-    ? [...withDistance].sort((a, b) => {
-        if (a.distance === null) return 1;
-        if (b.distance === null) return -1;
-        return a.distance - b.distance;
-      })
-    : withDistance;
+  let sorted = [...withDistance];
+
+  if (params.tri === "prix_asc") {
+    sorted.sort((a, b) => a.price - b.price);
+  } else if (params.tri === "prix_desc") {
+    sorted.sort((a, b) => b.price - a.price);
+  } else if (params.tri === "note") {
+    sorted.sort((a, b) => {
+      if (a.avgRating === null) return 1;
+      if (b.avgRating === null) return -1;
+      return b.avgRating - a.avgRating;
+    });
+  } else if (hasLocation) {
+    sorted.sort((a, b) => {
+      if (a.distance === null) return 1;
+      if (b.distance === null) return -1;
+      return a.distance - b.distance;
+    });
+  }
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-16">
@@ -75,6 +87,7 @@ export default async function ExpertsPage({
         defaultProfession={params.profession}
         defaultSpecialite={params.specialite}
         defaultVille={params.ville}
+        defaultTri={params.tri}
       />
 
       <p className="mt-6 font-mono text-xs text-mutedmore">
