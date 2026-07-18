@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 export default function InscriptionPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
 
   const [role, setRole] = useState<"client" | "expert" | null>(null);
@@ -14,6 +15,12 @@ export default function InscriptionPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get("role") === "expert") {
+      setRole("expert");
+    }
+  }, [searchParams]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -86,6 +93,15 @@ export default function InscriptionPage() {
             ← Retour
           </button>
 
+          {role === "expert" && (
+            <div className="rounded-[6px] border border-seal/40 bg-seal/5 p-4">
+              <p className="text-sm text-muted">
+                Vous créez un compte <strong>expert</strong> — vous serez redirigé vers le formulaire de
+                candidature juste après.
+              </p>
+            </div>
+          )}
+
           <div>
             <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
               Nom complet
@@ -133,13 +149,6 @@ export default function InscriptionPage() {
           >
             {loading ? "Création en cours..." : "Créer mon compte"}
           </button>
-
-          {role === "expert" && (
-            <p className="text-xs text-muted">
-              Vous serez ensuite redirigé vers le formulaire de candidature
-              expert (justificatifs professionnels selon votre métier).
-            </p>
-          )}
         </form>
       )}
     </main>
