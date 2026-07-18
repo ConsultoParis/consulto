@@ -1,10 +1,11 @@
 import Link from "next/link";
 import Avatar from "@/components/Avatar";
+import VerifiedBadge from "@/components/VerifiedBadge";
 import ExpertSearchForm from "@/components/ExpertSearchForm";
 import { createClient } from "@/lib/supabase/server";
 import { PROFESSION_LABELS, PROFESSION_COLORS, type Expert } from "@/lib/types";
 import { distanceKm } from "@/lib/geo";
-import { MapPin } from "lucide-react";
+import { MapPin, Star } from "lucide-react";
 
 export const revalidate = 30;
 
@@ -18,7 +19,7 @@ export default async function ExpertsPage({
 
   let query = supabase
     .from("experts")
-    .select("*, profiles(full_name, avatar_url)")
+    .select("*, profiles(full_name, avatar_url), reviews(rating)")
     .eq("verification_status", "verified");
 
   if (params.profession) {
@@ -31,7 +32,7 @@ export default async function ExpertsPage({
 
   const { data: expertsRaw } = await query.order("created_at", { ascending: false });
 
-  let experts = (expertsRaw as Expert[] | null) || [];
+  let experts = (expertsRaw as any[] | null) || [];
 
   if (params.q) {
     experts = experts.filter(
@@ -45,10 +46,16 @@ export default async function ExpertsPage({
   const searchLng = params.lng ? parseFloat(params.lng) : null;
   const hasLocation = searchLat !== null && searchLng !== null && !isNaN(searchLat) && !isNaN(searchLng);
 
-  const withDistance = experts.map((e: any) => ({
-    ...e,
-    distance: hasLocation && e.lat && e.lng ? distanceKm(searchLat!, searchLng!, e.lat, e.lng) : null,
-  }));
+  const withDistance = experts.map((e: any) => {
+    const ratings = (e.reviews || []).map((r: any) => r.rating);
+    const avgRating = ratings.length > 0 ? ratings.reduce((s: number, r: number) => s + r, 0) / ratings.length : null;
+    return {
+      ...e,
+      avgRating,
+      reviewCount: ratings.length,
+      distance: hasLocation && e.lat && e.lng ? distanceKm(searchLat!, searchLng!, e.lat, e.lng) : null,
+    };
+  });
 
   const sorted = hasLocation
     ? [...withDistance].sort((a, b) => {
@@ -96,6 +103,17 @@ export default async function ExpertsPage({
                   <p className="font-display text-lg font-medium">{expert.profiles?.full_name}</p>
                 </div>
               </div>
+
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <VerifiedBadge size="sm" />
+                {expert.avgRating !== null && (
+                  <span className="flex items-center gap-1 font-mono text-xs text-muted">
+                    <Star className="h-3 w-3 fill-current" style={{ color: "#3E8EF7" }} />
+                    {expert.avgRating.toFixed(1)} ({expert.reviewCount})
+                  </span>
+                )}
+              </div>
+
               <p className="mt-3 text-sm text-muted">
                 {expert.specialite} · {expert.experience_years} ans
               </p>
