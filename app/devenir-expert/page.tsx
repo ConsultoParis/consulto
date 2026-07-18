@@ -440,7 +440,7 @@ export default function DevenirExpertPage() {
               type="button"
               onClick={handleBack}
               disabled={loading}
-              className="flex items-center gap-1.5 rounded-[6px] border border-app px-5 py-3.5 text-sm font-medium transition hover:bg-ink/5"
+              className="btn-secondary flex items-center gap-1.5 rounded-[6px] px-5 py-3.5 text-sm font-medium"
             >
               <ArrowLeft className="h-4 w-4" /> Retour
             </button>
