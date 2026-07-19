@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import type { Profession } from "@/lib/types";
+import type { Profession, ConsultationMode } from "@/lib/types";
+import { Check } from "lucide-react";
 
 const WEEKDAYS = [
   { value: 1, label: "Lundi" },
@@ -13,6 +14,12 @@ const WEEKDAYS = [
   { value: 5, label: "Vendredi" },
   { value: 6, label: "Samedi" },
   { value: 0, label: "Dimanche" },
+];
+
+const MODE_OPTIONS: { value: ConsultationMode; label: string }[] = [
+  { value: "video", label: "Visio" },
+  { value: "chat", label: "Tchat" },
+  { value: "physique", label: "Physique" },
 ];
 
 // Nombre de semaines à l'avance pour lesquelles on crée le créneau récurrent.
@@ -29,9 +36,14 @@ export default function AddSlotForm({ expertId, profession }: { expertId: string
 
   const [time, setTime] = useState("");
   const [duration, setDuration] = useState<5 | 20 | 30>(20);
+  const [modes, setModes] = useState<ConsultationMode[]>(["video", "chat", "physique"]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
+
+  function toggleMode(m: ConsultationMode) {
+    setModes((prev) => (prev.includes(m) ? prev.filter((x) => x !== m) : [...prev, m]));
+  }
 
   function nextDateForWeekday(targetWeekday: number): Date {
     const d = new Date();
@@ -44,9 +56,12 @@ export default function AddSlotForm({ expertId, profession }: { expertId: string
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
     if (!time) return setError("Choisissez une heure");
+    if (duration !== 5 && modes.length === 0) return setError("Choisissez au moins un mode de consultation");
     setError("");
     setSuccess("");
     setLoading(true);
+
+    const finalModes: ConsultationMode[] = duration === 5 ? ["video"] : modes;
 
     if (recurrenceType === "unique") {
       if (!date) {
@@ -58,6 +73,7 @@ export default function AddSlotForm({ expertId, profession }: { expertId: string
         date,
         start_time: time,
         duration_min: duration,
+        available_modes: finalModes,
       });
       setLoading(false);
       if (insertError) return setError(insertError.message);
@@ -75,6 +91,7 @@ export default function AddSlotForm({ expertId, profession }: { expertId: string
         date: d.toISOString().slice(0, 10),
         start_time: time,
         duration_min: duration,
+        available_modes: finalModes,
       };
     });
 
@@ -163,6 +180,34 @@ export default function AddSlotForm({ expertId, profession }: { expertId: string
           {loading ? "..." : "Ajouter"}
         </button>
       </div>
+
+      {duration === 5 ? (
+        <p className="text-xs text-muted">Ce créneau est automatiquement en visio uniquement.</p>
+      ) : (
+        <div>
+          <label className="font-mono text-[11px] uppercase text-muted">Modes de consultation proposés</label>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {MODE_OPTIONS.map((m) => {
+              const active = modes.includes(m.value);
+              return (
+                <button
+                  key={m.value}
+                  type="button"
+                  onClick={() => toggleMode(m.value)}
+                  className={`flex items-center gap-1.5 rounded-full border px-3.5 py-2 text-xs font-medium transition-all ${
+                    active ? "border-[#3E8EF7]" : "border-app hover:border-[#3E8EF7]"
+                  }`}
+                  style={active ? { backgroundColor: "#3E8EF715", color: "#3E8EF7" } : undefined}
+                >
+                  {active && <Check className="h-3 w-3" />}
+                  {m.label}
+                </button>
+              );
+            })}
+          </div>
+          <p className="mt-1 text-xs text-muted">Cochez un, deux ou les trois modes pour ce créneau.</p>
+        </div>
+      )}
 
       {recurrenceType === "recurrent" && (
         <p className="text-xs text-muted">
