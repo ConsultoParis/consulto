@@ -45,13 +45,18 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Le prix et le mode sont déterminés par le serveur à partir du créneau,
-  // jamais fait confiance à ce que le navigateur envoie — évite toute
-  // manipulation du prix. Les créneaux de 5 min sont le "Devis rapide"
-  // à prix fixe (5€), obligatoirement en visio.
+  // Le prix et le mode sont déterminés/vérifiés côté serveur, jamais fait
+  // confiance à ce que le navigateur envoie. Les créneaux de 5 min sont le
+  // "Devis rapide" à prix fixe (5€), obligatoirement en visio. Pour les
+  // autres créneaux, le mode choisi doit faire partie de ceux autorisés par
+  // l'expert pour ce créneau précis.
   const isQuickQuote = slot.duration_min === 5;
   const price = isQuickQuote ? 5 : Number(expert.price);
-  const finalMode = isQuickQuote ? "video" : mode;
+  const allowedModes: string[] = isQuickQuote ? ["video"] : slot.available_modes || [];
+
+  if (!allowedModes.includes(mode)) {
+    return NextResponse.json({ error: "Ce mode de consultation n'est pas disponible pour ce créneau" }, { status: 400 });
+  }
 
   // 3. Crée le PaymentIntent Stripe (séquestre, réparti 80/20)
   const finalPrice = Math.max(0, price - (creditsUsed || 0));
@@ -72,7 +77,7 @@ export async function POST(req: NextRequest) {
       date: slot.date,
       start_time: slot.start_time,
       duration_min: slot.duration_min,
-      mode: finalMode,
+      mode,
       price: finalPrice,
       credits_used: creditsUsed || 0,
       stripe_payment_intent_id: paymentIntent.id,
