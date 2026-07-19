@@ -69,6 +69,7 @@ export default function DevenirExpertPage() {
   const [numeroOrdreComptable, setNumeroOrdreComptable] = useState("");
   const [certification, setCertification] = useState("");
   const [documents, setDocuments] = useState<File[]>([]);
+  const [photo, setPhoto] = useState<File | null>(null);
 
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -111,7 +112,8 @@ export default function DevenirExpertPage() {
       }
     }
     if (step === 3) {
-      if (documents.length === 0) return "Joignez au moins un justificatif";
+      if (!photo) return "La photo professionnelle est obligatoire";
+      if (profession !== "coiffeur" && documents.length === 0) return "Joignez au moins un justificatif professionnel";
     }
     return "";
   }
@@ -136,6 +138,20 @@ export default function DevenirExpertPage() {
     setLoading(true);
     setError("");
 
+    setUploadStep("Envoi de la photo...");
+    let photoUrl: string | null = null;
+    if (photo) {
+      const photoPath = `${userId}/${Date.now()}-${photo.name}`;
+      const { error: photoError } = await supabase.storage.from("expert-photos").upload(photoPath, photo);
+      if (photoError) {
+        setLoading(false);
+        setUploadStep("");
+        return setError(`Erreur lors de l'envoi de la photo : ${photoError.message}`);
+      }
+      const { data: publicUrlData } = supabase.storage.from("expert-photos").getPublicUrl(photoPath);
+      photoUrl = publicUrlData.publicUrl;
+    }
+
     setUploadStep("Création du profil...");
     const { error: insertError } = await supabase.from("experts").insert({
       id: userId,
@@ -144,6 +160,7 @@ export default function DevenirExpertPage() {
       ville,
       lat: coords?.lat ?? null,
       lng: coords?.lng ?? null,
+      photo_url: photoUrl,
       bio,
       price: Number(price),
       numero_barreau: profession === "avocat" ? numeroBarreau : null,
@@ -245,7 +262,7 @@ export default function DevenirExpertPage() {
                 <option value="">Sélectionnez votre profession</option>
                 <option value="avocat">Avocat</option>
                 <option value="notaire">Notaire</option>
-                <option value="medecin">Médecin généraliste</option>
+                <option value="medecin">Médecin</option>
                 <option value="garagiste">Garagiste</option>
                 <option value="coiffeur">Barber / Coiffeur</option>
                 <option value="comptable">Expert-comptable</option>
@@ -400,35 +417,68 @@ export default function DevenirExpertPage() {
         )}
 
         {currentStep === 3 && (
-          <div>
-            <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Pièces justificatives</label>
-            <p className="mt-1 text-xs text-muted">
-              Carte professionnelle, diplôme, attestation d'inscription... au moins un document.
-            </p>
+          <div className="space-y-6">
+            <div>
+              <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
+                Photo professionnelle <span style={{ color: "#3E8EF7" }}>— obligatoire</span>
+              </label>
+              <p className="mt-1 text-xs text-muted">
+                Photo de vous sur fond blanc ou photo professionnelle. Elle sera affichée publiquement sur votre profil.
+              </p>
 
-            <div className="mt-2.5 flex flex-wrap gap-2">
-              <label className="flex cursor-pointer items-center gap-1.5 rounded-full border border-app px-3.5 py-2 font-mono text-xs transition hover:bg-ink/5">
-                <Paperclip className="h-3.5 w-3.5" /> Choisir un fichier
-                <input type="file" multiple className="hidden" onChange={(e) => addFiles(e.target.files)} />
-              </label>
-              <label className="flex cursor-pointer items-center gap-1.5 rounded-full border border-app px-3.5 py-2 font-mono text-xs transition hover:bg-ink/5">
-                <Camera className="h-3.5 w-3.5" /> Prendre une photo
-                <input type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => addFiles(e.target.files)} />
-              </label>
+              <div className="mt-2.5 flex flex-wrap items-center gap-3">
+                <label className="flex cursor-pointer items-center gap-1.5 rounded-full border border-app px-3.5 py-2 font-mono text-xs transition hover:bg-ink/5">
+                  <Camera className="h-3.5 w-3.5" /> {photo ? "Changer la photo" : "Ajouter une photo"}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => setPhoto(e.target.files?.[0] || null)}
+                  />
+                </label>
+                {photo && <span className="truncate text-sm text-muted">{photo.name}</span>}
+              </div>
             </div>
 
-            {documents.length > 0 && (
-              <ul className="mt-3 space-y-2">
-                {documents.map((f, i) => (
-                  <li key={i} className="flex items-center justify-between rounded-[3px] border border-app px-3 py-2 text-sm">
-                    <span className="truncate">{f.name}</span>
-                    <button type="button" onClick={() => removeDocument(i)} className="ml-2 shrink-0 text-red-700">
-                      <X className="h-4 w-4" />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
+            <div className="border-t pt-6" style={{ borderColor: "var(--border)" }}>
+              <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
+                Justificatif professionnel{" "}
+                {profession === "coiffeur" ? (
+                  <span style={{ color: "var(--text-tertiary)" }}>— optionnel</span>
+                ) : (
+                  <span style={{ color: "#3E8EF7" }}>— obligatoire</span>
+                )}
+              </label>
+              <p className="mt-1 text-xs text-muted">
+                {profession === "coiffeur"
+                  ? "Certification, CAP Coiffure, Brevet de maîtrise... facultatif mais recommandé."
+                  : "Carte professionnelle, diplôme, attestation d'inscription à l'Ordre... au moins un document requis pour valider votre profil."}
+              </p>
+
+              <div className="mt-2.5 flex flex-wrap gap-2">
+                <label className="flex cursor-pointer items-center gap-1.5 rounded-full border border-app px-3.5 py-2 font-mono text-xs transition hover:bg-ink/5">
+                  <Paperclip className="h-3.5 w-3.5" /> Choisir un fichier
+                  <input type="file" multiple className="hidden" onChange={(e) => addFiles(e.target.files)} />
+                </label>
+                <label className="flex cursor-pointer items-center gap-1.5 rounded-full border border-app px-3.5 py-2 font-mono text-xs transition hover:bg-ink/5">
+                  <Camera className="h-3.5 w-3.5" /> Prendre une photo
+                  <input type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => addFiles(e.target.files)} />
+                </label>
+              </div>
+
+              {documents.length > 0 && (
+                <ul className="mt-3 space-y-2">
+                  {documents.map((f, i) => (
+                    <li key={i} className="flex items-center justify-between rounded-[3px] border border-app px-3 py-2 text-sm">
+                      <span className="truncate">{f.name}</span>
+                      <button type="button" onClick={() => removeDocument(i)} className="ml-2 shrink-0 text-red-700">
+                        <X className="h-4 w-4" />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
         )}
 
