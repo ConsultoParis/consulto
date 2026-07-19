@@ -18,6 +18,8 @@ const STEPS = [
   { key: "confirmation", label: "Confirmé" },
 ];
 
+const MODE_LABELS: Record<ConsultationMode, string> = { video: "Visio", chat: "Tchat", physique: "Physique" };
+
 function StepIndicator({ step }: { step: "creneaux" | "paiement" | "confirmation" }) {
   const currentIndex = STEPS.findIndex((s) => s.key === step);
   return (
@@ -64,7 +66,7 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
   const [slots, setSlots] = useState<AvailabilitySlot[]>([]);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<AvailabilitySlot | null>(null);
-  const [mode, setMode] = useState<ConsultationMode>("video");
+  const [mode, setMode] = useState<ConsultationMode | null>(null);
   const [docs, setDocs] = useState<File[]>([]);
   const [note, setNote] = useState("");
   const [email, setEmail] = useState("");
@@ -97,6 +99,7 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
         if (preselect) {
           setSelectedSlot(preselect);
           setSelectedDate(preselect.date);
+          if (preselect.available_modes?.length === 1) setMode(preselect.available_modes[0]);
         }
       }
 
@@ -115,10 +118,17 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
   function handleSelectDate(date: string) {
     setSelectedDate(date);
     setSelectedSlot(null);
+    setMode(null);
+  }
+
+  function handleSelectSlot(slot: AvailabilitySlot) {
+    setSelectedSlot(slot);
+    setMode(slot.available_modes?.length === 1 ? slot.available_modes[0] : null);
   }
 
   async function handleContinueToPayment() {
     if (!selectedSlot) return setError("Choisissez un créneau");
+    if (!mode) return setError("Choisissez un mode de consultation");
     if (!email.trim()) return setError("Adresse email requise");
     setError("");
     setLoading(true);
@@ -172,33 +182,7 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
 
       {step === "creneaux" && (
         <div className="mt-8">
-          {isQuickQuote ? (
-            <div className="rounded-[6px] border border-seal/40 bg-seal/5 p-4">
-              <p className="text-sm font-medium">Devis rapide — 5 minutes en visio</p>
-              <p className="mt-1 text-sm text-muted">
-                Ce créneau est réservé au mode visio, pour un premier devis rapide à prix fixe.
-              </p>
-            </div>
-          ) : (
-            <>
-              <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Mode de consultation</h2>
-              <div className="mt-3 flex gap-2">
-                {(["video", "chat", "physique"] as ConsultationMode[]).map((m) => (
-                  <button
-                    key={m}
-                    onClick={() => setMode(m)}
-                    className={`rounded-[3px] border px-4 py-2 text-sm transition-all ${
-                      mode === m ? "btn-primary border-transparent" : "border-app hover:border-[#3E8EF7]"
-                    }`}
-                  >
-                    {m === "video" ? "Visio" : m === "chat" ? "Tchat" : "Physique"}
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
-
-          <h2 className="mt-8 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Choisir une date</h2>
+          <h2 className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Choisir une date</h2>
           <div className="mt-3">
             <BookingCalendar availableDates={availableDates} selectedDate={selectedDate} onSelectDate={handleSelectDate} />
           </div>
@@ -213,7 +197,7 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
                   {slotsForSelectedDate.map((slot) => (
                     <button
                       key={slot.id}
-                      onClick={() => setSelectedSlot(slot)}
+                      onClick={() => handleSelectSlot(slot)}
                       className={`rounded-[3px] border px-4 py-3 text-left transition-all ${
                         selectedSlot?.id === slot.id
                           ? "border-[#3E8EF7] bg-[#3E8EF7]/10 shadow-[0_0_0_1px_rgba(62,142,247,0.3),0_0_16px_-4px_rgba(62,142,247,0.4)]"
@@ -229,6 +213,32 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
                           </span>
                         )}
                       </span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+
+          {selectedSlot && (
+            <>
+              <h2 className="mt-6 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Mode de consultation</h2>
+              {isQuickQuote ? (
+                <div className="mt-3 rounded-[6px] border border-seal/40 bg-seal/5 p-4">
+                  <p className="text-sm font-medium">Devis rapide — 5 minutes en visio</p>
+                  <p className="mt-1 text-sm text-muted">Ce créneau est réservé au mode visio, pour un premier devis rapide à prix fixe.</p>
+                </div>
+              ) : (
+                <div className="mt-3 flex gap-2">
+                  {(selectedSlot.available_modes || []).map((m) => (
+                    <button
+                      key={m}
+                      onClick={() => setMode(m)}
+                      className={`rounded-[3px] border px-4 py-2 text-sm transition-all ${
+                        mode === m ? "btn-primary border-transparent" : "border-app hover:border-[#3E8EF7]"
+                      }`}
+                    >
+                      {MODE_LABELS[m]}
                     </button>
                   ))}
                 </div>
