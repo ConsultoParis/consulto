@@ -19,15 +19,16 @@ export interface Expert {
   id: string;
   profession: Profession;
   specialite: string;
-ville: string | null;
-lat: number | null;
-lng: number | null;
   bio: string | null;
   price: number;
   experience_years: number;
   response_time_min: number;
   languages: string[];
   domains: string[];
+  ville: string | null;
+  lat: number | null;
+  lng: number | null;
+  photo_url: string | null;
   numero_barreau: string | null;
   numero_notaire: string | null;
   numero_rpps: string | null;
@@ -49,6 +50,7 @@ export interface AvailabilitySlot {
   start_time: string;
   duration_min: 5 | 20 | 30;
   is_booked: boolean;
+  available_modes: ConsultationMode[];
 }
 
 export interface Booking {
@@ -67,7 +69,7 @@ export interface Booking {
   status: BookingStatus;
   refunded: boolean;
   client_email: string;
-client_note: string | null;
+  client_note: string | null;
   created_at: string;
 }
 
@@ -96,7 +98,7 @@ export interface Review {
 export const PROFESSION_LABELS: Record<Profession, string> = {
   avocat: "Avocat",
   notaire: "Notaire",
-  medecin: "Médecin généraliste",
+  medecin: "Médecin",
   garagiste: "Garagiste",
   coiffeur: "Barber / Coiffeur",
   comptable: "Expert-comptable",
