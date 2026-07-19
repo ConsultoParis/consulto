@@ -41,6 +41,7 @@ export default async function ExpertDetailPage({
     : null;
 
   const color = PROFESSION_COLORS[expert.profession as keyof typeof PROFESSION_COLORS];
+  const nextSlot = slots && slots.length > 0 ? slots[0] : null;
 
   return (
     <main className="mx-auto max-w-3xl px-6 py-16">
@@ -67,6 +68,17 @@ export default async function ExpertDetailPage({
         <div className="card-soft p-5 text-center" style={{ backgroundColor: "var(--card)" }}>
           <p className="font-display text-2xl font-medium">{expert.price} €</p>
           <p className="font-mono text-[11px] text-mutedmore">par session · sans frais caché</p>
+          {nextSlot && (
+            <Link
+              href={`/booking/${expert.id}?slot=${nextSlot.id}`}
+              className="mt-3 block rounded-[3px] px-3 py-2 font-mono text-[11px] transition hover:border-[#3E8EF7]"
+              style={{ backgroundColor: "#1E8F6B15", color: "#1E8F6B" }}
+            >
+              Prochain RDV :{" "}
+              {new Date(nextSlot.date).toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" })}{" "}
+              à {nextSlot.start_time}
+            </Link>
+          )}
           <Link
             href={`/booking/${expert.id}`}
             className="btn-primary mt-3 block rounded-[3px] px-5 py-2.5 text-sm font-medium"
