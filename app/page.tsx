@@ -47,7 +47,7 @@ export default async function HomePage() {
             Un vrai expert, en 20&nbsp;minutes, sans mauvaise surprise sur la facture.
           </h1>
           <p className="mt-5 max-w-xl text-lg text-muted">
-            Avocats, notaires, médecins généralistes, garagistes, barbers/coiffeurs et experts-comptables — tous
+            Avocats, notaires, médecins, garagistes, barbers/coiffeurs et experts-comptables — tous
             vérifiés, tous francophones, aucun abonnement caché.
           </p>
 
@@ -201,7 +201,7 @@ export default async function HomePage() {
                 >
                   <div className="p-5">
                     <div className="flex items-center gap-3">
-                      <Avatar name={expert.profiles?.full_name} profession={expert.profession} size={40} />
+                      <Avatar name={expert.profiles?.full_name} profession={expert.profession} photoUrl={expert.photo_url} size={40} />
                       <div>
                         <p
                           className="font-mono text-[11px] uppercase tracking-[0.08em]"
