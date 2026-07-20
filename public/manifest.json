@@ -1,14 +1,18 @@
 {
+  "id": "/",
   "name": "1Expert — Conseil & Expertise",
   "short_name": "1Expert",
   "description": "Avocats, notaires, médecins, garagistes, coiffeurs et experts-comptables vérifiés. Consultation en 20 minutes, paiement sécurisé.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
+  "display_override": ["standalone", "browser"],
   "orientation": "portrait",
   "background_color": "#0A2540",
   "theme_color": "#0A2540",
   "lang": "fr",
+  "dir": "ltr",
+  "categories": ["business", "medical", "lifestyle"],
   "icons": [
     {
       "src": "/icon-192.png",
@@ -27,6 +31,36 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-mobile.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Trouver un expert vérifié en quelques secondes"
+    },
+    {
+      "src": "/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Un vrai expert, en 20 minutes"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Trouver un expert",
+      "short_name": "Recherche",
+      "url": "/experts",
+      "description": "Parcourir les experts vérifiés"
+    },
+    {
+      "name": "Mon espace",
+      "short_name": "Connexion",
+      "url": "/connexion",
+      "description": "Accéder à mon espace client ou expert"
     }
   ]
 }
