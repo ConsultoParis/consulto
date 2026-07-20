@@ -105,7 +105,7 @@ export default async function ExpertsPage({
           >
             <div className="p-5">
               <div className="flex items-center gap-3">
-                <Avatar name={expert.profiles?.full_name} profession={expert.profession} size={40} />
+                <Avatar name={expert.profiles?.full_name} profession={expert.profession} photoUrl={expert.photo_url} size={40} />
                 <div>
                   <p
                     className="font-mono text-[11px] uppercase tracking-[0.08em]"
