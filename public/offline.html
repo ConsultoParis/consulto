@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hors ligne — 1Expert</title>
+<style>
+  html, body {
+    margin: 0; height: 100%;
+    background: #0A2540;
+    color: #F4F8FF;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 24px;
+    box-sizing: border-box;
+  }
+  .badge {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: linear-gradient(155deg, #123b64 0%, #0A2540 65%);
+    border: 2px solid rgba(62,142,247,0.55);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 36px;
+  }
+  h1 { font-size: 22px; font-weight: 600; margin: 0 0 10px; }
+  p { color: #9fbde0; font-size: 15px; line-height: 1.5; margin: 0 0 24px; }
+  button {
+    background: linear-gradient(135deg, #0a2540, #123b64);
+    border: 1px solid rgba(62,142,247,0.4);
+    color: #F4F8FF; padding: 12px 24px; border-radius: 8px;
+    font-size: 15px; font-weight: 600; cursor: pointer;
+  }
+</style>
+</head>
+<body>
+  <div>
+    <div class="badge">1</div>
+    <h1>Pas de connexion internet</h1>
+    <p>Vérifiez votre connexion et réessayez — vos réservations et rendez-vous nécessitent une connexion active.</p>
+    <button onclick="window.location.reload()">Réessayer</button>
+  </div>
+</body>
+</html>
