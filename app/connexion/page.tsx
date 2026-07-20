@@ -1,49 +1,40 @@
 "use client";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
-
+import InstallAppButton from "@/components/InstallAppButton";
 export default function ConnexionPage() {
   const router = useRouter();
   const supabase = createClient();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
     setLoading(true);
-
     const { data, error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-
     if (signInError) {
       setLoading(false);
       return setError("Email ou mot de passe incorrect");
     }
-
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")
       .eq("id", data.user.id)
       .single();
-
     setLoading(false);
     router.push(profile?.role === "expert" ? "/dashboard/expert" : "/dashboard/client");
   }
-
   return (
     <main className="mx-auto max-w-md px-6 py-16">
       <p className="font-mono text-xs uppercase tracking-[0.16em] text-seal">Mon compte</p>
       <h1 className="mt-3 font-display text-3xl font-medium">Connexion</h1>
-
       <form onSubmit={handleSubmit} className="mt-8 space-y-5">
         <div>
           <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Email</label>
@@ -55,7 +46,6 @@ export default function ConnexionPage() {
             placeholder="vous@email.fr"
           />
         </div>
-
         <div>
           <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Mot de passe</label>
           <input
@@ -66,9 +56,7 @@ export default function ConnexionPage() {
             placeholder="••••••••"
           />
         </div>
-
         {error && <p className="text-sm text-red-700">{error}</p>}
-
         <button
           type="submit"
           disabled={loading}
@@ -76,7 +64,6 @@ export default function ConnexionPage() {
         >
           {loading ? "Connexion..." : "Se connecter"}
         </button>
-
         <p className="text-center text-sm text-muted">
           Pas encore de compte ?{" "}
           <Link href="/inscription" className="underline decoration-seal decoration-2 underline-offset-4">
@@ -84,6 +71,13 @@ export default function ConnexionPage() {
           </Link>
         </p>
       </form>
+
+      <div className="mt-8 border-t pt-6 text-center" style={{ borderColor: "var(--border)" }}>
+        <p className="mb-3 text-xs text-muted">Accédez plus rapidement à votre espace la prochaine fois :</p>
+        <div className="flex justify-center">
+          <InstallAppButton variant="secondary" />
+        </div>
+      </div>
     </main>
   );
 }
