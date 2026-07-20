@@ -3,6 +3,7 @@ import Avatar from "@/components/Avatar";
 import ImageCarousel from "@/components/ImageCarousel";
 import LogoAnimated from "@/components/LogoAnimated";
 import PresentationVideo from "@/components/PresentationVideo";
+import InstallAppButton from "@/components/InstallAppButton";
 import { Sparkles, Star, Lock, Globe, Search, Calendar, ShieldCheck, Clock3 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { PROFESSION_LABELS, PROFESSION_COLORS, type Expert } from "@/lib/types";
@@ -73,6 +74,9 @@ export default async function HomePage() {
             >
               Proposer mes services en tant qu'expert
             </Link>
+          </div>
+          <div className="mt-4">
+            <InstallAppButton variant="secondary" />
           </div>
         </div>
       </section>
