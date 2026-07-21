@@ -1,5 +1,6 @@
 {
   "id": "/",
+  "prefer_related_applications": false,
   "name": "1Expert — Conseil & Expertise",
   "short_name": "1Expert",
   "description": "Avocats, notaires, médecins, garagistes, coiffeurs et experts-comptables vérifiés. Consultation en 20 minutes, paiement sécurisé.",
