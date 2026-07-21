@@ -7,22 +7,18 @@ import CompleteBookingButton from "@/components/CompleteBookingButton";
 import CancelBookingButton from "@/components/CancelBookingButton";
 import CompleteExpertProfileForm from "@/components/CompleteExpertProfileForm";
 import StripeConnectButton from "@/components/StripeConnectButton";
+import NotificationButton from "@/components/NotificationButton";
 import { Star, Calendar, Eye, Award, TrendingUp, Zap, PlusCircle, CheckCircle2, Wallet } from "lucide-react";
-
 export default async function ExpertDashboardPage() {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
   if (!user) redirect("/connexion");
-
   const { data: expert } = await supabase.from("experts").select("*, profiles(full_name)").eq("id", user.id).single();
-
   if (!expert) {
     redirect("/devenir-expert");
   }
-
   if (expert.verification_status !== "verified") {
     return (
       <main className="mx-auto max-w-2xl px-6 py-16 text-center">
@@ -35,25 +31,21 @@ export default async function ExpertDashboardPage() {
       </main>
     );
   }
-
   const { data: bookings } = await supabase
     .from("bookings")
     .select("*, profiles(full_name), documents(*)")
     .eq("expert_id", user.id)
     .order("date", { ascending: false });
-
   const { data: slots } = await supabase
     .from("availability_slots")
     .select("*")
     .eq("expert_id", user.id)
     .order("date", { ascending: true });
-
   const { data: reviews } = await supabase
     .from("reviews")
     .select("*, profiles(full_name)")
     .eq("expert_id", user.id)
     .order("created_at", { ascending: false });
-
   const now = new Date();
   const completed = bookings?.filter((b) => b.status === "completed") || [];
   const upcoming = bookings?.filter((b) => new Date(`${b.date}T${b.start_time}`) > now && b.status === "confirmed") || [];
@@ -61,23 +53,18 @@ export default async function ExpertDashboardPage() {
   const revenusSequestre = upcoming.reduce((s, b) => s + Number(b.price), 0);
   const freeSlots = slots?.filter((s) => !s.is_booked) || [];
   const hasNothingYet = (!bookings || bookings.length === 0) && freeSlots.length === 0;
-
   const avgRating = reviews && reviews.length > 0 ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length : null;
   const satisfaction = avgRating ? Math.round((avgRating / 5) * 100) : null;
-
   const nextBooking = [...upcoming].sort((a, b) => (a.date + a.start_time).localeCompare(b.date + b.start_time))[0];
-
   const slotsByDate: Record<string, typeof freeSlots> = {};
   freeSlots.forEach((s) => {
     slotsByDate[s.date] = slotsByDate[s.date] || [];
     slotsByDate[s.date].push(s);
   });
-
   const badges: { label: string; icon: any; color: string }[] = [];
   if (avgRating && avgRating >= 4.7) badges.push({ label: "Top Expert", icon: Award, color: "#3E8EF7" });
   if (completed.length >= 10) badges.push({ label: "Expert confirmé", icon: TrendingUp, color: "#3457A6" });
   if (freeSlots.length > 0) badges.push({ label: "Disponible", icon: Zap, color: "#1E8F6B" });
-
   return (
     <main className="mx-auto max-w-4xl px-6 py-16">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -85,14 +72,16 @@ export default async function ExpertDashboardPage() {
           <p className="font-mono text-xs uppercase tracking-[0.16em] text-seal">Espace expert</p>
           <h1 className="mt-3 font-display text-3xl font-medium">Tableau de bord</h1>
         </div>
-        <Link
-          href={`/experts/${expert.id}`}
-          className="flex items-center gap-1.5 rounded-[3px] border border-app px-4 py-2 font-mono text-xs uppercase tracking-[0.08em] transition hover:bg-ink/5"
-        >
-          <Eye className="h-3.5 w-3.5" /> Voir mon profil public
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <NotificationButton />
+          <Link
+            href={`/experts/${expert.id}`}
+            className="flex items-center gap-1.5 rounded-[3px] border border-app px-4 py-2 font-mono text-xs uppercase tracking-[0.08em] transition hover:bg-ink/5"
+          >
+            <Eye className="h-3.5 w-3.5" /> Voir mon profil public
+          </Link>
+        </div>
       </div>
-
       {badges.length > 0 && (
         <div className="mt-4 flex flex-wrap gap-2">
           {badges.map((b, i) => {
@@ -109,7 +98,6 @@ export default async function ExpertDashboardPage() {
           })}
         </div>
       )}
-
       {hasNothingYet && (
         <div className="card-soft mt-8 p-8 text-center" style={{ backgroundColor: "var(--card)" }}>
           <PlusCircle className="mx-auto h-8 w-8" style={{ color: "#3E8EF7" }} />
@@ -119,7 +107,6 @@ export default async function ExpertDashboardPage() {
           </p>
         </div>
       )}
-
       {nextBooking && (
         <div className="card-soft mt-8 p-5" style={{ backgroundColor: "#1E8F6B0F", border: "1px solid #1E8F6B30" }}>
           <p className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.1em]" style={{ color: "#1E8F6B" }}>
@@ -131,7 +118,6 @@ export default async function ExpertDashboardPage() {
           </p>
         </div>
       )}
-
       <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <div className="card-soft bg-verified/5 p-5">
           <p className="flex items-center gap-1 font-display text-3xl font-semibold text-verified">
@@ -155,7 +141,6 @@ export default async function ExpertDashboardPage() {
           <p className="mt-1 font-mono text-[10px] uppercase text-muted">Satisfaction</p>
         </div>
       </div>
-
       <div
         className="card-soft mt-8 p-5"
         style={{
@@ -168,7 +153,6 @@ export default async function ExpertDashboardPage() {
           <StripeConnectButton chargesEnabled={expert.stripe_charges_enabled} />
         </div>
       </div>
-
       {!expert.bio && (
         <div className="card-soft mt-8 p-5" style={{ backgroundColor: "var(--card)" }}>
           <p className="font-medium">Complétez votre profil</p>
@@ -176,12 +160,10 @@ export default async function ExpertDashboardPage() {
           <CompleteExpertProfileForm expertId={expert.id} />
         </div>
       )}
-
       <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Ajouter un créneau</h2>
       <div className="mt-3 card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
         <AddSlotForm expertId={user.id} profession={expert.profession} />
       </div>
-
       {freeSlots.length > 0 && (
         <>
           <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Mes créneaux disponibles</h2>
@@ -203,14 +185,12 @@ export default async function ExpertDashboardPage() {
           </div>
         </>
       )}
-
       <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Consultations</h2>
       <div className="mt-4 space-y-4">
         {bookings?.map((b: any) => {
           const isPast = new Date(`${b.date}T${b.start_time}`) <= now;
           const clientDocs = b.documents?.filter((d: any) => d.uploaded_by === "client") || [];
           const expertDocs = b.documents?.filter((d: any) => d.uploaded_by === "expert") || [];
-
           return (
             <div key={b.id} className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
               <div className="flex items-center justify-between">
@@ -224,27 +204,23 @@ export default async function ExpertDashboardPage() {
                   {b.status === "completed" ? "Terminée" : isPast ? "À clôturer" : "À venir"}
                 </span>
               </div>
-
               <Link
                 href={`/consultation/${b.id}`}
                 className="btn-primary mt-3 inline-block rounded-[3px] px-4 py-2 text-xs font-medium"
               >
                 Accéder à la consultation
               </Link>
-
               {!isPast && b.status === "confirmed" && (
                 <div className="mt-3">
                   <CancelBookingButton bookingId={b.id} isClient={false} appointmentDate={b.date} appointmentTime={b.start_time} />
                 </div>
               )}
-
               {b.client_note && (
                 <div className="mt-3 border-t border-ink/10 pt-3">
                   <p className="font-mono text-[11px] uppercase text-muted">Message du client</p>
                   <p className="mt-1 text-sm">{b.client_note}</p>
                 </div>
               )}
-
               {clientDocs.length > 0 && (
                 <div className="mt-3 border-t border-ink/10 pt-3">
                   <p className="font-mono text-[11px] uppercase text-muted">
@@ -257,13 +233,11 @@ export default async function ExpertDashboardPage() {
                   </ul>
                 </div>
               )}
-
               {isPast && b.status === "confirmed" && (
                 <div className="mt-3 border-t border-ink/10 pt-3">
                   <CompleteBookingButton bookingId={b.id} />
                 </div>
               )}
-
               {b.status === "completed" && (
                 <div className="mt-3 border-t border-ink/10 pt-3">
                   <p className="font-mono text-[11px] uppercase text-muted">Envoyer des documents au client</p>
@@ -282,7 +256,6 @@ export default async function ExpertDashboardPage() {
           <p className="text-sm text-muted">Aucune consultation pour le moment.</p>
         )}
       </div>
-
       {reviews && reviews.length > 0 && (
         <>
           <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Derniers avis</h2>
@@ -301,7 +274,6 @@ export default async function ExpertDashboardPage() {
           </div>
         </>
       )}
-
       <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Comment ça marche</h2>
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
