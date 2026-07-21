@@ -5,47 +5,38 @@ import ReviewForm from "@/components/ReviewForm";
 import CancelBookingButton from "@/components/CancelBookingButton";
 import CompleteProfileForm from "@/components/CompleteProfileForm";
 import ReferralCode from "@/components/ReferralCode";
+import NotificationButton from "@/components/NotificationButton";
 import { PROFESSION_LABELS, PROFESSION_COLORS } from "@/lib/types";
 import { Search, Calendar, MessageCircle, Heart, Wallet, Gift, FileText } from "lucide-react";
-
 export default async function ClientDashboardPage() {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-
   if (!user) redirect("/connexion");
-
   const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-
   const { data: bookings } = await supabase
     .from("bookings")
     .select("*, experts(*, profiles(full_name)), documents(*)")
     .eq("client_id", user.id)
     .order("date", { ascending: false });
-
   const { data: reviews } = await supabase.from("reviews").select("booking_id").eq("client_id", user.id);
   const reviewedBookingIds = new Set(reviews?.map((r) => r.booking_id));
-
   const { data: favorites } = await supabase
     .from("favorites")
     .select("expert_id, experts(*, profiles(full_name))")
     .eq("client_id", user.id);
-
   const { data: recommended } = await supabase
     .from("experts")
     .select("*, profiles(full_name)")
     .eq("verification_status", "verified")
     .order("created_at", { ascending: false })
     .limit(4);
-
   const now = new Date();
   const upcoming = bookings?.filter((b) => new Date(`${b.date}T${b.start_time}`) > now && b.status === "confirmed") || [];
   const past = bookings?.filter((b) => new Date(`${b.date}T${b.start_time}`) <= now || b.status === "completed") || [];
   const hasNoBookings = !bookings || bookings.length === 0;
-
   const referralCode = profile?.referral_code || `1EXPERT-${user.id.slice(0, 6).toUpperCase()}`;
-
   return (
     <main className="mx-auto max-w-4xl px-6 py-16">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -53,14 +44,16 @@ export default async function ClientDashboardPage() {
           <p className="font-mono text-xs uppercase tracking-[0.16em] text-seal">Espace client</p>
           <h1 className="mt-3 font-display text-3xl font-medium">Mes rendez-vous</h1>
         </div>
-        <Link
-          href="/dashboard/client/documents"
-          className="flex items-center gap-1.5 rounded-[3px] border border-app px-4 py-2 font-mono text-xs uppercase tracking-[0.08em] transition hover:bg-ink/5"
-        >
-          <FileText className="h-3.5 w-3.5" /> Mes documents
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          <NotificationButton />
+          <Link
+            href="/dashboard/client/documents"
+            className="flex items-center gap-1.5 rounded-[3px] border border-app px-4 py-2 font-mono text-xs uppercase tracking-[0.08em] transition hover:bg-ink/5"
+          >
+            <FileText className="h-3.5 w-3.5" /> Mes documents
+          </Link>
+        </div>
       </div>
-
       {hasNoBookings && (
         <div className="card-soft mt-8 p-8 text-center" style={{ backgroundColor: "var(--card)" }}>
           <p className="font-display text-xl font-medium">Vous n'avez pas encore de rendez-vous</p>
@@ -75,7 +68,6 @@ export default async function ClientDashboardPage() {
           </Link>
         </div>
       )}
-
       <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <div className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
           <p className="font-display text-3xl font-semibold text-gradient">{upcoming.length}</p>
@@ -98,7 +90,6 @@ export default async function ClientDashboardPage() {
           </p>
         </div>
       </div>
-
       {profile && !profile.phone && (
         <div className="card-soft mt-8 p-5" style={{ backgroundColor: "var(--card)" }}>
           <p className="font-medium">Complétez votre profil</p>
@@ -106,7 +97,6 @@ export default async function ClientDashboardPage() {
           <CompleteProfileForm userId={user.id} />
         </div>
       )}
-
       {favorites && favorites.length > 0 && (
         <>
           <h2 className="mt-10 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
@@ -132,7 +122,6 @@ export default async function ClientDashboardPage() {
           </div>
         </>
       )}
-
       {recommended && recommended.length > 0 && (
         <>
           <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Experts à découvrir</h2>
@@ -160,7 +149,6 @@ export default async function ClientDashboardPage() {
           </div>
         </>
       )}
-
       <div className="card-soft mt-10 p-5" style={{ backgroundColor: "var(--card)" }}>
         <h3 className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
           <Gift className="h-4 w-4" /> Parrainage
@@ -170,7 +158,6 @@ export default async function ClientDashboardPage() {
         </p>
         <ReferralCode code={referralCode} />
       </div>
-
       <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Comment ça marche</h2>
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
@@ -189,7 +176,6 @@ export default async function ClientDashboardPage() {
           <p className="mt-1 text-sm text-muted">En visio, par tchat ou en physique, selon votre choix.</p>
         </div>
       </div>
-
       {!hasNoBookings && (
         <>
           <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Tous mes rendez-vous</h2>
@@ -198,7 +184,6 @@ export default async function ClientDashboardPage() {
               const isPast = new Date(`${b.date}T${b.start_time}`) <= now;
               const clientDocs = b.documents?.filter((d: any) => d.uploaded_by === "client") || [];
               const expertDocs = b.documents?.filter((d: any) => d.uploaded_by === "expert") || [];
-
               return (
                 <div key={b.id} className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
                   <div className="flex items-center justify-between">
@@ -212,7 +197,6 @@ export default async function ClientDashboardPage() {
                       {b.status === "completed" || isPast ? "Terminé" : "À venir"}
                     </span>
                   </div>
-
                   {b.status !== "cancelled_by_client" && b.status !== "cancelled_by_expert" && (
                     <Link
                       href={`/consultation/${b.id}`}
@@ -221,13 +205,11 @@ export default async function ClientDashboardPage() {
                       Accéder à la consultation
                     </Link>
                   )}
-
                   {!isPast && b.status === "confirmed" && (
                     <div className="mt-3">
                       <CancelBookingButton bookingId={b.id} isClient={true} appointmentDate={b.date} appointmentTime={b.start_time} />
                     </div>
                   )}
-
                   {(clientDocs.length > 0 || expertDocs.length > 0) && (
                     <div className="mt-3 grid grid-cols-1 gap-4 border-t border-ink/10 pt-3 sm:grid-cols-2">
                       {clientDocs.length > 0 && (
@@ -246,7 +228,6 @@ export default async function ClientDashboardPage() {
                       )}
                     </div>
                   )}
-
                   {isPast && b.status !== "cancelled_by_client" && b.status !== "cancelled_by_expert" && (
                     <div className="mt-4 border-t border-ink/10 pt-4">
                       {reviewedBookingIds.has(b.id) ? (
