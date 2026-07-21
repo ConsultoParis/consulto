@@ -1,11 +1,3 @@
-// Service worker 1Expert — stratégie volontairement équilibrée :
-// - Fichiers statiques (JS, CSS, images, polices) : mis en cache, servis
-//   depuis le cache en priorité, pour un fonctionnement hors-ligne réel.
-// - Pages (navigation) : réseau en priorité (contenu à jour), avec repli
-//   sur le cache puis sur une page hors-ligne si aucune connexion.
-// - Données dynamiques (API, Supabase) : JAMAIS mises en cache — le site
-//   doit toujours afficher les créneaux, réservations et experts à jour.
-
 const CACHE_NAME = "1expert-cache-v1";
 const OFFLINE_URL = "/offline.html";
 
@@ -69,5 +61,49 @@ self.addEventListener("fetch", (event) => {
         return cached || networkFetch;
       })
     );
+  }
+});
+
+self.addEventListener("push", (event) => {
+  if (!event.data) return;
+  let data = {};
+  try {
+    data = event.data.json();
+  } catch {
+    data = { title: "1Expert", body: event.data.text() };
+  }
+  const title = data.title || "1Expert";
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body: data.body || "",
+      icon: "/icon-192.png",
+      badge: "/icon-192.png",
+      data: { url: data.url || "/" },
+    })
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const targetUrl = event.notification.data?.url || "/";
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if (client.url.includes(targetUrl) && "focus" in client) return client.focus();
+      }
+      if (self.clients.openWindow) return self.clients.openWindow(targetUrl);
+    })
+  );
+});
+
+self.addEventListener("sync", (event) => {
+  if (event.tag === "1expert-sync") {
+    event.waitUntil(Promise.resolve());
+  }
+});
+
+self.addEventListener("periodicsync", (event) => {
+  if (event.tag === "1expert-periodic-sync") {
+    event.waitUntil(Promise.resolve());
   }
 });
