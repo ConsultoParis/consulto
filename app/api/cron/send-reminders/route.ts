@@ -1,13 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/server";
 import { sendReminderEmail } from "@/lib/email";
+import { sendPushNotification } from "@/lib/push";
 
-// GET /api/cron/send-reminders — appelé automatiquement par Vercel Cron
-// (voir vercel.json). Envoie un rappel par email au client ET à l'expert
-// pour chaque rendez-vous confirmé ayant lieu dans les 24 prochaines heures,
-// et qui n'a pas encore reçu de rappel.
 export async function GET(req: NextRequest) {
-  // Sécurise l'endpoint : seul Vercel Cron (avec le bon secret) peut l'appeler.
   const authHeader = req.headers.get("authorization");
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
@@ -54,6 +50,32 @@ export async function GET(req: NextRequest) {
         date: dateStr,
         time: b.start_time,
         bookingId: b.id,
+      });
+    }
+
+    const { data: clientSubs } = await supabase
+      .from("push_subscriptions")
+      .select("*")
+      .eq("user_id", b.client_id);
+
+    for (const sub of clientSubs || []) {
+      await sendPushNotification(sub, {
+        title: "Rappel de rendez-vous",
+        body: `Votre consultation avec ${expertName} a lieu le ${dateStr} à ${b.start_time}.`,
+        url: `/consultation/${b.id}`,
+      });
+    }
+
+    const { data: expertSubs } = await supabase
+      .from("push_subscriptions")
+      .select("*")
+      .eq("user_id", b.expert_id);
+
+    for (const sub of expertSubs || []) {
+      await sendPushNotification(sub, {
+        title: "Rappel de rendez-vous",
+        body: `Votre consultation avec ${clientName} a lieu le ${dateStr} à ${b.start_time}.`,
+        url: `/consultation/${b.id}`,
       });
     }
 
