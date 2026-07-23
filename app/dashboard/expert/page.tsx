@@ -8,7 +8,7 @@ import CancelBookingButton from "@/components/CancelBookingButton";
 import CompleteExpertProfileForm from "@/components/CompleteExpertProfileForm";
 import StripeConnectButton from "@/components/StripeConnectButton";
 import NotificationButton from "@/components/NotificationButton";
-import { Star, Calendar, Eye, Award, TrendingUp, Zap, PlusCircle, CheckCircle2, Wallet } from "lucide-react";
+import { Star, Calendar, Eye, Award, TrendingUp, Zap, PlusCircle, CheckCircle2, Wallet, Download } from "lucide-react";
 export default async function ExpertDashboardPage() {
   const supabase = await createClient();
   const {
@@ -141,6 +141,12 @@ export default async function ExpertDashboardPage() {
           <p className="mt-1 font-mono text-[10px] uppercase text-muted">Satisfaction</p>
         </div>
       </div>
+      
+        href="/api/expert/export-csv"
+        className="btn-secondary mt-4 inline-flex items-center gap-1.5 rounded-[6px] px-4 py-2.5 text-xs font-medium"
+      >
+        <Download className="h-3.5 w-3.5" /> Télécharger mes revenus (CSV)
+      </a>
       <div
         className="card-soft mt-8 p-5"
         style={{
