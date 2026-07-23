@@ -142,11 +142,7 @@ export default async function ExpertDashboardPage() {
         </div>
       </div>
       
-        href="/api/expert/export-csv"
-        className="btn-secondary mt-4 inline-flex items-center gap-1.5 rounded-[6px] px-4 py-2.5 text-xs font-medium"
-      >
-        <Download className="h-3.5 w-3.5" /> Télécharger mes revenus (CSV)
-      </a>
+        <a href="/api/expert/export-csv" className="btn-secondary mt-4 inline-flex items-center gap-1.5 rounded-[6px] px-4 py-2.5 text-xs font-medium"><Download className="h-3.5 w-3.5" /> Télécharger mes revenus (CSV)</a>
       <div
         className="card-soft mt-8 p-5"
         style={{
