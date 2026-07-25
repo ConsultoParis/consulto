@@ -78,12 +78,14 @@ export default function Header() {
             >
               <Search className="h-4 w-4" />
             </Link>
-
-            <div className="relative">
+            <div className="relative shrink-0">
               <button
                 onClick={() => (user ? setAccountMenuOpen((o) => !o) : (window.location.href = spaceHref))}
-                className="flex h-9 w-9 items-center justify-center rounded-full border transition-all hover:scale-105 hover:border-[#3E8EF7] hover:shadow-[0_0_12px_-2px_rgba(62,142,247,0.5)]"
-                style={{ borderColor: "var(--border)" }}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border transition-colors hover:border-[#3E8EF7]"
+                style={{
+                  borderColor: accountMenuOpen ? "#3E8EF7" : "var(--border)",
+                  boxShadow: accountMenuOpen ? "0 0 12px -2px rgba(62,142,247,0.5)" : "none",
+                }}
                 title="Mon espace"
               >
                 <UserIcon className="h-4 w-4" strokeWidth={1.75} />
