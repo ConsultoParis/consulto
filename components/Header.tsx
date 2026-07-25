@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Menu, X, User as UserIcon, Search } from "lucide-react";
+import { Menu, X, User as UserIcon, Search, LogOut } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import ThemeToggle from "@/components/ThemeToggle";
 import LogoAnimated from "@/components/LogoAnimated";
@@ -19,6 +19,7 @@ const navLinks = [
 export default function Header() {
   const supabase = createClient();
   const [user, setUser] = useState<User | null>(null);
+  const [role, setRole] = useState<"client" | "expert" | "admin" | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -28,6 +29,27 @@ export default function Header() {
     });
     return () => listener.subscription.unsubscribe();
   }, [supabase]);
+
+  useEffect(() => {
+    if (!user) {
+      setRole(null);
+      return;
+    }
+    supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", user.id)
+      .single()
+      .then(({ data }) => setRole(data?.role ?? "client"));
+  }, [user, supabase]);
+
+  const spaceHref = !user
+    ? "/connexion"
+    : role === "expert"
+    ? "/dashboard/expert"
+    : role === "admin"
+    ? "/admin/analytics"
+    : "/dashboard/client";
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -55,13 +77,23 @@ export default function Header() {
               <Search className="h-4 w-4" />
             </Link>
             <Link
-              href={user ? "/dashboard/client" : "/connexion"}
+              href={spaceHref}
               className="flex h-9 w-9 items-center justify-center rounded-full border transition-all hover:scale-105 hover:border-[#3E8EF7] hover:shadow-[0_0_12px_-2px_rgba(62,142,247,0.5)]"
               style={{ borderColor: "var(--border)" }}
-              title="Mon compte"
+              title="Mon espace"
             >
               <UserIcon className="h-4 w-4" strokeWidth={1.75} />
             </Link>
+            {user && (
+              <button
+                onClick={handleLogout}
+                className="flex h-9 w-9 items-center justify-center rounded-full border transition-all hover:scale-105 hover:border-[#3E8EF7] hover:shadow-[0_0_12px_-2px_rgba(62,142,247,0.5)]"
+                style={{ borderColor: "var(--border)" }}
+                title="Déconnexion"
+              >
+                <LogOut className="h-4 w-4" strokeWidth={1.75} />
+              </button>
+            )}
             <button
               onClick={() => setMenuOpen(true)}
               className="flex h-9 w-9 items-center justify-center rounded-full border transition-all hover:scale-105 hover:border-[#3E8EF7] hover:shadow-[0_0_12px_-2px_rgba(62,142,247,0.5)]"
