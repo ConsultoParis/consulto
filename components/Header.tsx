@@ -95,8 +95,8 @@ export default function Header() {
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setAccountMenuOpen(false)} />
                   <div
-                    className="card-soft absolute right-0 top-11 z-50 w-48 overflow-hidden py-1.5"
-                    style={{ backgroundColor: "var(--card)" }}
+                    className="absolute right-0 top-full z-50 mt-2 w-48 overflow-hidden rounded-[10px] border py-1.5 shadow-lg"
+                    style={{ backgroundColor: "var(--card)", borderColor: "var(--border)" }}
                   >
                     <Link
                       href={spaceHref}
