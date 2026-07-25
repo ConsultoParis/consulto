@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Menu, X, User as UserIcon, Search, LogOut } from "lucide-react";
+import { Menu, X, User as UserIcon, Search } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import ThemeToggle from "@/components/ThemeToggle";
 import LogoAnimated from "@/components/LogoAnimated";
@@ -51,6 +51,8 @@ export default function Header() {
     ? "/admin/analytics"
     : "/dashboard/client";
 
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+
   async function handleLogout() {
     await supabase.auth.signOut();
     window.location.href = "/";
@@ -76,24 +78,45 @@ export default function Header() {
             >
               <Search className="h-4 w-4" />
             </Link>
-            <Link
-              href={spaceHref}
-              className="flex h-9 w-9 items-center justify-center rounded-full border transition-all hover:scale-105 hover:border-[#3E8EF7] hover:shadow-[0_0_12px_-2px_rgba(62,142,247,0.5)]"
-              style={{ borderColor: "var(--border)" }}
-              title="Mon espace"
-            >
-              <UserIcon className="h-4 w-4" strokeWidth={1.75} />
-            </Link>
-            {user && (
+
+            <div className="relative">
               <button
-                onClick={handleLogout}
+                onClick={() => (user ? setAccountMenuOpen((o) => !o) : (window.location.href = spaceHref))}
                 className="flex h-9 w-9 items-center justify-center rounded-full border transition-all hover:scale-105 hover:border-[#3E8EF7] hover:shadow-[0_0_12px_-2px_rgba(62,142,247,0.5)]"
                 style={{ borderColor: "var(--border)" }}
-                title="Déconnexion"
+                title="Mon espace"
               >
-                <LogOut className="h-4 w-4" strokeWidth={1.75} />
+                <UserIcon className="h-4 w-4" strokeWidth={1.75} />
               </button>
-            )}
+
+              {accountMenuOpen && user && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setAccountMenuOpen(false)} />
+                  <div
+                    className="card-soft absolute right-0 top-11 z-50 w-48 overflow-hidden py-1.5"
+                    style={{ backgroundColor: "var(--card)" }}
+                  >
+                    <Link
+                      href={spaceHref}
+                      onClick={() => setAccountMenuOpen(false)}
+                      className="block px-4 py-2.5 text-sm transition-colors hover:bg-[#3E8EF7]/10"
+                    >
+                      Mon espace
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setAccountMenuOpen(false);
+                        handleLogout();
+                      }}
+                      className="block w-full px-4 py-2.5 text-left text-sm transition-colors hover:bg-[#3E8EF7]/10"
+                    >
+                      Déconnexion
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+
             <button
               onClick={() => setMenuOpen(true)}
               className="flex h-9 w-9 items-center justify-center rounded-full border transition-all hover:scale-105 hover:border-[#3E8EF7] hover:shadow-[0_0_12px_-2px_rgba(62,142,247,0.5)]"
