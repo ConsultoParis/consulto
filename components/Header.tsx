@@ -72,7 +72,7 @@ export default function Header() {
             <ThemeToggle />
             <Link
               href="/experts"
-              className="flex h-9 w-9 items-center justify-center rounded-full border transition-all hover:scale-105 hover:border-[#3E8EF7] hover:shadow-[0_0_12px_-2px_rgba(62,142,247,0.5)]"
+              className="flex h-9 w-9 items-center justify-center rounded-full border transition-all hover:border-[#3E8EF7] hover:shadow-[0_0_12px_-2px_rgba(62,142,247,0.5)]"
               style={{ borderColor: "var(--border)" }}
               title="Trouver un expert"
             >
@@ -101,7 +101,7 @@ export default function Header() {
                     <Link
                       href={spaceHref}
                       onClick={() => setAccountMenuOpen(false)}
-                      className="block px-4 py-2.5 text-sm transition-colors hover:bg-[#3E8EF7]/10"
+                      className="nav-link relative mx-4 block w-fit px-0 py-2.5 text-sm transition-colors"
                     >
                       Mon espace
                     </Link>
@@ -110,7 +110,7 @@ export default function Header() {
                         setAccountMenuOpen(false);
                         handleLogout();
                       }}
-                      className="block w-full px-4 py-2.5 text-left text-sm transition-colors hover:bg-[#3E8EF7]/10"
+                      className="nav-link relative mx-4 block w-fit px-0 py-2.5 text-left text-sm transition-colors"
                     >
                       Déconnexion
                     </button>
