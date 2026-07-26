@@ -8,6 +8,7 @@ import CancelBookingButton from "@/components/CancelBookingButton";
 import CompleteExpertProfileForm from "@/components/CompleteExpertProfileForm";
 import StripeConnectButton from "@/components/StripeConnectButton";
 import NotificationButton from "@/components/NotificationButton";
+import FeaturedSubscriptionButton from "@/components/FeaturedSubscriptionButton";
 import { Star, Calendar, Eye, Award, TrendingUp, Zap, PlusCircle, CheckCircle2, Wallet, Download } from "lucide-react";
 export default async function ExpertDashboardPage() {
   const supabase = await createClient();
@@ -141,8 +142,17 @@ export default async function ExpertDashboardPage() {
           <p className="mt-1 font-mono text-[10px] uppercase text-muted">Satisfaction</p>
         </div>
       </div>
-      
-        <a href="/api/expert/export-csv" className="btn-secondary mt-4 inline-flex items-center gap-1.5 rounded-[6px] px-4 py-2.5 text-xs font-medium"><Download className="h-3.5 w-3.5" /> Télécharger mes revenus (CSV)</a>
+
+      <a href="/api/expert/export-csv" className="btn-secondary mt-4 inline-flex items-center gap-1.5 rounded-[6px] px-4 py-2.5 text-xs font-medium"><Download className="h-3.5 w-3.5" /> Télécharger mes revenus (CSV)</a>
+
+      <div className="mt-6">
+        <FeaturedSubscriptionButton
+          isFeatured={expert.is_featured || false}
+          featuredUntil={expert.featured_until}
+          cancelAtPeriodEnd={expert.featured_cancel_at_period_end || false}
+        />
+      </div>
+
       <div
         className="card-soft mt-8 p-5"
         style={{
