@@ -1,0 +1,78 @@
+import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
+import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
+
+export async function GET(req: NextRequest, { params }: { params: Promise<{ bookingId: string }> }) {
+  const { bookingId } = await params;
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+  }
+
+  const { data: booking } = await supabase
+    .from("bookings")
+    .select("*, experts(profiles(full_name)), profiles(full_name)")
+    .eq("id", bookingId)
+    .single();
+
+  if (!booking || (booking.client_id !== user.id && booking.expert_id !== user.id)) {
+    return NextResponse.json({ error: "Introuvable" }, { status: 404 });
+  }
+
+  const pdfDoc = await PDFDocument.create();
+  const page = pdfDoc.addPage([595, 842]);
+  const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  const navy = rgb(0.039, 0.145, 0.251);
+  const gray = rgb(0.4, 0.45, 0.5);
+
+  let y = 780;
+  page.drawText("1Expert", { x: 50, y, size: 22, font: fontBold, color: navy });
+  y -= 18;
+  page.drawText("Conseil & Expertise", { x: 50, y, size: 10, font, color: gray });
+
+  y -= 50;
+  page.drawText("Reçu de consultation", { x: 50, y, size: 16, font: fontBold, color: navy });
+
+  y -= 30;
+  const rows: [string, string][] = [
+    ["Référence", booking.id.slice(0, 8).toUpperCase()],
+    ["Date de la consultation", new Date(booking.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })],
+    ["Heure", booking.start_time],
+    ["Client", (booking as any).profiles?.full_name || "—"],
+    ["Expert", (booking as any).experts?.profiles?.full_name || "—"],
+    ["Mode de consultation", booking.mode === "video" ? "Visioconférence" : booking.mode === "chat" ? "Tchat" : "Physique"],
+    ["Statut", booking.status === "completed" ? "Terminée" : booking.status],
+    ["Montant payé", `${Number(booking.price).toFixed(2)} €`],
+  ];
+
+  for (const [label, value] of rows) {
+    page.drawText(label, { x: 50, y, size: 11, font, color: gray });
+    page.drawText(String(value), { x: 250, y, size: 11, font: fontBold, color: navy });
+    y -= 24;
+  }
+
+  y -= 20;
+  page.drawLine({ start: { x: 50, y }, end: { x: 545, y }, thickness: 1, color: rgb(0.85, 0.88, 0.92) });
+
+  y -= 30;
+  page.drawText(
+    "Ce document atteste du paiement de la consultation indiquée ci-dessus, réalisée via la plateforme 1Expert.fr.",
+    { x: 50, y, size: 9, font, color: gray, maxWidth: 495 }
+  );
+  y -= 14;
+  page.drawText("1Expert — contact@1expert.fr — 1expert.fr", { x: 50, y, size: 9, font, color: gray });
+
+  const pdfBytes = await pdfDoc.save();
+
+  return new NextResponse(Buffer.from(pdfBytes), {
+    headers: {
+      "Content-Type": "application/pdf",
+      "Content-Disposition": `attachment; filename="1expert-recu-${booking.id.slice(0, 8)}.pdf"`,
+    },
+  });
+}
