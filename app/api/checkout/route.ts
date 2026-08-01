@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createEscrowPayment } from "@/lib/stripe";
+import { getLoyaltyStatus, LOYALTY_DISCOUNT_RATE } from "@/lib/loyalty";
 
-// POST /api/checkout — appelé quand le client valide sa réservation.
-// Crée la réservation en base (status "confirmed", payment_status "pending")
-// puis un PaymentIntent Stripe en mode séquestre (capture manuelle), réparti
-// automatiquement entre l'expert (80%) et 1Expert (20% de commission).
 export async function POST(req: NextRequest) {
   const supabase = await createClient();
   const {
@@ -17,9 +14,8 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { slotId, expertId, mode, clientEmail, clientNote, creditsUsed } = body;
+  const { slotId, expertId, mode, clientEmail, clientNote, creditsUsed, useLoyaltyDiscount } = body;
 
-  // 1. Vérifie que le créneau est toujours disponible
   const { data: slot } = await supabase
     .from("availability_slots")
     .select("*")
@@ -31,7 +27,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Ce créneau n'est plus disponible" }, { status: 409 });
   }
 
-  // 2. Vérifie que l'expert a bien connecté son compte de paiement
   const { data: expert } = await supabase
     .from("experts")
     .select("price, stripe_account_id, stripe_charges_enabled")
@@ -45,11 +40,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Le prix et le mode sont déterminés/vérifiés côté serveur, jamais fait
-  // confiance à ce que le navigateur envoie. Les créneaux de 5 min sont le
-  // "Devis rapide" à prix fixe (5€), obligatoirement en visio. Pour les
-  // autres créneaux, le mode choisi doit faire partie de ceux autorisés par
-  // l'expert pour ce créneau précis.
   const isQuickQuote = slot.duration_min === 5;
   const price = isQuickQuote ? 5 : Number(expert.price);
   const allowedModes: string[] = isQuickQuote ? ["video"] : slot.available_modes || [];
@@ -58,8 +48,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Ce mode de consultation n'est pas disponible pour ce créneau" }, { status: 400 });
   }
 
-  // 3. Crée le PaymentIntent Stripe (séquestre, réparti 80/20)
-  const finalPrice = Math.max(0, price - (creditsUsed || 0));
+  let loyaltyDiscountApplied = false;
+  let priceAfterLoyalty = price;
+  if (useLoyaltyDiscount && !isQuickQuote) {
+    const loyalty = await getLoyaltyStatus(supabase, user.id);
+    if (loyalty.discountsAvailable > 0) {
+      priceAfterLoyalty = Math.round(price * (1 - LOYALTY_DISCOUNT_RATE) * 100) / 100;
+      loyaltyDiscountApplied = true;
+    }
+  }
+
+  const finalPrice = Math.max(0, priceAfterLoyalty - (creditsUsed || 0));
+
   const paymentIntent = await createEscrowPayment({
     amountEuros: finalPrice,
     bookingId: slotId,
@@ -67,7 +67,6 @@ export async function POST(req: NextRequest) {
     expertStripeAccountId: expert.stripe_account_id,
   });
 
-  // 4. Crée la réservation en base
   const { data: booking, error } = await supabase
     .from("bookings")
     .insert({
@@ -92,7 +91,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // 5. Marque le créneau comme réservé
+  if (loyaltyDiscountApplied) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("loyalty_discounts_used")
+      .eq("id", user.id)
+      .single();
+    await supabase
+      .from("profiles")
+      .update({ loyalty_discounts_used: (profile?.loyalty_discounts_used || 0) + 1 })
+      .eq("id", user.id);
+  }
+
   await supabase.from("availability_slots").update({ is_booked: true }).eq("id", slotId);
 
   return NextResponse.json({
