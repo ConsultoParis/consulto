@@ -2,38 +2,31 @@ import Link from "next/link";
 import Avatar from "@/components/Avatar";
 import VerifiedBadge from "@/components/VerifiedBadge";
 import ExpertSearchForm from "@/components/ExpertSearchForm";
+import ResponseTimeBadge from "@/components/ResponseTimeBadge";
 import { createClient } from "@/lib/supabase/server";
 import { PROFESSION_LABELS, PROFESSION_COLORS, type Expert } from "@/lib/types";
 import { distanceKm } from "@/lib/geo";
 import { MapPin, Star } from "lucide-react";
-
 export const revalidate = 30;
-
 export default async function ExpertsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ profession?: string; q?: string; specialite?: string; ville?: string; lat?: string; lng?: string; tri?: string }>;
+  searchParams: Promise<{ profession?: string; q?: string; specialite?: string; ville?: string; lat?: string; lng?: string; tri?: string; quand?: string }>;
 }) {
   const params = await searchParams;
   const supabase = await createClient();
-
   let query = supabase
     .from("experts")
     .select("*, profiles(full_name, avatar_url), reviews(rating)")
     .eq("verification_status", "verified");
-
   if (params.profession) {
     query = query.eq("profession", params.profession);
   }
-
   if (params.specialite) {
     query = query.eq("specialite", params.specialite);
   }
-
   const { data: expertsRaw } = await query.order("created_at", { ascending: false });
-
   let experts = (expertsRaw as any[] | null) || [];
-
   if (params.q) {
     experts = experts.filter(
       (e) =>
@@ -42,10 +35,31 @@ export default async function ExpertsPage({
     );
   }
 
+  if (params.quand === "aujourdhui" || params.quand === "semaine") {
+    const today = new Date();
+    const todayStr = today.toISOString().slice(0, 10);
+    const endStr =
+      params.quand === "aujourdhui"
+        ? todayStr
+        : new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
+    const expertIds = experts.map((e) => e.id);
+    if (expertIds.length > 0) {
+      const { data: availableSlots } = await supabase
+        .from("availability_slots")
+        .select("expert_id")
+        .in("expert_id", expertIds)
+        .eq("is_booked", false)
+        .gte("date", todayStr)
+        .lte("date", endStr);
+      const expertsWithSlot = new Set((availableSlots || []).map((s) => s.expert_id));
+      experts = experts.filter((e) => expertsWithSlot.has(e.id));
+    }
+  }
+
   const searchLat = params.lat ? parseFloat(params.lat) : null;
   const searchLng = params.lng ? parseFloat(params.lng) : null;
   const hasLocation = searchLat !== null && searchLng !== null && !isNaN(searchLat) && !isNaN(searchLng);
-
   const withDistance = experts.map((e: any) => {
     const ratings = (e.reviews || []).map((r: any) => r.rating);
     const avgRating = ratings.length > 0 ? ratings.reduce((s: number, r: number) => s + r, 0) / ratings.length : null;
@@ -56,9 +70,7 @@ export default async function ExpertsPage({
       distance: hasLocation && e.lat && e.lng ? distanceKm(searchLat!, searchLng!, e.lat, e.lng) : null,
     };
   });
-
   let sorted = [...withDistance];
-
   if (params.tri === "prix_asc") {
     sorted.sort((a, b) => a.price - b.price);
   } else if (params.tri === "prix_desc") {
@@ -77,11 +89,21 @@ export default async function ExpertsPage({
     });
   }
 
+  const quickFilterBase = (key: string) => {
+    const p = new URLSearchParams();
+    if (params.profession) p.set("profession", params.profession);
+    if (params.q) p.set("q", params.q);
+    if (params.specialite) p.set("specialite", params.specialite);
+    if (params.ville) p.set("ville", params.ville);
+    if (params.tri) p.set("tri", params.tri);
+    if (key) p.set("quand", key);
+    return `/experts?${p.toString()}`;
+  };
+
   return (
     <main className="mx-auto max-w-6xl px-6 py-16">
       <p className="font-mono text-xs uppercase tracking-[0.16em]" style={{ color: "#3E8EF7" }}>Le registre</p>
       <h1 className="mt-3 font-display text-3xl font-medium">Trouver un expert</h1>
-
       <ExpertSearchForm
         defaultQ={params.q}
         defaultProfession={params.profession}
@@ -90,11 +112,46 @@ export default async function ExpertsPage({
         defaultTri={params.tri}
       />
 
-      <p className="mt-6 font-mono text-xs text-mutedmore">
+      <div className="mt-4 flex flex-wrap gap-2">
+        <Link
+          href={quickFilterBase("")}
+          className="rounded-full px-3.5 py-1.5 font-mono text-xs transition"
+          style={
+            !params.quand
+              ? { backgroundColor: "#0A2540", color: "#F4F8FF" }
+              : { border: "1px solid var(--border)", color: "var(--text)" }
+          }
+        >
+          Toutes dates
+        </Link>
+        <Link
+          href={quickFilterBase("aujourdhui")}
+          className="rounded-full px-3.5 py-1.5 font-mono text-xs transition"
+          style={
+            params.quand === "aujourdhui"
+              ? { backgroundColor: "#1E8F6B", color: "#FFFFFF" }
+              : { border: "1px solid var(--border)", color: "var(--text)" }
+          }
+        >
+          Disponible aujourd'hui
+        </Link>
+        <Link
+          href={quickFilterBase("semaine")}
+          className="rounded-full px-3.5 py-1.5 font-mono text-xs transition"
+          style={
+            params.quand === "semaine"
+              ? { backgroundColor: "#1E8F6B", color: "#FFFFFF" }
+              : { border: "1px solid var(--border)", color: "var(--text)" }
+          }
+        >
+          Disponible cette semaine
+        </Link>
+      </div>
+
+      <p className="mt-4 font-mono text-xs text-mutedmore">
         {sorted.length} expert{sorted.length !== 1 ? "s" : ""} trouvé{sorted.length !== 1 ? "s" : ""}
         {hasLocation ? " · trié par proximité" : ""}
       </p>
-
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {sorted.map((expert: any) => (
           <Link
@@ -116,7 +173,6 @@ export default async function ExpertsPage({
                   <p className="font-display text-lg font-medium">{expert.profiles?.full_name}</p>
                 </div>
               </div>
-
               <div className="mt-2 flex flex-wrap items-center gap-2">
                 <VerifiedBadge size="sm" />
                 {expert.avgRating !== null && (
@@ -125,8 +181,8 @@ export default async function ExpertsPage({
                     {expert.avgRating.toFixed(1)} ({expert.reviewCount})
                   </span>
                 )}
+                <ResponseTimeBadge minutes={expert.response_time_min} />
               </div>
-
               <p className="mt-3 text-sm text-muted">
                 {expert.specialite} · {expert.experience_years} ans
               </p>
