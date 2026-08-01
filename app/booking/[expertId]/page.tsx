@@ -7,7 +7,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { createClient } from "@/lib/supabase/client";
 import CheckoutForm from "@/components/CheckoutForm";
 import BookingCalendar from "@/components/BookingCalendar";
-import { Check } from "lucide-react";
+import { Check, Gift } from "lucide-react";
 import type { AvailabilitySlot, ConsultationMode } from "@/lib/types";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -19,6 +19,7 @@ const STEPS = [
 ];
 
 const MODE_LABELS: Record<ConsultationMode, string> = { video: "Visio", chat: "Tchat", physique: "Physique" };
+const LOYALTY_THRESHOLD = 100;
 
 function StepIndicator({ step }: { step: "creneaux" | "paiement" | "confirmation" }) {
   const currentIndex = STEPS.findIndex((s) => s.key === step);
@@ -75,6 +76,8 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
   const [step, setStep] = useState<"creneaux" | "paiement" | "confirmation">("creneaux");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [discountsAvailable, setDiscountsAvailable] = useState(0);
+  const [useDiscount, setUseDiscount] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -105,6 +108,23 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
 
       const { data: userData } = await supabase.auth.getUser();
       if (userData.user?.email) setEmail(userData.user.email);
+
+      if (userData.user) {
+        const { data: completedBookings } = await supabase
+          .from("bookings")
+          .select("price")
+          .eq("client_id", userData.user.id)
+          .eq("status", "completed");
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("loyalty_discounts_used")
+          .eq("id", userData.user.id)
+          .single();
+        const totalSpend = (completedBookings || []).reduce((s, b) => s + Number(b.price), 0);
+        const earned = Math.floor(totalSpend / LOYALTY_THRESHOLD);
+        const used = profile?.loyalty_discounts_used || 0;
+        setDiscountsAvailable(Math.max(0, earned - used));
+      }
     }
     load();
   }, [expertId]); // eslint-disable-line
@@ -118,7 +138,6 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
   function handleSelectDate(date: string) {
     setSelectedDate(date);
     setSelectedSlot(null);
-    setMode(null);
   }
 
   function handleSelectSlot(slot: AvailabilitySlot) {
@@ -146,6 +165,7 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
         clientEmail: email,
         clientNote: note,
         creditsUsed: 0,
+        useLoyaltyDiscount: !isQuickQuote && useDiscount,
       }),
     });
 
@@ -173,6 +193,7 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
   if (!expert) return null;
 
   const isQuickQuote = selectedSlot?.duration_min === 5;
+  const displayedPrice = isQuickQuote ? 5 : useDiscount ? Math.round(expert.price * 0.95 * 100) / 100 : expert.price;
 
   return (
     <main className="mx-auto max-w-2xl px-6 py-16">
@@ -246,6 +267,24 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
             </>
           )}
 
+          {discountsAvailable > 0 && !isQuickQuote && (
+            <label
+              className="mt-6 flex cursor-pointer items-start gap-3 rounded-[6px] border p-4"
+              style={{ borderColor: useDiscount ? "#1E8F6B" : "var(--border)", backgroundColor: useDiscount ? "#1E8F6B0F" : "transparent" }}
+            >
+              <input type="checkbox" checked={useDiscount} onChange={(e) => setUseDiscount(e.target.checked)} className="mt-0.5" />
+              <span>
+                <span className="flex items-center gap-1.5 text-sm font-medium" style={{ color: "#1E8F6B" }}>
+                  <Gift className="h-3.5 w-3.5" /> Utiliser ma réduction fidélité (-5%)
+                </span>
+                <span className="mt-0.5 block text-xs text-muted">
+                  Vous avez {discountsAvailable} réduction{discountsAvailable > 1 ? "s" : ""} disponible{discountsAvailable > 1 ? "s" : ""}.
+                  Non cumulable avec une autre réduction sur cette même session.
+                </span>
+              </span>
+            </label>
+          )}
+
           <details className="group mt-8 rounded-[6px] border" style={{ borderColor: "var(--border)" }}>
             <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
               Ajouter des précisions (optionnel)
@@ -308,7 +347,7 @@ export default function BookingPage({ params }: { params: Promise<{ expertId: st
             disabled={loading}
             className="btn-primary mt-8 w-full rounded-[6px] py-3.5 text-sm font-medium"
           >
-            {loading ? "Préparation..." : `Continuer — ${isQuickQuote ? 5 : expert.price} €`}
+            {loading ? "Préparation..." : `Continuer — ${displayedPrice} €${useDiscount && !isQuickQuote ? " (avec -5%)" : ""}`}
           </button>
         </div>
       )}
