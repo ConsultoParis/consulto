@@ -1,17 +1,13 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { Profession } from "@/lib/types";
 import { Paperclip, X, Camera, Check, ArrowLeft, ArrowRight } from "lucide-react";
 import CityAutocomplete from "@/components/CityAutocomplete";
-
 const inputClass =
   "mt-1.5 w-full rounded-[3px] border border-app px-3.5 py-2.5 text-[15px] outline-none focus:border-ink";
-
 const STEP_LABELS = ["Profil", "Offre", "Justificatif", "Terminé"];
-
 function StepIndicator({ current }: { current: number }) {
   return (
     <div className="mt-6 flex items-center">
@@ -46,15 +42,12 @@ function StepIndicator({ current }: { current: number }) {
     </div>
   );
 }
-
 export default function DevenirExpertPage() {
   const router = useRouter();
   const supabase = createClient();
-
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(0);
-
   const [profession, setProfession] = useState<Profession | "">("");
   const [specialite, setSpecialite] = useState("");
   const [ville, setVille] = useState("");
@@ -70,28 +63,23 @@ export default function DevenirExpertPage() {
   const [certification, setCertification] = useState("");
   const [documents, setDocuments] = useState<File[]>([]);
   const [photo, setPhoto] = useState<File | null>(null);
-
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [uploadStep, setUploadStep] = useState("");
-
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       setUserId(data.user?.id ?? null);
       setCheckingAuth(false);
     });
   }, [supabase]);
-
   function addFiles(fileList: FileList | null) {
     if (!fileList) return;
     setDocuments((d) => [...d, ...Array.from(fileList)]);
   }
-
   function removeDocument(index: number) {
     setDocuments((d) => d.filter((_, i) => i !== index));
   }
-
   function validateStep(step: number): string {
     if (step === 0) {
       if (!profession) return "Choisissez une profession";
@@ -117,27 +105,22 @@ export default function DevenirExpertPage() {
     }
     return "";
   }
-
   function handleNext() {
     const validationError = validateStep(currentStep);
     if (validationError) return setError(validationError);
     setError("");
     setCurrentStep((s) => s + 1);
   }
-
   function handleBack() {
     setError("");
     setCurrentStep((s) => s - 1);
   }
-
   async function handleSubmit() {
     const validationError = validateStep(3);
     if (validationError) return setError(validationError);
     if (!userId) return setError("Vous devez être connecté pour candidater");
-
     setLoading(true);
     setError("");
-
     setUploadStep("Envoi de la photo...");
     let photoUrl: string | null = null;
     if (photo) {
@@ -151,7 +134,6 @@ export default function DevenirExpertPage() {
       const { data: publicUrlData } = supabase.storage.from("expert-photos").getPublicUrl(photoPath);
       photoUrl = publicUrlData.publicUrl;
     }
-
     setUploadStep("Création du profil...");
     const { error: insertError } = await supabase.from("experts").insert({
       id: userId,
@@ -172,38 +154,39 @@ export default function DevenirExpertPage() {
       certification: profession === "coiffeur" ? certification : null,
       verification_status: "pending",
     });
-
     if (insertError) {
       setLoading(false);
       setUploadStep("");
       return setError(insertError.message);
     }
-
     setUploadStep("Envoi des justificatifs...");
     for (const file of documents) {
       const filePath = `${userId}/${Date.now()}-${file.name}`;
       const { error: uploadError } = await supabase.storage.from("expert-documents").upload(filePath, file);
-
       if (uploadError) {
         setLoading(false);
         setUploadStep("");
         return setError(`Erreur lors de l'envoi de "${file.name}" : ${uploadError.message}`);
       }
-
       await supabase.from("expert_documents").insert({
         expert_id: userId,
         file_name: file.name,
         file_path: filePath,
       });
     }
-
     setLoading(false);
     setUploadStep("");
     setSubmitted(true);
+    fetch("/api/notify-admin-new-application", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ expertId: userId }),
+    }).catch(() => {
+      // Échec silencieux : la candidature est bien enregistrée dans tous
+      // les cas, cette notification est un bonus, pas un blocage.
+    });
   }
-
   if (checkingAuth) return null;
-
   if (!userId) {
     return (
       <main className="mx-auto max-w-2xl px-6 py-16 text-center">
@@ -216,7 +199,6 @@ export default function DevenirExpertPage() {
       </main>
     );
   }
-
   if (submitted) {
     return (
       <main className="mx-auto max-w-2xl px-6 py-16 text-center">
@@ -230,15 +212,12 @@ export default function DevenirExpertPage() {
       </main>
     );
   }
-
   const needsJustificatifStep = profession !== "" && profession !== "coiffeur";
-
   return (
     <main className="mx-auto max-w-2xl px-6 py-16">
       <p className="font-mono text-xs uppercase tracking-[0.16em] text-seal">Candidature expert</p>
       <h1 className="mt-3 font-display text-3xl font-medium">Rejoindre le registre</h1>
       <p className="mt-3 text-muted">Chaque profil est vérifié manuellement avant mise en ligne.</p>
-
       <div className="mt-6 rounded-[6px] border border-seal/40 bg-seal/5 p-5">
         <p className="text-sm text-muted">
           <strong>Pourquoi rejoindre 1Expert ?</strong> Aucun abonnement, aucun frais fixe — vous ne payez que 20% sur
@@ -246,9 +225,7 @@ export default function DevenirExpertPage() {
           garanti par séquestre sécurisé.
         </p>
       </div>
-
       <StepIndicator current={currentStep} />
-
       <div className="mt-8 space-y-5">
         {currentStep === 0 && (
           <>
@@ -268,7 +245,6 @@ export default function DevenirExpertPage() {
                 <option value="comptable">Expert-comptable</option>
               </select>
             </div>
-
             <div>
               <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Spécialité</label>
               {profession === "medecin" ? (
@@ -289,7 +265,6 @@ export default function DevenirExpertPage() {
                 <input className={inputClass} value={specialite} onChange={(e) => setSpecialite(e.target.value)} />
               )}
             </div>
-
             <div>
               <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Ville ou code postal</label>
               <CityAutocomplete
@@ -306,7 +281,6 @@ export default function DevenirExpertPage() {
             </div>
           </>
         )}
-
         {currentStep === 1 && (
           <>
             <div>
@@ -318,7 +292,6 @@ export default function DevenirExpertPage() {
                 placeholder="Votre parcours, votre approche, en quelques phrases..."
               />
             </div>
-
             <div>
               <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Tarif par session (€)</label>
               <input
@@ -330,7 +303,6 @@ export default function DevenirExpertPage() {
             </div>
           </>
         )}
-
         {currentStep === 2 && (
           <>
             {profession === "medecin" && (
@@ -363,14 +335,12 @@ export default function DevenirExpertPage() {
                 </div>
               </div>
             )}
-
             {profession === "avocat" && (
               <div>
                 <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">N° au Barreau</label>
                 <input className={inputClass} value={numeroBarreau} onChange={(e) => setNumeroBarreau(e.target.value)} />
               </div>
             )}
-
             {profession === "notaire" && (
               <div>
                 <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
@@ -379,14 +349,12 @@ export default function DevenirExpertPage() {
                 <input className={inputClass} value={numeroNotaire} onChange={(e) => setNumeroNotaire(e.target.value)} />
               </div>
             )}
-
             {profession === "garagiste" && (
               <div>
                 <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">N° SIRET</label>
                 <input className={inputClass} value={numeroSiret} onChange={(e) => setNumeroSiret(e.target.value)} />
               </div>
             )}
-
             {profession === "coiffeur" && (
               <div>
                 <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
@@ -400,7 +368,6 @@ export default function DevenirExpertPage() {
                 />
               </div>
             )}
-
             {profession === "comptable" && (
               <div>
                 <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
@@ -415,7 +382,6 @@ export default function DevenirExpertPage() {
             )}
           </>
         )}
-
         {currentStep === 3 && (
           <div className="space-y-6">
             <div>
@@ -425,7 +391,6 @@ export default function DevenirExpertPage() {
               <p className="mt-1 text-xs text-muted">
                 Photo de vous sur fond blanc ou photo professionnelle. Elle sera affichée publiquement sur votre profil.
               </p>
-
               <div className="mt-2.5 flex flex-wrap items-center gap-3">
                 <label className="flex cursor-pointer items-center gap-1.5 rounded-full border border-app px-3.5 py-2 font-mono text-xs transition hover:bg-ink/5">
                   <Camera className="h-3.5 w-3.5" /> {photo ? "Changer la photo" : "Ajouter une photo"}
@@ -439,7 +404,6 @@ export default function DevenirExpertPage() {
                 {photo && <span className="truncate text-sm text-muted">{photo.name}</span>}
               </div>
             </div>
-
             <div className="border-t pt-6" style={{ borderColor: "var(--border)" }}>
               <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
                 Justificatif professionnel{" "}
@@ -454,7 +418,6 @@ export default function DevenirExpertPage() {
                   ? "Certification, CAP Coiffure, Brevet de maîtrise... facultatif mais recommandé."
                   : "Carte professionnelle, diplôme, attestation d'inscription à l'Ordre... au moins un document requis pour valider votre profil."}
               </p>
-
               <div className="mt-2.5 flex flex-wrap gap-2">
                 <label className="flex cursor-pointer items-center gap-1.5 rounded-full border border-app px-3.5 py-2 font-mono text-xs transition hover:bg-ink/5">
                   <Paperclip className="h-3.5 w-3.5" /> Choisir un fichier
@@ -465,7 +428,6 @@ export default function DevenirExpertPage() {
                   <input type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => addFiles(e.target.files)} />
                 </label>
               </div>
-
               {documents.length > 0 && (
                 <ul className="mt-3 space-y-2">
                   {documents.map((f, i) => (
@@ -481,9 +443,7 @@ export default function DevenirExpertPage() {
             </div>
           </div>
         )}
-
         {error && <p className="text-sm text-red-700">{error}</p>}
-
         <div className="flex gap-3 pt-2">
           {currentStep > 0 && (
             <button
@@ -495,7 +455,6 @@ export default function DevenirExpertPage() {
               <ArrowLeft className="h-4 w-4" /> Retour
             </button>
           )}
-
           {currentStep < 3 ? (
             <button
               type="button"
