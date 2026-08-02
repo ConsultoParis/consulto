@@ -135,25 +135,28 @@ export default function DevenirExpertPage() {
       photoUrl = publicUrlData.publicUrl;
     }
     setUploadStep("Création du profil...");
-    const { error: insertError } = await supabase.from("experts").insert({
-      id: userId,
-      profession,
-      specialite,
-      ville,
-      lat: coords?.lat ?? null,
-      lng: coords?.lng ?? null,
-      photo_url: photoUrl,
-      bio,
-      price: Number(price),
-      numero_barreau: profession === "avocat" ? numeroBarreau : null,
-      numero_notaire: profession === "notaire" ? numeroNotaire : null,
-      numero_rpps: profession === "medecin" ? numeroRpps : null,
-      numero_ordre_medecins: profession === "medecin" ? numeroOrdreMedecins : null,
-      numero_siret: profession === "garagiste" ? numeroSiret : null,
-      numero_ordre_comptable: profession === "comptable" ? numeroOrdreComptable : null,
-      certification: profession === "coiffeur" ? certification : null,
-      verification_status: "pending",
-    });
+    const { error: insertError } = await supabase.from("experts").upsert(
+      {
+        id: userId,
+        profession,
+        specialite,
+        ville,
+        lat: coords?.lat ?? null,
+        lng: coords?.lng ?? null,
+        photo_url: photoUrl,
+        bio,
+        price: Number(price),
+        numero_barreau: profession === "avocat" ? numeroBarreau : null,
+        numero_notaire: profession === "notaire" ? numeroNotaire : null,
+        numero_rpps: profession === "medecin" ? numeroRpps : null,
+        numero_ordre_medecins: profession === "medecin" ? numeroOrdreMedecins : null,
+        numero_siret: profession === "garagiste" ? numeroSiret : null,
+        numero_ordre_comptable: profession === "comptable" ? numeroOrdreComptable : null,
+        certification: profession === "coiffeur" ? certification : null,
+        verification_status: "pending",
+      },
+      { onConflict: "id" }
+    );
     if (insertError) {
       setLoading(false);
       setUploadStep("");
