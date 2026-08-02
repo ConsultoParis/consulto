@@ -36,7 +36,10 @@ export default async function ExpertDashboardPage() {
           <p className="mt-4 text-sm text-muted">
             Vous pouvez corriger vos informations et vos justificatifs, puis renvoyer une nouvelle candidature.
           </p>
-          <a href="/devenir-expert" className="btn-primary mt-5 inline-block rounded-[6px] px-6 py-3 text-sm font-semibold">Renvoyer ma candidature</a>
+          <div className="mt-5 flex flex-wrap justify-center gap-3">
+            <a href="/devenir-expert" className="btn-primary inline-block rounded-[6px] px-6 py-3 text-sm font-semibold">Renvoyer ma candidature</a>
+            <a href="/dashboard/client" className="btn-secondary inline-block rounded-[6px] px-6 py-3 text-sm font-semibold">Accéder à mon espace client</a>
+          </div>
         </div>
       </main>
     );
@@ -49,6 +52,7 @@ export default async function ExpertDashboardPage() {
           <p className="mt-2 text-muted">
             Votre dossier est en cours d'examen. Vous recevrez un email dès que votre profil sera activé.
           </p>
+          <a href="/dashboard/client" className="btn-secondary mt-5 inline-block rounded-[6px] px-6 py-3 text-sm font-semibold">Accéder à mon espace client en attendant</a>
         </div>
       </main>
     );
