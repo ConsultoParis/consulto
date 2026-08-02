@@ -191,13 +191,13 @@ export default async function ExpertDashboardPage() {
           <StripeConnectButton chargesEnabled={expert.stripe_charges_enabled} />
         </div>
       </div>
-      {!expert.bio && (
-        <div className="card-soft mt-8 p-5" style={{ backgroundColor: "var(--card)" }}>
-          <p className="font-medium">Complétez votre profil</p>
-          <p className="mt-1 text-sm text-muted">Ajoutez une présentation : c'est souvent la première chose que lit un client avant de réserver.</p>
-          <CompleteExpertProfileForm expertId={expert.id} />
-        </div>
-      )}
+      <div className="card-soft mt-8 p-5" style={{ backgroundColor: "var(--card)" }}>
+        <p className="font-medium">Ma biographie</p>
+        <p className="mt-1 text-sm text-muted">
+          Visible publiquement sur votre fiche — c'est souvent la première chose que lit un client avant de réserver.
+        </p>
+        <CompleteExpertProfileForm expertId={expert.id} currentBio={expert.bio} />
+      </div>
       <h2 id="ajouter-creneau" className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Ajouter un créneau</h2>
       <div className="mt-3 card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
         <AddSlotForm expertId={user.id} profession={expert.profession} />
