@@ -257,7 +257,7 @@ export default async function ExpertDashboardPage() {
                     Ajoutés à son espace 1Expert et envoyés par email à {b.client_email}.
                   </p>
                   <div className="mt-2">
-                    <SendDocumentsForm bookingId={b.id} existing={expertDocs} />
+                    <SendDocumentsForm bookingId={b.id} existing={expertDocs} profession={expert.profession} />
                   </div>
                 </div>
               )}
