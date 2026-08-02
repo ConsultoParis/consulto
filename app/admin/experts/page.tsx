@@ -1,8 +1,9 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import AdminExpertActions from "@/components/AdminExpertActions";
 import { PROFESSION_LABELS } from "@/lib/types";
-import { FileText } from "lucide-react";
+import { FileText, ClipboardList, Search, BarChart3 } from "lucide-react";
 export default async function AdminExpertsPage() {
   const supabase = await createClient();
   const {
@@ -35,6 +36,11 @@ export default async function AdminExpertsPage() {
     <main className="mx-auto max-w-4xl px-6 py-16">
       <p className="font-mono text-xs uppercase tracking-[0.16em] text-seal">Administration</p>
       <h1 className="mt-3 font-display text-3xl font-medium">Candidatures en attente</h1>
+      <div className="mt-6 flex flex-wrap gap-2">
+        <Link href="/admin/analytics" className="flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-mono text-xs transition" style={{ borderColor: "var(--border)" }}><BarChart3 className="h-3.5 w-3.5" /> Analytics</Link>
+        <Link href="/admin/experts" className="rounded-full px-3.5 py-1.5 font-mono text-xs transition" style={{ backgroundColor: "#0A2540", color: "#F4F8FF" }}>Candidatures en attente</Link>
+        <Link href="/admin/recherche-experts" className="flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-mono text-xs transition" style={{ borderColor: "var(--border)" }}><Search className="h-3.5 w-3.5" /> Rechercher un expert (tous statuts)</Link>
+      </div>
       {error && <p className="mt-4 text-sm text-red-700">Erreur de chargement : {error.message}</p>}
       {withUrls.length === 0 ? (
         <p className="mt-8 text-sm text-muted">Aucune candidature en attente pour le moment.</p>
