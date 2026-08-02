@@ -55,6 +55,11 @@ export default function ConnexionPage() {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••"
           />
+          <p className="mt-1.5 text-right">
+            <Link href="/mot-de-passe-oublie" className="font-mono text-xs text-muted underline decoration-seal decoration-2 underline-offset-4">
+              Mot de passe oublié ?
+            </Link>
+          </p>
         </div>
         {error && <p className="text-sm text-red-700">{error}</p>}
         <button
