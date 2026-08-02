@@ -36,12 +36,7 @@ export default async function ExpertDashboardPage() {
           <p className="mt-4 text-sm text-muted">
             Vous pouvez corriger vos informations et vos justificatifs, puis renvoyer une nouvelle candidature.
           </p>
-          
-            href="/devenir-expert"
-            className="btn-primary mt-5 inline-block rounded-[6px] px-6 py-3 text-sm font-semibold"
-          >
-            Renvoyer ma candidature
-          </a>
+          <a href="/devenir-expert" className="btn-primary mt-5 inline-block rounded-[6px] px-6 py-3 text-sm font-semibold">Renvoyer ma candidature</a>
         </div>
       </main>
     );
