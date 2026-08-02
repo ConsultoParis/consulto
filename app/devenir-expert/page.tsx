@@ -287,7 +287,7 @@ export default function DevenirExpertPage() {
         {currentStep === 1 && (
           <>
             <div>
-              <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Présentation</label>
+              <label className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Biographie</label>
               <textarea
                 className={inputClass + " min-h-[100px]"}
                 value={bio}
