@@ -19,14 +19,14 @@ export default async function ClientDashboardPage() {
   const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single();
   const { data: bookings } = await supabase
     .from("bookings")
-    .select("*, experts(*, profiles(full_name)), documents(*)")
+    .select("*, experts(*, profiles!experts_id_fkey(full_name)), documents(*)")
     .eq("client_id", user.id)
     .order("date", { ascending: false });
   const { data: reviews } = await supabase.from("reviews").select("booking_id").eq("client_id", user.id);
   const reviewedBookingIds = new Set(reviews?.map((r) => r.booking_id));
   const { data: favorites } = await supabase
     .from("favorites")
-    .select("expert_id, experts(*, profiles(full_name))")
+    .select("expert_id, experts(*, profiles!experts_id_fkey(full_name))")
     .eq("client_id", user.id);
   const { data: recommended } = await supabase
     .from("experts")
