@@ -16,7 +16,7 @@ export default async function HomePage() {
 
   const { data: experts } = await supabase
     .from("experts")
-    .select("*, profiles(full_name, avatar_url)")
+    .select("*, profiles!experts_id_fkey(full_name, avatar_url)")
     .eq("verification_status", "verified")
     .order("created_at", { ascending: false })
     .limit(8);
