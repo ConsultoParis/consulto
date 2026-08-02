@@ -20,6 +20,32 @@ export default async function ExpertDashboardPage() {
   if (!expert) {
     redirect("/devenir-expert");
   }
+  if (expert.verification_status === "rejected") {
+    return (
+      <main className="mx-auto max-w-2xl px-6 py-16 text-center">
+        <div className="card-soft p-8" style={{ backgroundColor: "var(--card)" }}>
+          <h1 className="font-display text-2xl font-medium">Candidature non retenue</h1>
+          <p className="mt-2 text-muted">
+            Votre dossier n'a pas pu être validé en l'état.
+          </p>
+          {expert.rejection_reason && (
+            <p className="mt-4 rounded-[6px] border border-red-700/20 bg-red-700/5 p-4 text-left text-sm text-muted">
+              <strong>Motif :</strong> {expert.rejection_reason}
+            </p>
+          )}
+          <p className="mt-4 text-sm text-muted">
+            Vous pouvez corriger vos informations et vos justificatifs, puis renvoyer une nouvelle candidature.
+          </p>
+          
+            href="/devenir-expert"
+            className="btn-primary mt-5 inline-block rounded-[6px] px-6 py-3 text-sm font-semibold"
+          >
+            Renvoyer ma candidature
+          </a>
+        </div>
+      </main>
+    );
+  }
   if (expert.verification_status !== "verified") {
     return (
       <main className="mx-auto max-w-2xl px-6 py-16 text-center">
