@@ -43,13 +43,23 @@ export default async function AdminExpertsPage() {
           {withUrls.map((expert: any) => (
             <div key={expert.id} className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
               <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <p className="font-medium">{expert.profiles?.full_name}</p>
-                  <p className="text-sm text-muted">{expert.profiles?.email}</p>
-                  <p className="mt-1 font-mono text-[11px] uppercase text-mutedmore">
-                    {PROFESSION_LABELS[expert.profession as keyof typeof PROFESSION_LABELS]} · {expert.specialite}
-                    {expert.ville ? ` · ${expert.ville}` : ""}
-                  </p>
+                <div className="flex items-start gap-4">
+                  {expert.photo_url && (
+                    <img
+                      src={expert.photo_url}
+                      alt={expert.profiles?.full_name || "Photo du candidat"}
+                      className="h-20 w-20 shrink-0 rounded-[6px] object-cover"
+                      style={{ border: "1px solid var(--border)" }}
+                    />
+                  )}
+                  <div>
+                    <p className="font-medium">{expert.profiles?.full_name}</p>
+                    <p className="text-sm text-muted">{expert.profiles?.email}</p>
+                    <p className="mt-1 font-mono text-[11px] uppercase text-mutedmore">
+                      {PROFESSION_LABELS[expert.profession as keyof typeof PROFESSION_LABELS]} · {expert.specialite}
+                      {expert.ville ? ` · ${expert.ville}` : ""}
+                    </p>
+                  </div>
                 </div>
                 <AdminExpertActions expertId={expert.id} />
               </div>
