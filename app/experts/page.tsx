@@ -17,7 +17,7 @@ export default async function ExpertsPage({
   const supabase = await createClient();
   let query = supabase
     .from("experts")
-    .select("*, profiles(full_name, avatar_url), reviews(rating)")
+    .select("*, profiles!experts_id_fkey(full_name, avatar_url), reviews(rating)")
     .eq("verification_status", "verified");
   if (params.profession) {
     query = query.eq("profession", params.profession);
