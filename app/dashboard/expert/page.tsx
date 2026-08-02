@@ -16,7 +16,7 @@ export default async function ExpertDashboardPage() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/connexion");
-  const { data: expert } = await supabase.from("experts").select("*, profiles(full_name)").eq("id", user.id).single();
+  const { data: expert } = await supabase.from("experts").select("*, profiles!experts_id_fkey(full_name)").eq("id", user.id).single();
   if (!expert) {
     redirect("/devenir-expert");
   }
