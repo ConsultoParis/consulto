@@ -131,6 +131,7 @@ export default async function ExpertDashboardPage() {
           <p className="mt-2 text-sm text-muted">
             Vos disponibilités apparaissent immédiatement dans le registre — les clients pourront réserver dès aujourd'hui.
           </p>
+          <a href="#ajouter-creneau" className="btn-primary mt-4 inline-block rounded-[6px] px-6 py-3 text-sm font-semibold">Ajouter un créneau</a>
         </div>
       )}
       {nextBooking && (
@@ -197,7 +198,7 @@ export default async function ExpertDashboardPage() {
           <CompleteExpertProfileForm expertId={expert.id} />
         </div>
       )}
-      <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Ajouter un créneau</h2>
+      <h2 id="ajouter-creneau" className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Ajouter un créneau</h2>
       <div className="mt-3 card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
         <AddSlotForm expertId={user.id} profession={expert.profession} />
       </div>
