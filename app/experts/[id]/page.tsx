@@ -4,7 +4,6 @@ import VerifiedBadge from "@/components/VerifiedBadge";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { PROFESSION_LABELS, PROFESSION_COLORS } from "@/lib/types";
-
 export default async function ExpertDetailPage({
   params,
 }: {
@@ -12,16 +11,13 @@ export default async function ExpertDetailPage({
 }) {
   const { id } = await params;
   const supabase = await createClient();
-
   const { data: expert } = await supabase
     .from("experts")
-    .select("*, profiles(full_name, avatar_url)")
+    .select("*, profiles!experts_id_fkey(full_name, avatar_url)")
     .eq("id", id)
     .eq("verification_status", "verified")
     .single();
-
   if (!expert) notFound();
-
   const { data: slots } = await supabase
     .from("availability_slots")
     .select("*")
@@ -29,20 +25,16 @@ export default async function ExpertDetailPage({
     .eq("is_booked", false)
     .gte("date", new Date().toISOString().slice(0, 10))
     .order("date", { ascending: true });
-
   const { data: reviews } = await supabase
     .from("reviews")
     .select("*, profiles(full_name)")
     .eq("expert_id", id)
     .order("created_at", { ascending: false });
-
   const avgRating = reviews && reviews.length > 0
     ? reviews.reduce((s, r) => s + r.rating, 0) / reviews.length
     : null;
-
   const color = PROFESSION_COLORS[expert.profession as keyof typeof PROFESSION_COLORS];
   const nextSlot = slots && slots.length > 0 ? slots[0] : null;
-
   return (
     <main className="mx-auto max-w-3xl px-6 py-16">
       <div className="flex flex-wrap items-start gap-5">
@@ -87,9 +79,7 @@ export default async function ExpertDetailPage({
           </Link>
         </div>
       </div>
-
       {expert.bio && <p className="mt-8 leading-relaxed text-muted">{expert.bio}</p>}
-
       <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-mutedmore">
         Avis certifiés ({reviews?.length || 0})
       </h2>
@@ -108,7 +98,6 @@ export default async function ExpertDetailPage({
           ))}
         </div>
       )}
-
       <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-mutedmore">
         Créneaux disponibles ({slots?.length || 0})
       </h2>
