@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { PROFESSION_LABELS } from "@/lib/types";
-import { Search } from "lucide-react";
+import { Search, BarChart3, ClipboardList } from "lucide-react";
 
 const STATUS_LABELS: Record<string, { label: string; color: string; bg: string }> = {
   verified: { label: "Vérifié", color: "#1E8F6B", bg: "#1E8F6B15" },
@@ -67,6 +67,11 @@ export default async function AdminRechercheExpertsPage({
     <main className="mx-auto max-w-4xl px-6 py-16">
       <p className="font-mono text-xs uppercase tracking-[0.16em] text-seal">Administration</p>
       <h1 className="mt-3 font-display text-3xl font-medium">Rechercher un expert</h1>
+      <div className="mt-6 flex flex-wrap gap-2">
+        <Link href="/admin/analytics" className="flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-mono text-xs transition" style={{ borderColor: "var(--border)" }}><BarChart3 className="h-3.5 w-3.5" /> Analytics</Link>
+        <Link href="/admin/experts" className="flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-mono text-xs transition" style={{ borderColor: "var(--border)" }}><ClipboardList className="h-3.5 w-3.5" /> Candidatures en attente</Link>
+        <Link href="/admin/recherche-experts" className="rounded-full px-3.5 py-1.5 font-mono text-xs transition" style={{ backgroundColor: "#0A2540", color: "#F4F8FF" }}>Rechercher un expert (tous statuts)</Link>
+      </div>
 
       <form method="GET" className="mt-6 flex gap-2">
         <input
