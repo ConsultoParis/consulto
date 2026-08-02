@@ -16,7 +16,7 @@ export default async function AdminExpertsPage() {
 
   const { data: pending, error } = await admin
     .from("experts")
-    .select("*, profiles(full_name, email), expert_documents(*)")
+    .select("*, profiles!experts_id_fkey(full_name, email), expert_documents(*)")
     .eq("verification_status", "pending")
     .order("created_at", { ascending: true });
 
