@@ -1,6 +1,35 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { TrendingUp, Wallet, XCircle, Users, Award } from "lucide-react";
+import { TrendingUp, Wallet, XCircle, Users, Award, ClipboardList, Search } from "lucide-react";
+
+function AdminNav() {
+  return (
+    <div className="mt-6 flex flex-wrap gap-2">
+      <Link
+        href="/admin/analytics"
+        className="rounded-full px-3.5 py-1.5 font-mono text-xs transition"
+        style={{ backgroundColor: "#0A2540", color: "#F4F8FF" }}
+      >
+        Analytics
+      </Link>
+      <Link
+        href="/admin/experts"
+        className="flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-mono text-xs transition"
+        style={{ borderColor: "var(--border)" }}
+      >
+        <ClipboardList className="h-3.5 w-3.5" /> Candidatures en attente
+      </Link>
+      <Link
+        href="/admin/recherche-experts"
+        className="flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 font-mono text-xs transition"
+        style={{ borderColor: "var(--border)" }}
+      >
+        <Search className="h-3.5 w-3.5" /> Rechercher un expert (tous statuts)
+      </Link>
+    </div>
+  );
+}
 
 export default async function AdminAnalyticsPage() {
   const supabase = await createClient();
@@ -18,7 +47,7 @@ export default async function AdminAnalyticsPage() {
 
   const { data: weekBookings } = await supabase
     .from("bookings")
-    .select("*, experts(profiles(full_name))")
+    .select("*, experts(profiles!experts_id_fkey(full_name))")
     .gte("created_at", weekAgo.toISOString());
 
   const { count: verifiedExpertCount } = await supabase
@@ -54,6 +83,8 @@ export default async function AdminAnalyticsPage() {
       <p className="font-mono text-xs uppercase tracking-[0.16em] text-seal">Administration</p>
       <h1 className="mt-3 font-display text-3xl font-medium">Analytics</h1>
       <p className="mt-2 text-sm text-muted">Vue des 7 derniers jours.</p>
+
+      <AdminNav />
 
       <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <div className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
