@@ -24,8 +24,8 @@ export default function CompleteExpertProfileForm({ expertId, currentBio }: { ex
   return (
     <form onSubmit={handleSubmit} className="mt-3 space-y-2">
       <textarea
-        className="w-full rounded-[3px] border border-ink/15 px-3.5 py-2.5 text-[15px] outline-none focus:border-ink"
-        style={{ minHeight: 90 }}
+        className="w-full rounded-[6px] border-2 px-3.5 py-2.5 text-[15px] outline-none transition-colors focus:border-[#3E8EF7]"
+        style={{ minHeight: 100, backgroundColor: "var(--input-bg)", borderColor: "var(--border)" }}
         value={bio}
         onChange={(e) => setBio(e.target.value)}
         placeholder="Votre parcours, votre approche, en quelques phrases..."
