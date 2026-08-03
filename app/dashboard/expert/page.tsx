@@ -9,7 +9,30 @@ import CompleteExpertProfileForm from "@/components/CompleteExpertProfileForm";
 import StripeConnectButton from "@/components/StripeConnectButton";
 import NotificationButton from "@/components/NotificationButton";
 import FeaturedSubscriptionButton from "@/components/FeaturedSubscriptionButton";
-import { Star, Calendar, Eye, Award, TrendingUp, Zap, PlusCircle, CheckCircle2, Wallet, Download } from "lucide-react";
+import {
+  Star,
+  Calendar,
+  Eye,
+  Award,
+  TrendingUp,
+  Zap,
+  PlusCircle,
+  CheckCircle2,
+  Wallet,
+  Download,
+  Clock,
+  MessageSquare,
+  Sparkles,
+} from "lucide-react";
+
+function SectionTitle({ icon: Icon, children, color = "#3E8EF7" }: { icon: any; children: React.ReactNode; color?: string }) {
+  return (
+    <h2 className="mt-10 flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-[0.12em]" style={{ color }}>
+      <Icon className="h-3.5 w-3.5" /> {children}
+    </h2>
+  );
+}
+
 export default async function ExpertDashboardPage() {
   const supabase = await createClient();
   const {
@@ -102,7 +125,8 @@ export default async function ExpertDashboardPage() {
           <NotificationButton />
           <Link
             href={`/experts/${expert.id}`}
-            className="flex items-center gap-1.5 rounded-[3px] border border-app px-4 py-2 font-mono text-xs uppercase tracking-[0.08em] transition hover:bg-ink/5"
+            className="flex items-center gap-1.5 rounded-full px-4 py-2 font-mono text-xs font-medium uppercase tracking-[0.08em] transition hover:opacity-80"
+            style={{ backgroundColor: "#3E8EF715", color: "#3E8EF7" }}
           >
             <Eye className="h-3.5 w-3.5" /> Voir mon profil public
           </Link>
@@ -115,7 +139,7 @@ export default async function ExpertDashboardPage() {
             return (
               <span
                 key={i}
-                className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-[11px]"
+                className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-[11px] font-semibold"
                 style={{ backgroundColor: `${b.color}15`, color: b.color }}
               >
                 <Icon className="h-3 w-3" /> {b.label}
@@ -136,7 +160,7 @@ export default async function ExpertDashboardPage() {
       )}
       {nextBooking && (
         <div className="card-soft mt-8 p-5" style={{ backgroundColor: "#1E8F6B0F", border: "1px solid #1E8F6B30" }}>
-          <p className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.1em]" style={{ color: "#1E8F6B" }}>
+          <p className="flex items-center gap-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.1em]" style={{ color: "#1E8F6B" }}>
             <Calendar className="h-3.5 w-3.5" /> Prochain rendez-vous
           </p>
           <p className="mt-1 font-display text-lg font-medium">{nextBooking.profiles?.full_name}</p>
@@ -146,26 +170,26 @@ export default async function ExpertDashboardPage() {
         </div>
       )}
       <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <div className="card-soft bg-verified/5 p-5">
-          <p className="flex items-center gap-1 font-display text-3xl font-semibold text-verified">
+        <div className="card-soft p-5" style={{ backgroundColor: "#1E8F6B0D", borderTop: "3px solid #1E8F6B" }}>
+          <p className="flex items-center gap-1 font-display text-3xl font-semibold" style={{ color: "#1E8F6B" }}>
             <Wallet className="h-5 w-5" /> {revenusReverses} €
           </p>
-          <p className="mt-1 font-mono text-[10px] uppercase text-verified">Revenus reversés</p>
+          <p className="mt-1 font-mono text-[10px] font-semibold uppercase" style={{ color: "#1E8F6B" }}>Revenus reversés</p>
         </div>
-        <div className="card-soft bg-seal/5 p-5">
-          <p className="font-display text-3xl font-semibold text-seal">{revenusSequestre} €</p>
-          <p className="mt-1 font-mono text-[10px] uppercase text-seal">En séquestre</p>
+        <div className="card-soft p-5" style={{ backgroundColor: "#D98A1F0D", borderTop: "3px solid #D98A1F" }}>
+          <p className="font-display text-3xl font-semibold" style={{ color: "#D98A1F" }}>{revenusSequestre} €</p>
+          <p className="mt-1 font-mono text-[10px] font-semibold uppercase" style={{ color: "#D98A1F" }}>En séquestre</p>
         </div>
-        <div className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
-          <p className="flex items-center gap-1 font-display text-3xl font-semibold">
+        <div className="card-soft p-5" style={{ backgroundColor: "#3E8EF70D", borderTop: "3px solid #3E8EF7" }}>
+          <p className="flex items-center gap-1 font-display text-3xl font-semibold" style={{ color: "#3E8EF7" }}>
             {avgRating ? avgRating.toFixed(1) : "—"}
-            {avgRating && <Star className="h-5 w-5 fill-current" style={{ color: "#3E8EF7" }} />}
+            {avgRating && <Star className="h-5 w-5 fill-current" />}
           </p>
-          <p className="mt-1 font-mono text-[10px] uppercase text-muted">{reviews?.length || 0} avis</p>
+          <p className="mt-1 font-mono text-[10px] font-semibold uppercase" style={{ color: "#3E8EF7" }}>{reviews?.length || 0} avis</p>
         </div>
-        <div className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
-          <p className="font-display text-3xl font-semibold text-gradient">{satisfaction ? `${satisfaction}%` : "—"}</p>
-          <p className="mt-1 font-mono text-[10px] uppercase text-muted">Satisfaction</p>
+        <div className="card-soft p-5" style={{ backgroundColor: "#7C5CFF0D", borderTop: "3px solid #7C5CFF" }}>
+          <p className="font-display text-3xl font-semibold" style={{ color: "#7C5CFF" }}>{satisfaction ? `${satisfaction}%` : "—"}</p>
+          <p className="mt-1 font-mono text-[10px] font-semibold uppercase" style={{ color: "#7C5CFF" }}>Satisfaction</p>
         </div>
       </div>
 
@@ -186,29 +210,31 @@ export default async function ExpertDashboardPage() {
           border: `1px solid ${expert.stripe_charges_enabled ? "#1E8F6B30" : "#3E8EF730"}`,
         }}
       >
-        <p className="font-medium">Recevoir mes paiements</p>
+        <p className="font-display text-lg font-medium">Recevoir mes paiements</p>
         <div className="mt-2">
           <StripeConnectButton chargesEnabled={expert.stripe_charges_enabled} />
         </div>
       </div>
       <div className="card-soft mt-8 p-5" style={{ backgroundColor: "var(--card)" }}>
-        <p className="font-medium">Ma biographie</p>
+        <p className="font-display text-lg font-medium">Ma biographie</p>
         <p className="mt-1 text-sm text-muted">
           Visible publiquement sur votre fiche — c'est souvent la première chose que lit un client avant de réserver.
         </p>
         <CompleteExpertProfileForm expertId={expert.id} currentBio={expert.bio} />
       </div>
-      <h2 id="ajouter-creneau" className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Ajouter un créneau</h2>
+      <SectionTitle icon={PlusCircle} color="#1E8F6B">
+        <span id="ajouter-creneau">Ajouter un créneau</span>
+      </SectionTitle>
       <div className="mt-3 card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
         <AddSlotForm expertId={user.id} profession={expert.profession} />
       </div>
       {freeSlots.length > 0 && (
         <>
-          <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Mes créneaux disponibles</h2>
+          <SectionTitle icon={Clock} color="#D98A1F">Mes créneaux disponibles</SectionTitle>
           <div className="mt-3 space-y-3">
             {Object.entries(slotsByDate).map(([date, daySlots]) => (
               <div key={date} className="card-soft p-4" style={{ backgroundColor: "var(--card)" }}>
-                <p className="font-mono text-[11px] uppercase text-muted">
+                <p className="font-mono text-[11px] font-semibold uppercase text-muted">
                   {new Date(date).toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })}
                 </p>
                 <div className="mt-2 flex flex-wrap gap-2">
@@ -223,7 +249,7 @@ export default async function ExpertDashboardPage() {
           </div>
         </>
       )}
-      <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Consultations</h2>
+      <SectionTitle icon={MessageSquare} color="#3457A6">Consultations</SectionTitle>
       <div className="mt-4 space-y-4">
         {bookings?.map((b: any) => {
           const isPast = new Date(`${b.date}T${b.start_time}`) <= now;
@@ -233,12 +259,21 @@ export default async function ExpertDashboardPage() {
             <div key={b.id} className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium">{b.profiles?.full_name}</p>
+                  <p className="font-display text-base font-medium">{b.profiles?.full_name}</p>
                   <p className="text-sm text-muted">
                     {new Date(b.date).toLocaleDateString("fr-FR")} à {b.start_time}
                   </p>
                 </div>
-                <span className="rounded-[2px] bg-ink/5 px-2 py-0.5 font-mono text-[11px]">
+                <span
+                  className="rounded-full px-2.5 py-1 font-mono text-[11px] font-semibold"
+                  style={
+                    b.status === "completed"
+                      ? { backgroundColor: "#1E8F6B15", color: "#1E8F6B" }
+                      : isPast
+                      ? { backgroundColor: "#D98A1F15", color: "#D98A1F" }
+                      : { backgroundColor: "#3E8EF715", color: "#3E8EF7" }
+                  }
+                >
                   {b.status === "completed" ? "Terminée" : isPast ? "À clôturer" : "À venir"}
                 </span>
               </div>
@@ -255,13 +290,13 @@ export default async function ExpertDashboardPage() {
               )}
               {b.client_note && (
                 <div className="mt-3 border-t border-ink/10 pt-3">
-                  <p className="font-mono text-[11px] uppercase text-muted">Message du client</p>
+                  <p className="font-mono text-[11px] font-semibold uppercase text-muted">Message du client</p>
                   <p className="mt-1 text-sm">{b.client_note}</p>
                 </div>
               )}
               {clientDocs.length > 0 && (
                 <div className="mt-3 border-t border-ink/10 pt-3">
-                  <p className="font-mono text-[11px] uppercase text-muted">
+                  <p className="font-mono text-[11px] font-semibold uppercase text-muted">
                     Pièces transmises par le client ({clientDocs.length})
                   </p>
                   <ul className="mt-1 text-sm text-muted">
@@ -278,7 +313,7 @@ export default async function ExpertDashboardPage() {
               )}
               {b.status === "completed" && (
                 <div className="mt-3 border-t border-ink/10 pt-3">
-                  <p className="font-mono text-[11px] uppercase text-muted">Envoyer des documents au client</p>
+                  <p className="font-mono text-[11px] font-semibold uppercase text-muted">Envoyer des documents au client</p>
                   <p className="mt-1 text-xs text-muted">
                     Ajoutés à son espace 1Expert et envoyés par email à {b.client_email}.
                   </p>
@@ -296,13 +331,13 @@ export default async function ExpertDashboardPage() {
       </div>
       {reviews && reviews.length > 0 && (
         <>
-          <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Derniers avis</h2>
+          <SectionTitle icon={Star} color="#3E8EF7">Derniers avis</SectionTitle>
           <div className="mt-4 space-y-3">
             {reviews.slice(0, 5).map((r: any) => (
               <div key={r.id} className="card-soft p-4" style={{ backgroundColor: "var(--card)" }}>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">{r.profiles?.full_name}</span>
-                  <span className="flex items-center gap-1 font-mono text-xs" style={{ color: "#3E8EF7" }}>
+                  <span className="flex items-center gap-1 font-mono text-xs font-semibold" style={{ color: "#3E8EF7" }}>
                     <Star className="h-3 w-3 fill-current" /> {r.rating}
                   </span>
                 </div>
@@ -312,21 +347,21 @@ export default async function ExpertDashboardPage() {
           </div>
         </>
       )}
-      <h2 className="mt-10 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">Comment ça marche</h2>
+      <SectionTitle icon={Sparkles} color="#7C5CFF">Comment ça marche</SectionTitle>
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
           <PlusCircle className="h-5 w-5" style={{ color: "#3457A6" }} />
-          <p className="mt-2 font-medium">1. Ajoutez des créneaux</p>
+          <p className="mt-2 font-display text-base font-medium">1. Ajoutez des créneaux</p>
           <p className="mt-1 text-sm text-muted">Vos disponibilités sont visibles immédiatement par les clients.</p>
         </div>
         <div className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
           <Calendar className="h-5 w-5" style={{ color: "#D98A1F" }} />
-          <p className="mt-2 font-medium">2. Recevez une réservation</p>
+          <p className="mt-2 font-display text-base font-medium">2. Recevez une réservation</p>
           <p className="mt-1 text-sm text-muted">Le paiement du client est conservé en séquestre.</p>
         </div>
         <div className="card-soft p-5" style={{ backgroundColor: "var(--card)" }}>
           <CheckCircle2 className="h-5 w-5" style={{ color: "#1E8F6B" }} />
-          <p className="mt-2 font-medium">3. Clôturez et soyez payé</p>
+          <p className="mt-2 font-display text-base font-medium">3. Clôturez et soyez payé</p>
           <p className="mt-1 text-sm text-muted">Une fois la consultation marquée terminée, les fonds sont reversés.</p>
         </div>
       </div>
