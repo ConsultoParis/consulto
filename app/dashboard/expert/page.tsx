@@ -215,7 +215,7 @@ export default async function ExpertDashboardPage() {
           <StripeConnectButton chargesEnabled={expert.stripe_charges_enabled} />
         </div>
       </div>
-      <div className="card-soft mt-8 p-5" style={{ backgroundColor: "var(--card)" }}>
+      <div className="card-soft mt-8 p-5" style={{ backgroundColor: "#7C5CFF0D", border: "1px solid #7C5CFF30" }}>
         <p className="font-display text-lg font-medium">Ma biographie</p>
         <p className="mt-1 text-sm text-muted">
           Visible publiquement sur votre fiche — c'est souvent la première chose que lit un client avant de réserver.
