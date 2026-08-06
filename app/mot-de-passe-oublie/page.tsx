@@ -14,27 +14,34 @@ export default function MotDePasseOublie() {
     setError("");
     setStatus("sending");
 
-    const checkRes = await fetch("/api/auth/check-email", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
-    const checkData = await checkRes.json();
-    if (!checkRes.ok) {
+    try {
+      const checkRes = await fetch("/api/auth/check-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const checkData = await checkRes.json();
+      if (!checkRes.ok) {
+        setStatus("idle");
+        setError(checkData.error || "Une erreur est survenue");
+        return;
+      }
+
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
+        redirectTo: `${window.location.origin}/reinitialiser-mot-de-passe`,
+      });
+
+      if (resetError) {
+        setStatus("idle");
+        setError(resetError.message);
+        return;
+      }
+
+      setStatus("sent");
+    } catch (err: any) {
       setStatus("idle");
-      return setError(checkData.error || "Une erreur est survenue");
+      setError(err?.message || "Une erreur inattendue est survenue. Réessayez.");
     }
-
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
-      redirectTo: `${window.location.origin}/reinitialiser-mot-de-passe`,
-    });
-
-    if (resetError) {
-      setStatus("idle");
-      return setError(resetError.message);
-    }
-
-    setStatus("sent");
   }
 
   return (
