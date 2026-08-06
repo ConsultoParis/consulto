@@ -1,9 +1,9 @@
 "use client";
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-export default function ReinitialiserMotDePasse() {
+function ReinitialiserMotDePasseInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const supabase = createClient();
@@ -106,5 +106,13 @@ export default function ReinitialiserMotDePasse() {
         </form>
       )}
     </main>
+  );
+}
+
+export default function ReinitialiserMotDePasse() {
+  return (
+    <Suspense fallback={null}>
+      <ReinitialiserMotDePasseInner />
+    </Suspense>
   );
 }
