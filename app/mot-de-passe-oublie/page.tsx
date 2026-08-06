@@ -125,9 +125,9 @@ export default function MotDePasseOublie() {
               required
               className="mt-1.5 w-full rounded-[3px] border border-app px-3.5 py-2.5 text-center text-2xl tracking-[0.3em] outline-none focus:border-ink"
               value={code}
-              onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-              placeholder="123456"
-              maxLength={6}
+              onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 10))}
+              placeholder="12345678"
+              maxLength={10}
             />
           </div>
           <div>
