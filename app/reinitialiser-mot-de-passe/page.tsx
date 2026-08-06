@@ -1,12 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
 export default function ReinitialiserMotDePasse() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
   const [ready, setReady] = useState(false);
+  const [linkError, setLinkError] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
@@ -14,16 +16,33 @@ export default function ReinitialiserMotDePasse() {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    const { data: listener } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") {
+    async function checkLink() {
+      const code = searchParams.get("code");
+      if (code) {
+        const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+        if (exchangeError) {
+          setLinkError("Ce lien est invalide ou a expiré. Refaites une demande de réinitialisation.");
+          return;
+        }
         setReady(true);
+        return;
       }
-    });
-    supabase.auth.getSession().then(({ data }) => {
-      if (data.session) setReady(true);
-    });
-    return () => listener.subscription.unsubscribe();
-  }, [supabase]);
+
+      const { data } = await supabase.auth.getSession();
+      if (data.session) {
+        setReady(true);
+        return;
+      }
+
+      const { data: listener } = supabase.auth.onAuthStateChange((event) => {
+        if (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN") {
+          setReady(true);
+        }
+      });
+      return () => listener.subscription.unsubscribe();
+    }
+    checkLink();
+  }, [searchParams, supabase]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -46,6 +65,11 @@ export default function ReinitialiserMotDePasse() {
       {success ? (
         <div className="card-soft mt-8 p-6" style={{ backgroundColor: "var(--card)" }}>
           <p className="text-sm text-verified">Mot de passe mis à jour — redirection vers la connexion...</p>
+        </div>
+      ) : linkError ? (
+        <div className="card-soft mt-8 p-6" style={{ backgroundColor: "var(--card)" }}>
+          <p className="text-sm text-red-700">{linkError}</p>
+          <a href="/mot-de-passe-oublie" className="mt-4 inline-block font-mono text-xs uppercase tracking-[0.1em] underline decoration-seal decoration-2 underline-offset-4">Refaire une demande</a>
         </div>
       ) : !ready ? (
         <p className="mt-8 text-sm text-muted">Vérification du lien en cours...</p>
