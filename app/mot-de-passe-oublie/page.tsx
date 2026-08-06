@@ -1,11 +1,12 @@
 "use client";
-import { useState } from "react";
+import { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-export default function MotDePasseOublie() {
+function MotDePasseOublieInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const supabase = createClient();
   const [step, setStep] = useState<"email" | "code">("email");
   const [email, setEmail] = useState("");
@@ -15,6 +16,14 @@ export default function MotDePasseOublie() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    const emailFromLink = searchParams.get("email");
+    if (emailFromLink) {
+      setEmail(emailFromLink);
+      setStep("code");
+    }
+  }, [searchParams]);
 
   async function handleSendCode(e: React.FormEvent) {
     e.preventDefault();
@@ -168,5 +177,13 @@ export default function MotDePasseOublie() {
         </form>
       )}
     </main>
+  );
+}
+
+export default function MotDePasseOublie() {
+  return (
+    <Suspense fallback={null}>
+      <MotDePasseOublieInner />
+    </Suspense>
   );
 }
