@@ -1,8 +1,10 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/client";
 
 export default function MotDePasseOublie() {
+  const supabase = createClient();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
   const [error, setError] = useState("");
@@ -11,16 +13,27 @@ export default function MotDePasseOublie() {
     e.preventDefault();
     setError("");
     setStatus("sending");
-    const res = await fetch("/api/auth/forgot-password", {
+
+    const checkRes = await fetch("/api/auth/check-email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
     });
-    const data = await res.json();
-    if (!res.ok) {
+    const checkData = await checkRes.json();
+    if (!checkRes.ok) {
       setStatus("idle");
-      return setError(data.error || "Une erreur est survenue");
+      return setError(checkData.error || "Une erreur est survenue");
     }
+
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
+      redirectTo: `${window.location.origin}/reinitialiser-mot-de-passe`,
+    });
+
+    if (resetError) {
+      setStatus("idle");
+      return setError(resetError.message);
+    }
+
     setStatus("sent");
   }
 
